@@ -1,7 +1,7 @@
-import SimpleSchema from "simpl-schema";
-import { TimestampSchema } from "../default-schema";
+import SimpleSchema from 'simpl-schema';
+import { TimestampSchema } from '../default-schema';
 
-export const Games = new MongoCollection("games");
+export const Games = new MongoCollection('games');
 
 Games.schema = new SimpleSchema({});
 
