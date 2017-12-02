@@ -107,6 +107,8 @@
         <item url="file://$USER_HOME$/.meteor/packages/htmljs/1.0.11/web.browser/html.js" />
         <item url="file://$USER_HOME$/.meteor/packages/htmljs/1.0.11/web.browser/visitors.js" />
         <item url="file://$USER_HOME$/.meteor/packages/htmljs/1.0.11/web.browser/preamble.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/mdg_validated-method/1.1.0/web.browser/validated-method-tests.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/mdg_validated-method/1.1.0/web.browser/validated-method.js" />
         <item url="file://$USER_HOME$/.meteor/packages/react-meteor-data/0.2.15/web.browser/react-meteor-data.jsx" />
         <item url="file://$USER_HOME$/.meteor/packages/react-meteor-data/0.2.15/web.browser/createContainer.jsx" />
         <item url="file://$USER_HOME$/.meteor/packages/modules-runtime/0.9.1/web.browser/.npm/package/node_modules/install/install.js" />
@@ -267,6 +269,8 @@
       <root url="file://$USER_HOME$/.meteor/packages/htmljs/1.0.11/web.browser/html.js" />
       <root url="file://$USER_HOME$/.meteor/packages/htmljs/1.0.11/web.browser/visitors.js" />
       <root url="file://$USER_HOME$/.meteor/packages/htmljs/1.0.11/web.browser/preamble.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/mdg_validated-method/1.1.0/web.browser/validated-method-tests.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/mdg_validated-method/1.1.0/web.browser/validated-method.js" />
       <root url="file://$USER_HOME$/.meteor/packages/react-meteor-data/0.2.15/web.browser/react-meteor-data.jsx" />
       <root url="file://$USER_HOME$/.meteor/packages/react-meteor-data/0.2.15/web.browser/createContainer.jsx" />
       <root url="file://$USER_HOME$/.meteor/packages/modules-runtime/0.9.1/web.browser/.npm/package/node_modules/install/install.js" />

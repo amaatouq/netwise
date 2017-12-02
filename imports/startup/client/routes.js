@@ -1,8 +1,8 @@
-import { Route, Router } from "react-router";
-import { createBrowserHistory } from "history";
-import React from "react";
+import { Route, Router } from 'react-router';
+import { createBrowserHistory } from 'history';
+import React from 'react';
 
-import Home from "../../ui/pages/Home";
+import Home from '../../ui/pages/Home';
 
 const browserHistory = createBrowserHistory();
 export const renderRoutes = () => (
