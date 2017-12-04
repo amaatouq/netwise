@@ -1,1 +1,5 @@
 node_modules/
+*.xml
+.idea/libraries/meteor_packages_auto_import_browser.xml
+.idea/libraries/meteor_packages_auto_import_npm.xml
+.idea/workspace.xml
