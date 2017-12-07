@@ -3,3 +3,4 @@ node_modules/
 .idea/libraries/meteor_packages_auto_import_browser.xml
 .idea/libraries/meteor_packages_auto_import_npm.xml
 .idea/workspace.xml
+.idea/inspectionProfiles/
