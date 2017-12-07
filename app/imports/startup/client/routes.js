@@ -2,7 +2,7 @@ import { Route, Router } from "react-router";
 import { createBrowserHistory } from "history";
 import React from "react";
 
-import GameTemp from "../../ui/games/plot/GameTemp";
+import GameTemp from "../../ui/games/task/GameTemp";
 
 const browserHistory = createBrowserHistory();
 export const renderRoutes = () => (

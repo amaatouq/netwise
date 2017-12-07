@@ -6,6 +6,10 @@ import { stages } from "./game";
 export default class Task extends React.Component {
   render() {
     const { round, stage } = this.props;
+
+    // const plots = gameInstance.get("plots");
+    // const plot = plots[round];
+
     return (
       <div className="task">
         Task for Round {round} at stage {stage}
