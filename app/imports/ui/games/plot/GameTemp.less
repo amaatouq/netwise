@@ -1,0 +1,42 @@
+.game-temp {
+  font-stretch: ultra-expanded;
+  height: 100%;
+
+  .round-plot {
+    display: flex;
+    height: 100%;
+
+    .context {
+      display: flex;
+      flex-direction: column;
+      width: 20rem;
+      background-color: #f5f5f5;
+      min-height: 100%;
+      align-items: center;
+      padding-top: 2rem;
+
+      .player-icon {
+        width: 10rem;
+        height: 10rem;
+        margin-bottom: 2rem;
+      }
+
+      .score {
+        text-align: center;
+        span {
+          font-size: 2em;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .task {
+      flex-grow: 1;
+    }
+
+    .social {
+      background-color: #f5f5f5;
+      width: 40rem;
+    }
+  }
+}

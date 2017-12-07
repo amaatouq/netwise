@@ -31,3 +31,5 @@ react-meteor-data                 # Connects the meteor reactive model to react
 
 # Methods
 mdg:validated-method              # Define Meteor methods in a structured way
+
+random
