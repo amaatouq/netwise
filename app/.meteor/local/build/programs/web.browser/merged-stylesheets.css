@@ -567,7 +567,23 @@ footer {
 
 .round .task {
   flex-grow: 2;
-  align-content: center;
+  align-content: right;
+  padding-left: 3rem;
+}
+
+.round .task .form {
+  margin: 0 auto;
+  padding: 100px 30px 0;
+}
+
+@media (min-width: 800px) {
+  .round .task .form {
+    max-width: 60%;
+  }
+}
+
+.round .task .input-range {
+  margin-bottom: 160px;
 }
 
 .round .task .task-image {

@@ -3,10 +3,10 @@ import React from "react";
 
 export default class TaskStimulus extends React.Component {
   render() {
-    console.log("taskPath", this.props.task.data.taskPath);
+    console.log('inside stim', this.props);
     return (
       <div>
-        <img src={this.props.task.data.taskPath} className="task-image" />
+        <img src={this.props.taskParam} className="task-image" />
       </div>
     );
   }

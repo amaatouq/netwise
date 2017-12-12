@@ -17,8 +17,9 @@ export default class Round extends React.Component {
         <PlayerProfile currentPlayer={currentPlayer} />
 
           <Task
-            task={currentRound.data.task}
+            task={currentRound.task}
             stage={currentRound.currentStage}
+            currentPlayer={currentPlayer}
           />
         
       </div>

@@ -78,9 +78,9 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/packages/modules.js?hash=a19f333c04c816a4d91b6149836b0134691699a1",
-      "size": 5723818,
-      "hash": "a19f333c04c816a4d91b6149836b0134691699a1"
+      "url": "/packages/modules.js?hash=33b0169d62f70e97b4a70d04dd13784c52ebd515",
+      "size": 5935309,
+      "hash": "33b0169d62f70e97b4a70d04dd13784c52ebd515"
     },
     {
       "path": "packages/ecmascript-runtime.js",
@@ -545,22 +545,22 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/app/app.js?hash=55435dddae56c7e498ca3f4505f75f8027790da8",
+      "url": "/app/app.js?hash=f7f0a0c8f0d2b1d5cf240adcd4f53b27d5625ebb",
       "sourceMap": "app/app.js.map",
-      "sourceMapUrl": "/app/55435dddae56c7e498ca3f4505f75f8027790da8.map",
-      "size": 71025,
-      "hash": "55435dddae56c7e498ca3f4505f75f8027790da8"
+      "sourceMapUrl": "/app/f7f0a0c8f0d2b1d5cf240adcd4f53b27d5625ebb.map",
+      "size": 90919,
+      "hash": "f7f0a0c8f0d2b1d5cf240adcd4f53b27d5625ebb"
     },
     {
       "path": "merged-stylesheets.css",
       "where": "client",
       "type": "css",
       "cacheable": true,
-      "url": "/merged-stylesheets.css?hash=c0b5d4ce1d42b5b63ea30ecea6e7e7f12f84e289",
+      "url": "/merged-stylesheets.css?hash=57bc471c6181bfe2698c847b7c31af6499dc20a6",
       "sourceMap": "merged-stylesheets.css.map",
-      "sourceMapUrl": "/c0b5d4ce1d42b5b63ea30ecea6e7e7f12f84e289.map",
-      "size": 9215,
-      "hash": "c0b5d4ce1d42b5b63ea30ecea6e7e7f12f84e289"
+      "sourceMapUrl": "/57bc471c6181bfe2698c847b7c31af6499dc20a6.map",
+      "size": 9436,
+      "hash": "57bc471c6181bfe2698c847b7c31af6499dc20a6"
     },
     {
       "path": "app/avatars/bee.png",

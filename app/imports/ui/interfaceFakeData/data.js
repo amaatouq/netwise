@@ -15,19 +15,26 @@ Creating dummy Tasks data: we will shuffle them at the game level
 const Tasks = _.shuffle([
   {
     _id: "1",
-    data: { taskPath: "/tasks/1.png", correctAnswer: 0.1, difficulty: "easy" }
+    data: {
+      correctAnswer: 0.1,
+      difficultyPath: { easy: "/tasks/1.png", hard: "/tasks/2.png" }
+    }
   },
+
   {
     _id: "2",
-    data: { taskPath: "/tasks/2.png", correctAnswer: 0.6, difficulty: "easy" }
+    data: {
+      correctAnswer: 0.5,
+      difficultyPath: { easy: "/tasks/3.png", hard: "/tasks/4.png" }
+    }
   },
+  
   {
     _id: "3",
-    data: { taskPath: "/tasks/3.png", correctAnswer: 0.3, difficulty: "easy" }
-  },
-  {
-    _id: "4",
-    data: { taskPath: "/tasks/4.png", correctAnswer: 0.54, difficulty: "easy" }
+    data: {
+      correctAnswer: 1.0,
+      difficultyPath: { easy: "/tasks/5.png", hard: "/tasks/6.png" }
+    }
   }
 ]);
 
@@ -45,7 +52,8 @@ _.times(nPlayers, i => {
     alters: null,
     data: {
       avatar: avatars[i],
-      score: _.random(0, 123)
+      score: _.random(0, 123),
+      difficulty: Random.choice(['easy','hard'])
     }
   });
 });
@@ -82,7 +90,8 @@ _.times(nRounds, i => {
     createdAt: new Date(),
     stages,
     currentStage: currentStage,
-    data: { task: Tasks[i] }
+    task: Tasks[i],
+    data: { }
   });
 });
 

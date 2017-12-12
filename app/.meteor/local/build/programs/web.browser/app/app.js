@@ -250,6 +250,18 @@ module.watch(require("./TaskStimulus"), {                                       
     TaskStimulus = v;                                                                                           // 1
   }                                                                                                             // 1
 }, 2);                                                                                                          // 1
+var TaskResponse = void 0;                                                                                      // 1
+module.watch(require("./TaskResponse"), {                                                                       // 1
+  "default": function (v) {                                                                                     // 1
+    TaskResponse = v;                                                                                           // 1
+  }                                                                                                             // 1
+}, 3);                                                                                                          // 1
+var TaskFeedback = void 0;                                                                                      // 1
+module.watch(require("./TaskFeedback"), {                                                                       // 1
+  "default": function (v) {                                                                                     // 1
+    TaskFeedback = v;                                                                                           // 1
+  }                                                                                                             // 1
+}, 4);                                                                                                          // 1
                                                                                                                 //
 var Task = function (_React$Component) {                                                                        //
   (0, _inherits3.default)(Task, _React$Component);                                                              //
@@ -261,20 +273,24 @@ var Task = function (_React$Component) {                                        
                                                                                                                 //
   Task.prototype.render = function () {                                                                         //
     function render() {                                                                                         //
-      var task = this.props.task;                                                                               // 7
-      var stage = this.props.stage;                                                                             // 8
-      console.log("task from inside task", task);                                                               // 9
-      console.log("stage from inside task", stage);                                                             // 10
-      return React.createElement(                                                                               // 12
-        "div",                                                                                                  // 13
-        {                                                                                                       // 13
-          className: "task"                                                                                     // 13
-        },                                                                                                      // 13
-        React.createElement(TaskStimulus, {                                                                     // 14
-          task: task                                                                                            // 14
-        })                                                                                                      // 14
-      );                                                                                                        // 13
-    }                                                                                                           // 17
+      var taskData = this.props.task.data;                                                                      // 9
+      var taskPath = taskData.difficultyPath[this.props.currentPlayer.data.difficulty]; //get user specific task difficulty
+                                                                                                                //
+      var stage = this.props.stage;                                                                             // 11
+      console.log('currentPlayer.difficulty', this.props.currentPlayer.data.difficulty);                        // 12
+      console.log("task from inside task", taskData);                                                           // 13
+      console.log("stage from inside task", stage);                                                             // 14
+      return React.createElement(                                                                               // 16
+        "div",                                                                                                  // 17
+        {                                                                                                       // 17
+          className: "task"                                                                                     // 17
+        },                                                                                                      // 17
+        React.createElement(TaskStimulus, {                                                                     // 18
+          taskParam: taskPath                                                                                   // 18
+        }),                                                                                                     // 18
+        stage !== "outcome" ? React.createElement(TaskResponse, null) : React.createElement(TaskFeedback, null)
+      );                                                                                                        // 17
+    }                                                                                                           // 22
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //
@@ -282,11 +298,171 @@ var Task = function (_React$Component) {                                        
   return Task;                                                                                                  //
 }(React.Component);                                                                                             //
                                                                                                                 //
-Task.propTypes = {                                                                                              // 20
-  // Current round index                                                                                        // 21
-  task: PropTypes.object.isRequired,                                                                            // 22
-  stage: PropTypes.string.isRequired                                                                            // 23
-};                                                                                                              // 20
+Task.propTypes = {                                                                                              // 25
+  // Current round index                                                                                        // 26
+  task: PropTypes.object.isRequired,                                                                            // 27
+  stage: PropTypes.string.isRequired,                                                                           // 28
+  currentPlayer: PropTypes.object.isRequired                                                                    // 29
+};                                                                                                              // 25
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+},"TaskFeedback.jsx":function(require,exports,module){
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                              //
+// imports/ui/components/TaskFeedback.jsx                                                                       //
+//                                                                                                              //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                                //
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");                                         //
+                                                                                                                //
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);                                                //
+                                                                                                                //
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");                   //
+                                                                                                                //
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);                          //
+                                                                                                                //
+var _inherits2 = require("babel-runtime/helpers/inherits");                                                     //
+                                                                                                                //
+var _inherits3 = _interopRequireDefault(_inherits2);                                                            //
+                                                                                                                //
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }               //
+                                                                                                                //
+module.export({                                                                                                 // 1
+  "default": function () {                                                                                      // 1
+    return Task;                                                                                                // 1
+  }                                                                                                             // 1
+});                                                                                                             // 1
+var PropTypes = void 0;                                                                                         // 1
+module.watch(require("prop-types"), {                                                                           // 1
+  "default": function (v) {                                                                                     // 1
+    PropTypes = v;                                                                                              // 1
+  }                                                                                                             // 1
+}, 0);                                                                                                          // 1
+var React = void 0;                                                                                             // 1
+module.watch(require("react"), {                                                                                // 1
+  "default": function (v) {                                                                                     // 1
+    React = v;                                                                                                  // 1
+  }                                                                                                             // 1
+}, 1);                                                                                                          // 1
+                                                                                                                //
+var Task = function (_React$Component) {                                                                        //
+  (0, _inherits3.default)(Task, _React$Component);                                                              //
+                                                                                                                //
+  function Task() {                                                                                             //
+    (0, _classCallCheck3.default)(this, Task);                                                                  //
+    return (0, _possibleConstructorReturn3.default)(this, _React$Component.apply(this, arguments));             //
+  }                                                                                                             //
+                                                                                                                //
+  Task.prototype.render = function () {                                                                         //
+    function render() {}                                                                                        //
+                                                                                                                //
+    return render;                                                                                              //
+  }();                                                                                                          //
+                                                                                                                //
+  return Task;                                                                                                  //
+}(React.Component);                                                                                             //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+},"TaskResponse.jsx":function(require,exports,module){
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                              //
+// imports/ui/components/TaskResponse.jsx                                                                       //
+//                                                                                                              //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                                //
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");                                         //
+                                                                                                                //
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);                                                //
+                                                                                                                //
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");                   //
+                                                                                                                //
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);                          //
+                                                                                                                //
+var _inherits2 = require("babel-runtime/helpers/inherits");                                                     //
+                                                                                                                //
+var _inherits3 = _interopRequireDefault(_inherits2);                                                            //
+                                                                                                                //
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }               //
+                                                                                                                //
+module.export({                                                                                                 // 1
+  "default": function () {                                                                                      // 1
+    return TaskResponse;                                                                                        // 1
+  }                                                                                                             // 1
+});                                                                                                             // 1
+var React = void 0;                                                                                             // 1
+module.watch(require("react"), {                                                                                // 1
+  "default": function (v) {                                                                                     // 1
+    React = v;                                                                                                  // 1
+  }                                                                                                             // 1
+}, 0);                                                                                                          // 1
+var Slider = void 0;                                                                                            // 1
+module.watch(require("react-rangeslider"), {                                                                    // 1
+  "default": function (v) {                                                                                     // 1
+    Slider = v;                                                                                                 // 1
+  }                                                                                                             // 1
+}, 1);                                                                                                          // 1
+                                                                                                                //
+var TaskResponse = function (_React$Component) {                                                                //
+  (0, _inherits3.default)(TaskResponse, _React$Component);                                                      //
+                                                                                                                //
+  function TaskResponse(props, context) {                                                                       // 5
+    (0, _classCallCheck3.default)(this, TaskResponse);                                                          // 5
+                                                                                                                //
+    var _this = (0, _possibleConstructorReturn3.default)(this, _React$Component.call(this, props, context));    // 5
+                                                                                                                //
+    _this.handleChangeStart = function () {                                                                     // 5
+      console.log('Change event started');                                                                      // 13
+    };                                                                                                          // 14
+                                                                                                                //
+    _this.handleChange = function (value) {                                                                     // 5
+      _this.setState({                                                                                          // 17
+        value: value                                                                                            // 18
+      });                                                                                                       // 17
+    };                                                                                                          // 20
+                                                                                                                //
+    _this.handleChangeComplete = function () {                                                                  // 5
+      console.log('Change event completed'); //here log the data to the database                                // 23
+    };                                                                                                          // 25
+                                                                                                                //
+    _this.state = {                                                                                             // 7
+      value: 50                                                                                                 // 8
+    };                                                                                                          // 7
+    return _this;                                                                                               // 5
+  }                                                                                                             // 10
+                                                                                                                //
+  TaskResponse.prototype.render = function () {                                                                 //
+    function render() {                                                                                         //
+      var value = this.state.value;                                                                             // 27
+      return React.createElement(                                                                               // 29
+        "div",                                                                                                  // 30
+        {                                                                                                       // 30
+          className: "slider"                                                                                   // 30
+        },                                                                                                      // 30
+        React.createElement(Slider, {                                                                           // 31
+          min: 0,                                                                                               // 32
+          max: 100,                                                                                             // 33
+          value: value,                                                                                         // 34
+          onChangeStart: this.handleChangeStart,                                                                // 35
+          onChange: this.handleChange,                                                                          // 36
+          onChangeComplete: this.handleChangeComplete                                                           // 37
+        }),                                                                                                     // 31
+        React.createElement(                                                                                    // 39
+          "div",                                                                                                // 39
+          {                                                                                                     // 39
+            className: "value"                                                                                  // 39
+          },                                                                                                    // 39
+          value                                                                                                 // 39
+        )                                                                                                       // 39
+      );                                                                                                        // 30
+    }                                                                                                           // 42
+                                                                                                                //
+    return render;                                                                                              //
+  }();                                                                                                          //
+                                                                                                                //
+  return TaskResponse;                                                                                          //
+}(React.Component);                                                                                             //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"TaskStimulus.jsx":function(require,exports,module){
@@ -339,12 +515,12 @@ var TaskStimulus = function (_React$Component) {                                
                                                                                                                 //
   TaskStimulus.prototype.render = function () {                                                                 //
     function render() {                                                                                         //
-      console.log("taskPath", this.props.task.data.taskPath);                                                   // 6
+      console.log('inside stim', this.props);                                                                   // 6
       return React.createElement(                                                                               // 7
         "div",                                                                                                  // 8
         null,                                                                                                   // 8
         React.createElement("img", {                                                                            // 9
-          src: this.props.task.data.taskPath,                                                                   // 9
+          src: this.props.taskParam,                                                                            // 9
           className: "task-image"                                                                               // 9
         })                                                                                                      // 9
       );                                                                                                        // 8
@@ -397,61 +573,61 @@ var avatars = ["/avatars/bee.png", "/avatars/bird.png", "/avatars/cat.png", "/av
 var Tasks = _.shuffle([{                                                                                        // 15
   _id: "1",                                                                                                     // 17
   data: {                                                                                                       // 18
-    taskPath: "/tasks/1.png",                                                                                   // 18
-    correctAnswer: 0.1,                                                                                         // 18
-    difficulty: "easy"                                                                                          // 18
+    correctAnswer: 0.1,                                                                                         // 19
+    difficultyPath: {                                                                                           // 20
+      easy: "/tasks/1.png",                                                                                     // 20
+      hard: "/tasks/2.png"                                                                                      // 20
+    }                                                                                                           // 20
   }                                                                                                             // 18
 }, {                                                                                                            // 16
-  _id: "2",                                                                                                     // 21
-  data: {                                                                                                       // 22
-    taskPath: "/tasks/2.png",                                                                                   // 22
-    correctAnswer: 0.6,                                                                                         // 22
-    difficulty: "easy"                                                                                          // 22
-  }                                                                                                             // 22
-}, {                                                                                                            // 20
-  _id: "3",                                                                                                     // 25
+  _id: "2",                                                                                                     // 25
   data: {                                                                                                       // 26
-    taskPath: "/tasks/3.png",                                                                                   // 26
-    correctAnswer: 0.3,                                                                                         // 26
-    difficulty: "easy"                                                                                          // 26
+    correctAnswer: 0.5,                                                                                         // 27
+    difficultyPath: {                                                                                           // 28
+      easy: "/tasks/3.png",                                                                                     // 28
+      hard: "/tasks/4.png"                                                                                      // 28
+    }                                                                                                           // 28
   }                                                                                                             // 26
 }, {                                                                                                            // 24
-  _id: "4",                                                                                                     // 29
-  data: {                                                                                                       // 30
-    taskPath: "/tasks/4.png",                                                                                   // 30
-    correctAnswer: 0.54,                                                                                        // 30
-    difficulty: "easy"                                                                                          // 30
-  }                                                                                                             // 30
-}]); /*                                                                                                         // 28
+  _id: "3",                                                                                                     // 33
+  data: {                                                                                                       // 34
+    correctAnswer: 1.0,                                                                                         // 35
+    difficultyPath: {                                                                                           // 36
+      easy: "/tasks/5.png",                                                                                     // 36
+      hard: "/tasks/6.png"                                                                                      // 36
+    }                                                                                                           // 36
+  }                                                                                                             // 34
+}]); /*                                                                                                         // 32
      Creating dummy players data: this will be provided to us by netwise                                        //
      */ //create empty list of players                                                                          //
                                                                                                                 //
                                                                                                                 //
-var nPlayers = 3;                                                                                               // 38
-var players = []; //fill the list with random players information                                               // 39
+var nPlayers = 3;                                                                                               // 45
+var players = []; //fill the list with random players information                                               // 46
                                                                                                                 //
-_.times(nPlayers, function (i) {                                                                                // 41
-  players.push({                                                                                                // 42
-    _id: Random.id(),                                                                                           // 43
-    createdAt: new Date(),                                                                                      // 44
-    alters: null,                                                                                               // 45
-    data: {                                                                                                     // 46
-      avatar: avatars[i],                                                                                       // 47
-      score: _.random(0, 123)                                                                                   // 48
-    }                                                                                                           // 46
-  });                                                                                                           // 42
-}); //add alters                                                                                                // 51
+_.times(nPlayers, function (i) {                                                                                // 48
+  players.push({                                                                                                // 49
+    _id: Random.id(),                                                                                           // 50
+    createdAt: new Date(),                                                                                      // 51
+    alters: null,                                                                                               // 52
+    data: {                                                                                                     // 53
+      avatar: avatars[i],                                                                                       // 54
+      score: _.random(0, 123),                                                                                  // 55
+      difficulty: Random.choice(['easy', 'hard'])                                                               // 56
+    }                                                                                                           // 53
+  });                                                                                                           // 49
+}); //add alters                                                                                                // 59
 //todo: we need to think of the network structure. What if it changes every round? how can we keep a history of the entire networks etc.
                                                                                                                 //
                                                                                                                 //
-var maxOutDegree = 2; //maximum number of out going degree (i.e., how many 'alters' the 'ego' is connected to   // 54
+var maxOutDegree = 2; //maximum number of out going degree (i.e., how many 'alters' the 'ego' is connected to   // 62
                                                                                                                 //
-players.forEach(function (player) {                                                                             // 55
-  player.alters = Array.from(new Set(_.sample(removeElement(players, player), maxOutDegree)));                  // 56
-}); //select one players at random to be the currentPlayer                                                      // 59
+players.forEach(function (player) {                                                                             // 63
+  player.alters = Array.from(new Set(_.sample(removeElement(players, player), maxOutDegree)));                  // 64
+}); //select one players at random to be the currentPlayer                                                      // 67
                                                                                                                 //
-var currentPlayer = Random.choice(players);                                                                     // 61
-/*                                                                                                              // 63
+var currentPlayer = Random.choice(players);                                                                     // 69
+/*                                                                                                              // 71
 Creating dummy round data: this will be created at the initiation of the game                                   //
 TODO: this round structure I do not like. The main unit of analysis is the user per round  for example:         //
     Players might have a different task for the same round                                                      //
@@ -461,47 +637,46 @@ TODO: this round structure I do not like. The main unit of analysis is the user 
     Therefore: we need better PlayerRound data structure                                                        //
     For now: I'll just assume that the Rounds object is for the current player (filtered)                       //
 */var nRounds = 3; //the number of rounds in this game                                                          //
-//stages per round                                                                                              // 74
+//stages per round                                                                                              // 82
                                                                                                                 //
 var stages = ["initial", "interactive", "outcome"]; //const currentStage = Random.choice(stages);//random stage
                                                                                                                 //
-var currentStage = stages[0];                                                                                   // 77
-var rounds = [];                                                                                                // 78
+var currentStage = stages[0];                                                                                   // 85
+var rounds = [];                                                                                                // 86
                                                                                                                 //
-_.times(nRounds, function (i) {                                                                                 // 79
-  rounds.push({                                                                                                 // 80
-    _id: i,                                                                                                     // 81
-    createdAt: new Date(),                                                                                      // 82
-    stages: stages,                                                                                             // 83
-    currentStage: currentStage,                                                                                 // 84
-    data: {                                                                                                     // 85
-      task: Tasks[i]                                                                                            // 85
-    }                                                                                                           // 85
-  });                                                                                                           // 80
-}); //TODO: can treatment be an array to describe factor experimental design?                                   // 87
-//Imagine we have two factors: number of players [high, mid, low] and network status [static,dynamic]           // 90
+_.times(nRounds, function (i) {                                                                                 // 87
+  rounds.push({                                                                                                 // 88
+    _id: i,                                                                                                     // 89
+    createdAt: new Date(),                                                                                      // 90
+    stages: stages,                                                                                             // 91
+    currentStage: currentStage,                                                                                 // 92
+    task: Tasks[i],                                                                                             // 93
+    data: {}                                                                                                    // 94
+  });                                                                                                           // 88
+}); //TODO: can treatment be an array to describe factor experimental design?                                   // 96
+//Imagine we have two factors: number of players [high, mid, low] and network status [static,dynamic]           // 99
 //Then we will have 6 treatments: [high,static], [high, dynamic], [mid,static],[mid,dynamic],[low,static],[low,dynamic]
-//notice that the choice of high/low effects the recruitment of participants (number of players)                // 92
-//However static/dynamic effects the stage 'round outcome'                                                      // 93
-//It makes sense that in the round outcome I just have to check static/dynamic without checking                 // 94
+//notice that the choice of high/low effects the recruitment of participants (number of players)                // 101
+//However static/dynamic effects the stage 'round outcome'                                                      // 102
+//It makes sense that in the round outcome I just have to check static/dynamic without checking                 // 103
 //whether the number of players is high/low .. also, at recruitment, I should be able to specify the number of people I want, regardless of static/dynamic
                                                                                                                 //
                                                                                                                 //
-var game = {                                                                                                    // 96
-  _id: Random.id(),                                                                                             // 97
-  treatments: [],                                                                                               // 98
-  players: players,                                                                                             // 99
-  rounds: rounds,                                                                                               // 100
-  currentRoundId: _.random(0, nRounds - 1)                                                                      // 101
-};                                                                                                              // 96
+var game = {                                                                                                    // 105
+  _id: Random.id(),                                                                                             // 106
+  treatments: [],                                                                                               // 107
+  players: players,                                                                                             // 108
+  rounds: rounds,                                                                                               // 109
+  currentRoundId: _.random(0, nRounds - 1)                                                                      // 110
+};                                                                                                              // 105
                                                                                                                 //
-//Helper functions to create the dummy data                                                                     // 104
-//function to remove element from an array in an non-mutable way                                                // 105
-function removeElement(array, element) {                                                                        // 106
-  return array.filter(function (e) {                                                                            // 107
-    return e !== element;                                                                                       // 107
-  });                                                                                                           // 107
-}                                                                                                               // 108
+//Helper functions to create the dummy data                                                                     // 113
+//function to remove element from an array in an non-mutable way                                                // 114
+function removeElement(array, element) {                                                                        // 115
+  return array.filter(function (e) {                                                                            // 116
+    return e !== element;                                                                                       // 116
+  });                                                                                                           // 116
+}                                                                                                               // 117
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }},"pages":{"Round.jsx":function(require,exports,module){
@@ -587,11 +762,12 @@ var Round = function (_React$Component) {                                       
           currentPlayer: currentPlayer                                                                          // 17
         }),                                                                                                     // 17
         React.createElement(Task, {                                                                             // 19
-          task: currentRound.data.task,                                                                         // 20
-          stage: currentRound.currentStage                                                                      // 21
+          task: currentRound.task,                                                                              // 20
+          stage: currentRound.currentStage,                                                                     // 21
+          currentPlayer: currentPlayer                                                                          // 22
         })                                                                                                      // 19
       );                                                                                                        // 13
-    }                                                                                                           // 26
+    }                                                                                                           // 27
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //
