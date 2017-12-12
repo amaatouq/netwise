@@ -397,61 +397,90 @@ module.watch(require("react"), {                                                
     React = v;                                                                                                  // 1
   }                                                                                                             // 1
 }, 0);                                                                                                          // 1
+module.watch(require("rc-slider/assets/index.css"));                                                            // 1
+var Slider = void 0;                                                                                            // 1
+module.watch(require("rc-slider"), {                                                                            // 1
+  "default": function (v) {                                                                                     // 1
+    Slider = v;                                                                                                 // 1
+  }                                                                                                             // 1
+}, 1);                                                                                                          // 1
                                                                                                                 //
 var TaskResponse = function (_React$Component) {                                                                //
   (0, _inherits3.default)(TaskResponse, _React$Component);                                                      //
                                                                                                                 //
-  function TaskResponse(props, context) {                                                                       // 8
-    (0, _classCallCheck3.default)(this, TaskResponse);                                                          // 8
+  function TaskResponse(props, context) {                                                                       // 11
+    (0, _classCallCheck3.default)(this, TaskResponse);                                                          // 11
                                                                                                                 //
-    var _this = (0, _possibleConstructorReturn3.default)(this, _React$Component.call(this, props, context));    // 8
+    var _this = (0, _possibleConstructorReturn3.default)(this, _React$Component.call(this, props, context));    // 11
                                                                                                                 //
-    _this.handleChangeStart = function () {                                                                     // 8
-      console.log('Change event started');                                                                      // 16
-    };                                                                                                          // 17
+    _this.handleChangeStart = function () {                                                                     // 11
+      console.log('Change event started');                                                                      // 19
+    };                                                                                                          // 20
                                                                                                                 //
-    _this.handleChange = function (event) {                                                                     // 8
-      _this.setState({                                                                                          // 20
-        value: event.target.value                                                                               // 20
-      });                                                                                                       // 20
-    };                                                                                                          // 21
+    _this.handleChange = function (value) {                                                                     // 11
+      _this.setState({                                                                                          // 23
+        value: value                                                                                            // 23
+      });                                                                                                       // 23
+    };                                                                                                          // 24
                                                                                                                 //
-    _this.handleChangeComplete = function () {                                                                  // 8
-      console.log('Change event completed'); //here log the data to the database                                // 24
-    };                                                                                                          // 26
+    _this.handleChangeComplete = function () {                                                                  // 11
+      console.log('Change event completed'); //here log the data to the database                                // 27
+    };                                                                                                          // 29
                                                                                                                 //
-    _this.state = {                                                                                             // 10
-      value: ""                                                                                                 // 11
-    };                                                                                                          // 10
-    return _this;                                                                                               // 8
-  }                                                                                                             // 13
+    _this.state = {                                                                                             // 13
+      value: null                                                                                               // 14
+    };                                                                                                          // 13
+    return _this;                                                                                               // 11
+  }                                                                                                             // 16
                                                                                                                 //
   TaskResponse.prototype.render = function () {                                                                 //
     function render() {                                                                                         //
-      var value = this.state.value;                                                                             // 28
-      return React.createElement(                                                                               // 30
-        "div",                                                                                                  // 31
-        {                                                                                                       // 31
-          className: "slider"                                                                                   // 31
-        },                                                                                                      // 31
-        React.createElement("input", {                                                                          // 32
-          id: "typeinp",                                                                                        // 33
-          type: "range",                                                                                        // 34
-          min: "0",                                                                                             // 35
-          max: "1",                                                                                             // 35
-          value: this.state.value,                                                                              // 36
-          onChange: this.handleChange,                                                                          // 37
-          step: "0.01"                                                                                          // 38
-        }),                                                                                                     // 32
-        React.createElement(                                                                                    // 39
-          "div",                                                                                                // 39
-          {                                                                                                     // 39
-            className: "value"                                                                                  // 39
+      var style = {                                                                                             // 32
+        width: 400,                                                                                             // 32
+        margin: 50                                                                                              // 32
+      };                                                                                                        // 32
+      var marks = {                                                                                             // 33
+        0: React.createElement(                                                                                 // 34
+          "strong",                                                                                             // 34
+          null,                                                                                                 // 34
+          "0"                                                                                                   // 34
+        ),                                                                                                      // 34
+        .25: '0.25',                                                                                            // 35
+        0.5: '0.5',                                                                                             // 36
+        0.75: '0.75',                                                                                           // 37
+        1: {                                                                                                    // 38
+          style: {                                                                                              // 39
+            color: 'red'                                                                                        // 40
           },                                                                                                    // 39
-          value                                                                                                 // 39
-        )                                                                                                       // 39
-      );                                                                                                        // 31
-    }                                                                                                           // 42
+          label: React.createElement(                                                                           // 42
+            "strong",                                                                                           // 42
+            null,                                                                                               // 42
+            "1"                                                                                                 // 42
+          )                                                                                                     // 42
+        }                                                                                                       // 38
+      };                                                                                                        // 33
+      var value = this.state.value;                                                                             // 31
+      return React.createElement(                                                                               // 46
+        "div",                                                                                                  // 47
+        {                                                                                                       // 47
+          style: style                                                                                          // 47
+        },                                                                                                      // 47
+        React.createElement(                                                                                    // 48
+          "p",                                                                                                  // 48
+          null,                                                                                                 // 48
+          "Your current guess of the correlation is: ",                                                         // 48
+          this.state.value                                                                                      // 48
+        ),                                                                                                      // 48
+        React.createElement(Slider, {                                                                           // 49
+          min: 0,                                                                                               // 49
+          max: 1,                                                                                               // 49
+          marks: marks,                                                                                         // 49
+          step: 0.01,                                                                                           // 49
+          onChange: this.handleChange,                                                                          // 49
+          defaultValue: null                                                                                    // 49
+        })                                                                                                      // 49
+      );                                                                                                        // 47
+    }                                                                                                           // 52
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //
@@ -624,11 +653,11 @@ players.forEach(function (player) {                                             
 var currentPlayer = Random.choice(players);                                                                     // 69
 /*                                                                                                              // 71
 Creating dummy round data: this will be created at the initiation of the game                                   //
-TODO: this round structure I do not like. The main unit of analysis is the user per round  for example:         //
-    Players might have a different task for the same round                                                      //
-    We want to know the answer for each player per round                                                        //
-    We want to know the alters for each player per round                                                        //
-    We want to know the  answer of alters for the current round                                                 //
+TODO: this round structure I do not like. The main unit of analysis is the player-per-round for example:        //
+    Players might have a different task for the same round (it is currently solved based on how we created the task & player.data.difficulty)
+    We want to know the answer for each player per round (their initial estimate / contribution & the updated one in the case of guess the correlation)
+    We want to know the alters for each player per round (the network might change every round)                 //
+    We want to know the  answer of alters for the current round (for the social exposure)                       //
     What about if different player types (dictator, recipient) have different number of stages?                 //
     Therefore: we need better PlayerRound data structure                                                        //
     For now: I'll just assume that the Rounds object is for the current player (filtered)                       //

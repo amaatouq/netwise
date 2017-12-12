@@ -70,11 +70,11 @@ export const currentPlayer = Random.choice(players);
 
 /*
 Creating dummy round data: this will be created at the initiation of the game
-TODO: this round structure I do not like. The main unit of analysis is the user per round  for example:
-    Players might have a different task for the same round
-    We want to know the answer for each player per round
-    We want to know the alters for each player per round
-    We want to know the  answer of alters for the current round
+TODO: this round structure I do not like. The main unit of analysis is the player-per-round for example:
+    Players might have a different task for the same round (it is currently solved based on how we created the task & player.data.difficulty)
+    We want to know the answer for each player per round (their initial estimate / contribution & the updated one in the case of guess the correlation)
+    We want to know the alters for each player per round (the network might change every round)
+    We want to know the  answer of alters for the current round (for the social exposure)
     What about if different player types (dictator, recipient) have different number of stages?
     Therefore: we need better PlayerRound data structure
     For now: I'll just assume that the Rounds object is for the current player (filtered)
