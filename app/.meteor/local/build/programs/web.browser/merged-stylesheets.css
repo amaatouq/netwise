@@ -534,17 +534,21 @@ footer {
   justify-content: center;
 }
 
-.game-temp {
+.round {
   font-stretch: ultra-expanded;
   height: 100%;
 }
 
-.game-temp .round-plot {
-  display: flex;
-  height: 100%;
+.round .task {
+  align-items: center;
+  padding-top: 2rem;
 }
 
-.game-temp .round-plot .context {
+.round .task .task-image {
+  width: 60rem;
+}
+
+.round .player-profile {
   display: flex;
   flex-direction: column;
   width: 20rem;
@@ -554,26 +558,22 @@ footer {
   padding-top: 2rem;
 }
 
-.game-temp .round-plot .context .player-icon {
+.round .player-profile .profile-avatar {
   width: 10rem;
   height: 10rem;
   margin-bottom: 2rem;
 }
 
-.game-temp .round-plot .context .score {
+.round .player-profile .profile-score {
   text-align: center;
 }
 
-.game-temp .round-plot .context .score span {
+.round .player-profile .profile-score span {
   font-size: 2em;
   font-weight: bold;
 }
 
-.game-temp .round-plot .task {
-  flex-grow: 1;
-}
-
-.game-temp .round-plot .social {
+.round .social {
   background-color: #f5f5f5;
   width: 40rem;
 }

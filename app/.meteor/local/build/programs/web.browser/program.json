@@ -78,9 +78,9 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/packages/modules.js?hash=609429319b1a6391a52cf56602aa93f847d8a389",
-      "size": 5723568,
-      "hash": "609429319b1a6391a52cf56602aa93f847d8a389"
+      "url": "/packages/modules.js?hash=a19f333c04c816a4d91b6149836b0134691699a1",
+      "size": 5723818,
+      "hash": "a19f333c04c816a4d91b6149836b0134691699a1"
     },
     {
       "path": "packages/ecmascript-runtime.js",
@@ -545,22 +545,85 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/app/app.js?hash=23d832654aca45442c8cf90028cdcd254e7ae6b5",
+      "url": "/app/app.js?hash=cc8a67ae616a7bee6ad0e2fbead522b271102af8",
       "sourceMap": "app/app.js.map",
-      "sourceMapUrl": "/app/23d832654aca45442c8cf90028cdcd254e7ae6b5.map",
-      "size": 76256,
-      "hash": "23d832654aca45442c8cf90028cdcd254e7ae6b5"
+      "sourceMapUrl": "/app/cc8a67ae616a7bee6ad0e2fbead522b271102af8.map",
+      "size": 70797,
+      "hash": "cc8a67ae616a7bee6ad0e2fbead522b271102af8"
     },
     {
       "path": "merged-stylesheets.css",
       "where": "client",
       "type": "css",
       "cacheable": true,
-      "url": "/merged-stylesheets.css?hash=1134c2bb90d6aedadb7f73a84a2613c27e4f3428",
+      "url": "/merged-stylesheets.css?hash=0c91fb9117051e0ee8ac6f848b65f63faaec5ce1",
       "sourceMap": "merged-stylesheets.css.map",
-      "sourceMapUrl": "/1134c2bb90d6aedadb7f73a84a2613c27e4f3428.map",
-      "size": 9241,
-      "hash": "1134c2bb90d6aedadb7f73a84a2613c27e4f3428"
+      "sourceMapUrl": "/0c91fb9117051e0ee8ac6f848b65f63faaec5ce1.map",
+      "size": 9201,
+      "hash": "0c91fb9117051e0ee8ac6f848b65f63faaec5ce1"
+    },
+    {
+      "path": "app/avatars/bee.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/avatars/bee.png",
+      "size": 2093,
+      "hash": "eed4de4b551449773d0d1ebcf05fb7ee709735a2"
+    },
+    {
+      "path": "app/avatars/bird.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/avatars/bird.png",
+      "size": 2506,
+      "hash": "3dd5b0af57c55eee522d2248f92cea6a37efdb87"
+    },
+    {
+      "path": "app/avatars/cat.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/avatars/cat.png",
+      "size": 2207,
+      "hash": "ea861e67ae58d6ff486f4ce1ce899b672cda73f3"
+    },
+    {
+      "path": "app/avatars/cow.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/avatars/cow.png",
+      "size": 2572,
+      "hash": "13cdaa88e75e3e0c67fadbb5cc1153e33d13f3f7"
+    },
+    {
+      "path": "app/avatars/elephant.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/avatars/elephant.png",
+      "size": 2791,
+      "hash": "c63559b66a52ec961d762b1618109bc304c50674"
+    },
+    {
+      "path": "app/avatars/lion.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/avatars/lion.png",
+      "size": 3515,
+      "hash": "a21e5b446d3f7166e197df83d05fb7a0f0dd944e"
+    },
+    {
+      "path": "app/avatars/pig.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/avatars/pig.png",
+      "size": 3403,
+      "hash": "dd86471b2fc82936ec4f1d1a3556f7cbf4f1bc8f"
     },
     {
       "path": "app/img/404.svg",
@@ -579,6 +642,96 @@
       "url": "/img/bg-footer.svg",
       "size": 61109,
       "hash": "ec1fa7349123e2783d3173612f367158b05c61e6"
+    },
+    {
+      "path": "app/tasks/1.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/1.png",
+      "size": 146955,
+      "hash": "a75b53d24c3fd0c935a94ffaef5b5d33571bf12f"
+    },
+    {
+      "path": "app/tasks/10.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/10.png",
+      "size": 48048,
+      "hash": "d767c618c3f8f45c431ca2ee64f091e3cbd06eb8"
+    },
+    {
+      "path": "app/tasks/2.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/2.png",
+      "size": 142871,
+      "hash": "aff2594cb6bf4bbb98bb84ff688df268edfff005"
+    },
+    {
+      "path": "app/tasks/3.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/3.png",
+      "size": 140779,
+      "hash": "42fd5cb9abe41bc5ef97209017b9119d24d3f95a"
+    },
+    {
+      "path": "app/tasks/4.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/4.png",
+      "size": 158907,
+      "hash": "5f3441b6abadc0f084a8ef488f7c7ecd8ac7de74"
+    },
+    {
+      "path": "app/tasks/5.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/5.png",
+      "size": 154845,
+      "hash": "f43c23b7e2e40506f3a3f933faf115889f7eb6c7"
+    },
+    {
+      "path": "app/tasks/6.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/6.png",
+      "size": 156688,
+      "hash": "10c741358cb52fe9549913f08b5c95f42f969d64"
+    },
+    {
+      "path": "app/tasks/7.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/7.png",
+      "size": 142529,
+      "hash": "f4df5df14335eae3dec4b0a68a040778c649cf07"
+    },
+    {
+      "path": "app/tasks/8.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/8.png",
+      "size": 163172,
+      "hash": "564b0ce3e1dd846c371e78efcceaad8d0a60d2b3"
+    },
+    {
+      "path": "app/tasks/9.png",
+      "where": "client",
+      "type": "asset",
+      "cacheable": false,
+      "url": "/tasks/9.png",
+      "size": 149430,
+      "hash": "1ae1af52045599552c43827af8b8495d86abe074"
     },
     {
       "path": "head.html",

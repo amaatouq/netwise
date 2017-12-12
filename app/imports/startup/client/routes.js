@@ -2,7 +2,7 @@ import { Route, Router } from "react-router";
 import { createBrowserHistory } from "history";
 import React from "react";
 
-import GameTemp from "../../ui/games/task/GameTemp";
+import Round from "../../ui/pages/Round";
 
 const browserHistory = createBrowserHistory();
 export const renderRoutes = () => (
@@ -14,7 +14,7 @@ export const renderRoutes = () => (
 
       <main>
         {/* <Route path="/" component={Home} /> */}
-        <Route path="/" component={GameTemp} />
+        <Route path="/" component={Round} />
       </main>
 
       <footer>footer</footer>
