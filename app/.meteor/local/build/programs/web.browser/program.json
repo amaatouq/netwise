@@ -78,9 +78,9 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/packages/modules.js?hash=33b0169d62f70e97b4a70d04dd13784c52ebd515",
-      "size": 5935309,
-      "hash": "33b0169d62f70e97b4a70d04dd13784c52ebd515"
+      "url": "/packages/modules.js?hash=a19f333c04c816a4d91b6149836b0134691699a1",
+      "size": 5723818,
+      "hash": "a19f333c04c816a4d91b6149836b0134691699a1"
     },
     {
       "path": "packages/ecmascript-runtime.js",
@@ -545,11 +545,11 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/app/app.js?hash=f7f0a0c8f0d2b1d5cf240adcd4f53b27d5625ebb",
+      "url": "/app/app.js?hash=952f60fd3581c76641180aee2227771c88b97c68",
       "sourceMap": "app/app.js.map",
-      "sourceMapUrl": "/app/f7f0a0c8f0d2b1d5cf240adcd4f53b27d5625ebb.map",
-      "size": 90919,
-      "hash": "f7f0a0c8f0d2b1d5cf240adcd4f53b27d5625ebb"
+      "sourceMapUrl": "/app/952f60fd3581c76641180aee2227771c88b97c68.map",
+      "size": 90455,
+      "hash": "952f60fd3581c76641180aee2227771c88b97c68"
     },
     {
       "path": "merged-stylesheets.css",

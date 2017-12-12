@@ -74,6 +74,7 @@ TODO: this round structure I do not like. The main unit of analysis is the user 
     Players might have a different task for the same round
     We want to know the answer for each player per round
     We want to know the alters for each player per round
+    We want to know the  answer of alters for the current round
     What about if different player types (dictator, recipient) have different number of stages?
     Therefore: we need better PlayerRound data structure
     For now: I'll just assume that the Rounds object is for the current player (filtered)

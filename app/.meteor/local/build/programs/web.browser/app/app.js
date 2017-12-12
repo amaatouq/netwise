@@ -273,24 +273,24 @@ var Task = function (_React$Component) {                                        
                                                                                                                 //
   Task.prototype.render = function () {                                                                         //
     function render() {                                                                                         //
-      var taskData = this.props.task.data;                                                                      // 9
+      var taskData = this.props.task.data;                                                                      // 11
       var taskPath = taskData.difficultyPath[this.props.currentPlayer.data.difficulty]; //get user specific task difficulty
                                                                                                                 //
-      var stage = this.props.stage;                                                                             // 11
-      console.log('currentPlayer.difficulty', this.props.currentPlayer.data.difficulty);                        // 12
-      console.log("task from inside task", taskData);                                                           // 13
-      console.log("stage from inside task", stage);                                                             // 14
-      return React.createElement(                                                                               // 16
-        "div",                                                                                                  // 17
-        {                                                                                                       // 17
-          className: "task"                                                                                     // 17
-        },                                                                                                      // 17
-        React.createElement(TaskStimulus, {                                                                     // 18
-          taskParam: taskPath                                                                                   // 18
-        }),                                                                                                     // 18
+      var stage = this.props.stage;                                                                             // 13
+      console.log('currentPlayer.difficulty', this.props.currentPlayer.data.difficulty);                        // 14
+      console.log("task from inside task", taskData);                                                           // 15
+      console.log("stage from inside task", stage);                                                             // 16
+      return React.createElement(                                                                               // 18
+        "div",                                                                                                  // 19
+        {                                                                                                       // 19
+          className: "task"                                                                                     // 19
+        },                                                                                                      // 19
+        React.createElement(TaskStimulus, {                                                                     // 20
+          taskParam: taskPath                                                                                   // 20
+        }),                                                                                                     // 20
         stage !== "outcome" ? React.createElement(TaskResponse, null) : React.createElement(TaskFeedback, null)
-      );                                                                                                        // 17
-    }                                                                                                           // 22
+      );                                                                                                        // 19
+    }                                                                                                           // 24
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //
@@ -298,12 +298,12 @@ var Task = function (_React$Component) {                                        
   return Task;                                                                                                  //
 }(React.Component);                                                                                             //
                                                                                                                 //
-Task.propTypes = {                                                                                              // 25
-  // Current round index                                                                                        // 26
-  task: PropTypes.object.isRequired,                                                                            // 27
-  stage: PropTypes.string.isRequired,                                                                           // 28
-  currentPlayer: PropTypes.object.isRequired                                                                    // 29
-};                                                                                                              // 25
+Task.propTypes = {                                                                                              // 27
+  // Current round index                                                                                        // 28
+  task: PropTypes.object.isRequired,                                                                            // 29
+  stage: PropTypes.string.isRequired,                                                                           // 30
+  currentPlayer: PropTypes.object.isRequired                                                                    // 31
+};                                                                                                              // 27
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"TaskFeedback.jsx":function(require,exports,module){
@@ -397,57 +397,52 @@ module.watch(require("react"), {                                                
     React = v;                                                                                                  // 1
   }                                                                                                             // 1
 }, 0);                                                                                                          // 1
-var Slider = void 0;                                                                                            // 1
-module.watch(require("react-rangeslider"), {                                                                    // 1
-  "default": function (v) {                                                                                     // 1
-    Slider = v;                                                                                                 // 1
-  }                                                                                                             // 1
-}, 1);                                                                                                          // 1
                                                                                                                 //
 var TaskResponse = function (_React$Component) {                                                                //
   (0, _inherits3.default)(TaskResponse, _React$Component);                                                      //
                                                                                                                 //
-  function TaskResponse(props, context) {                                                                       // 5
-    (0, _classCallCheck3.default)(this, TaskResponse);                                                          // 5
+  function TaskResponse(props, context) {                                                                       // 8
+    (0, _classCallCheck3.default)(this, TaskResponse);                                                          // 8
                                                                                                                 //
-    var _this = (0, _possibleConstructorReturn3.default)(this, _React$Component.call(this, props, context));    // 5
+    var _this = (0, _possibleConstructorReturn3.default)(this, _React$Component.call(this, props, context));    // 8
                                                                                                                 //
-    _this.handleChangeStart = function () {                                                                     // 5
-      console.log('Change event started');                                                                      // 13
-    };                                                                                                          // 14
+    _this.handleChangeStart = function () {                                                                     // 8
+      console.log('Change event started');                                                                      // 16
+    };                                                                                                          // 17
                                                                                                                 //
-    _this.handleChange = function (value) {                                                                     // 5
-      _this.setState({                                                                                          // 17
-        value: value                                                                                            // 18
-      });                                                                                                       // 17
-    };                                                                                                          // 20
+    _this.handleChange = function (event) {                                                                     // 8
+      _this.setState({                                                                                          // 20
+        value: event.target.value                                                                               // 20
+      });                                                                                                       // 20
+    };                                                                                                          // 21
                                                                                                                 //
-    _this.handleChangeComplete = function () {                                                                  // 5
-      console.log('Change event completed'); //here log the data to the database                                // 23
-    };                                                                                                          // 25
+    _this.handleChangeComplete = function () {                                                                  // 8
+      console.log('Change event completed'); //here log the data to the database                                // 24
+    };                                                                                                          // 26
                                                                                                                 //
-    _this.state = {                                                                                             // 7
-      value: 50                                                                                                 // 8
-    };                                                                                                          // 7
-    return _this;                                                                                               // 5
-  }                                                                                                             // 10
+    _this.state = {                                                                                             // 10
+      value: ""                                                                                                 // 11
+    };                                                                                                          // 10
+    return _this;                                                                                               // 8
+  }                                                                                                             // 13
                                                                                                                 //
   TaskResponse.prototype.render = function () {                                                                 //
     function render() {                                                                                         //
-      var value = this.state.value;                                                                             // 27
-      return React.createElement(                                                                               // 29
-        "div",                                                                                                  // 30
-        {                                                                                                       // 30
-          className: "slider"                                                                                   // 30
-        },                                                                                                      // 30
-        React.createElement(Slider, {                                                                           // 31
-          min: 0,                                                                                               // 32
-          max: 100,                                                                                             // 33
-          value: value,                                                                                         // 34
-          onChangeStart: this.handleChangeStart,                                                                // 35
-          onChange: this.handleChange,                                                                          // 36
-          onChangeComplete: this.handleChangeComplete                                                           // 37
-        }),                                                                                                     // 31
+      var value = this.state.value;                                                                             // 28
+      return React.createElement(                                                                               // 30
+        "div",                                                                                                  // 31
+        {                                                                                                       // 31
+          className: "slider"                                                                                   // 31
+        },                                                                                                      // 31
+        React.createElement("input", {                                                                          // 32
+          id: "typeinp",                                                                                        // 33
+          type: "range",                                                                                        // 34
+          min: "0",                                                                                             // 35
+          max: "1",                                                                                             // 35
+          value: this.state.value,                                                                              // 36
+          onChange: this.handleChange,                                                                          // 37
+          step: "0.01"                                                                                          // 38
+        }),                                                                                                     // 32
         React.createElement(                                                                                    // 39
           "div",                                                                                                // 39
           {                                                                                                     // 39
@@ -455,7 +450,7 @@ var TaskResponse = function (_React$Component) {                                
           },                                                                                                    // 39
           value                                                                                                 // 39
         )                                                                                                       // 39
-      );                                                                                                        // 30
+      );                                                                                                        // 31
     }                                                                                                           // 42
                                                                                                                 //
     return render;                                                                                              //
@@ -633,50 +628,51 @@ TODO: this round structure I do not like. The main unit of analysis is the user 
     Players might have a different task for the same round                                                      //
     We want to know the answer for each player per round                                                        //
     We want to know the alters for each player per round                                                        //
+    We want to know the  answer of alters for the current round                                                 //
     What about if different player types (dictator, recipient) have different number of stages?                 //
     Therefore: we need better PlayerRound data structure                                                        //
     For now: I'll just assume that the Rounds object is for the current player (filtered)                       //
 */var nRounds = 3; //the number of rounds in this game                                                          //
-//stages per round                                                                                              // 82
+//stages per round                                                                                              // 83
                                                                                                                 //
 var stages = ["initial", "interactive", "outcome"]; //const currentStage = Random.choice(stages);//random stage
                                                                                                                 //
-var currentStage = stages[0];                                                                                   // 85
-var rounds = [];                                                                                                // 86
+var currentStage = stages[0];                                                                                   // 86
+var rounds = [];                                                                                                // 87
                                                                                                                 //
-_.times(nRounds, function (i) {                                                                                 // 87
-  rounds.push({                                                                                                 // 88
-    _id: i,                                                                                                     // 89
-    createdAt: new Date(),                                                                                      // 90
-    stages: stages,                                                                                             // 91
-    currentStage: currentStage,                                                                                 // 92
-    task: Tasks[i],                                                                                             // 93
-    data: {}                                                                                                    // 94
-  });                                                                                                           // 88
-}); //TODO: can treatment be an array to describe factor experimental design?                                   // 96
-//Imagine we have two factors: number of players [high, mid, low] and network status [static,dynamic]           // 99
+_.times(nRounds, function (i) {                                                                                 // 88
+  rounds.push({                                                                                                 // 89
+    _id: i,                                                                                                     // 90
+    createdAt: new Date(),                                                                                      // 91
+    stages: stages,                                                                                             // 92
+    currentStage: currentStage,                                                                                 // 93
+    task: Tasks[i],                                                                                             // 94
+    data: {}                                                                                                    // 95
+  });                                                                                                           // 89
+}); //TODO: can treatment be an array to describe factor experimental design?                                   // 97
+//Imagine we have two factors: number of players [high, mid, low] and network status [static,dynamic]           // 100
 //Then we will have 6 treatments: [high,static], [high, dynamic], [mid,static],[mid,dynamic],[low,static],[low,dynamic]
-//notice that the choice of high/low effects the recruitment of participants (number of players)                // 101
-//However static/dynamic effects the stage 'round outcome'                                                      // 102
-//It makes sense that in the round outcome I just have to check static/dynamic without checking                 // 103
+//notice that the choice of high/low effects the recruitment of participants (number of players)                // 102
+//However static/dynamic effects the stage 'round outcome'                                                      // 103
+//It makes sense that in the round outcome I just have to check static/dynamic without checking                 // 104
 //whether the number of players is high/low .. also, at recruitment, I should be able to specify the number of people I want, regardless of static/dynamic
                                                                                                                 //
                                                                                                                 //
-var game = {                                                                                                    // 105
-  _id: Random.id(),                                                                                             // 106
-  treatments: [],                                                                                               // 107
-  players: players,                                                                                             // 108
-  rounds: rounds,                                                                                               // 109
-  currentRoundId: _.random(0, nRounds - 1)                                                                      // 110
-};                                                                                                              // 105
+var game = {                                                                                                    // 106
+  _id: Random.id(),                                                                                             // 107
+  treatments: [],                                                                                               // 108
+  players: players,                                                                                             // 109
+  rounds: rounds,                                                                                               // 110
+  currentRoundId: _.random(0, nRounds - 1)                                                                      // 111
+};                                                                                                              // 106
                                                                                                                 //
-//Helper functions to create the dummy data                                                                     // 113
-//function to remove element from an array in an non-mutable way                                                // 114
-function removeElement(array, element) {                                                                        // 115
-  return array.filter(function (e) {                                                                            // 116
-    return e !== element;                                                                                       // 116
-  });                                                                                                           // 116
-}                                                                                                               // 117
+//Helper functions to create the dummy data                                                                     // 114
+//function to remove element from an array in an non-mutable way                                                // 115
+function removeElement(array, element) {                                                                        // 116
+  return array.filter(function (e) {                                                                            // 117
+    return e !== element;                                                                                       // 117
+  });                                                                                                           // 117
+}                                                                                                               // 118
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }},"pages":{"Round.jsx":function(require,exports,module){

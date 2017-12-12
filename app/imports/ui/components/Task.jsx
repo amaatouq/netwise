@@ -4,6 +4,8 @@ import TaskStimulus from "./TaskStimulus";
 import TaskResponse from './TaskResponse';
 import TaskFeedback from './TaskFeedback'
 
+
+//TODO: is there a need to wrap TaskStimulus and TaskResponse/TaskFeedback with this component? or should we do all the conditions at the Round.jsx?
 export default class Task extends React.Component {
   render() {
     const taskData = this.props.task.data;
