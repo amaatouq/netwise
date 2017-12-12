@@ -10,9 +10,9 @@ export default class Task extends React.Component {
     console.log("stage from inside task", stage);
 
     return (
-      <main className="task">
+      <div className="task">
         <TaskStimulus task={task} />
-      </main>
+      </div>
     );
   }
 }

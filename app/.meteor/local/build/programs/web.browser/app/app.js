@@ -173,24 +173,24 @@ var PlayerProfile = function (_React$Component) {                               
           "ID:",                                                                                                // 13
           currentPlayer._id                                                                                     // 13
         ),                                                                                                      // 13
-        React.createElement(                                                                                    // 20
-          "div",                                                                                                // 20
-          {                                                                                                     // 20
-            className: "profile-score"                                                                          // 20
-          },                                                                                                    // 20
-          React.createElement(                                                                                  // 21
-            "h4",                                                                                               // 21
-            null,                                                                                               // 21
-            "Total score"                                                                                       // 21
-          ),                                                                                                    // 21
-          React.createElement(                                                                                  // 22
-            "span",                                                                                             // 22
-            null,                                                                                               // 22
-            currentPlayer.data.score                                                                            // 22
-          )                                                                                                     // 22
-        )                                                                                                       // 20
+        React.createElement(                                                                                    // 18
+          "div",                                                                                                // 18
+          {                                                                                                     // 18
+            className: "profile-score"                                                                          // 18
+          },                                                                                                    // 18
+          React.createElement(                                                                                  // 19
+            "h4",                                                                                               // 19
+            null,                                                                                               // 19
+            "Total score"                                                                                       // 19
+          ),                                                                                                    // 19
+          React.createElement(                                                                                  // 20
+            "span",                                                                                             // 20
+            null,                                                                                               // 20
+            currentPlayer.data.score                                                                            // 20
+          )                                                                                                     // 20
+        )                                                                                                       // 18
       );                                                                                                        // 9
-    }                                                                                                           // 26
+    }                                                                                                           // 24
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //
@@ -198,11 +198,11 @@ var PlayerProfile = function (_React$Component) {                               
   return PlayerProfile;                                                                                         //
 }(React.Component);                                                                                             //
                                                                                                                 //
-PlayerProfile.propTypes = {                                                                                     // 29
-  // Current player with all the attribute about the player:                                                    // 30
-  //Things include: Avatar, Score, Bonus, Gender Team membership (Whether came from Mturk or Crowdflower)       // 31
-  currentPlayer: PropTypes.object.isRequired                                                                    // 32
-};                                                                                                              // 29
+PlayerProfile.propTypes = {                                                                                     // 27
+  // Current player with all the attribute about the player:                                                    // 28
+  //Things include: Avatar, Score, Bonus, Gender Team membership (Whether came from Mturk or Crowdflower)       // 29
+  currentPlayer: PropTypes.object.isRequired                                                                    // 30
+};                                                                                                              // 27
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"Task.jsx":function(require,exports,module){
@@ -266,7 +266,7 @@ var Task = function (_React$Component) {                                        
       console.log("task from inside task", task);                                                               // 9
       console.log("stage from inside task", stage);                                                             // 10
       return React.createElement(                                                                               // 12
-        "main",                                                                                                 // 13
+        "div",                                                                                                  // 13
         {                                                                                                       // 13
           className: "task"                                                                                     // 13
         },                                                                                                      // 13
@@ -340,11 +340,15 @@ var TaskStimulus = function (_React$Component) {                                
   TaskStimulus.prototype.render = function () {                                                                 //
     function render() {                                                                                         //
       console.log("taskPath", this.props.task.data.taskPath);                                                   // 6
-      return React.createElement("img", {                                                                       // 7
-        src: this.props.task.data.taskPath,                                                                     // 7
-        className: "task-image"                                                                                 // 7
-      });                                                                                                       // 7
-    }                                                                                                           // 8
+      return React.createElement(                                                                               // 7
+        "div",                                                                                                  // 8
+        null,                                                                                                   // 8
+        React.createElement("img", {                                                                            // 9
+          src: this.props.task.data.taskPath,                                                                   // 9
+          className: "task-image"                                                                               // 9
+        })                                                                                                      // 9
+      );                                                                                                        // 8
+    }                                                                                                           // 12
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //
@@ -352,9 +356,9 @@ var TaskStimulus = function (_React$Component) {                                
   return TaskStimulus;                                                                                          //
 }(React.Component);                                                                                             //
                                                                                                                 //
-TaskStimulus.propTypes = {                                                                                      // 11
-  task: PropTypes.object                                                                                        // 12
-};                                                                                                              // 11
+TaskStimulus.propTypes = {                                                                                      // 15
+  task: PropTypes.object                                                                                        // 16
+};                                                                                                              // 15
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }},"interfaceFakeData":{"data.js":function(require,exports,module){
@@ -583,11 +587,11 @@ var Round = function (_React$Component) {                                       
           currentPlayer: currentPlayer                                                                          // 17
         }),                                                                                                     // 17
         React.createElement(Task, {                                                                             // 19
-          task: currentRound.data.task,                                                                         // 19
-          stage: currentRound.currentStage                                                                      // 19
+          task: currentRound.data.task,                                                                         // 20
+          stage: currentRound.currentStage                                                                      // 21
         })                                                                                                      // 19
       );                                                                                                        // 13
-    }                                                                                                           // 22
+    }                                                                                                           // 26
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //

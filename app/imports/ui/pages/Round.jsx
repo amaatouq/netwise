@@ -16,7 +16,11 @@ export default class Round extends React.Component {
         {/*I do not want the current player profile to update until the next round (static within round, changes across rounds)*/}
         <PlayerProfile currentPlayer={currentPlayer} />
 
-        <Task task={currentRound.data.task} stage={currentRound.currentStage} />
+          <Task
+            task={currentRound.data.task}
+            stage={currentRound.currentStage}
+          />
+        
       </div>
     );
   }

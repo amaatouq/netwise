@@ -545,22 +545,22 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/app/app.js?hash=0e93c41a69eaff4978d1e4ca95b26c0d2224de87",
+      "url": "/app/app.js?hash=55435dddae56c7e498ca3f4505f75f8027790da8",
       "sourceMap": "app/app.js.map",
-      "sourceMapUrl": "/app/0e93c41a69eaff4978d1e4ca95b26c0d2224de87.map",
-      "size": 70556,
-      "hash": "0e93c41a69eaff4978d1e4ca95b26c0d2224de87"
+      "sourceMapUrl": "/app/55435dddae56c7e498ca3f4505f75f8027790da8.map",
+      "size": 71025,
+      "hash": "55435dddae56c7e498ca3f4505f75f8027790da8"
     },
     {
       "path": "merged-stylesheets.css",
       "where": "client",
       "type": "css",
       "cacheable": true,
-      "url": "/merged-stylesheets.css?hash=0c91fb9117051e0ee8ac6f848b65f63faaec5ce1",
+      "url": "/merged-stylesheets.css?hash=c0b5d4ce1d42b5b63ea30ecea6e7e7f12f84e289",
       "sourceMap": "merged-stylesheets.css.map",
-      "sourceMapUrl": "/0c91fb9117051e0ee8ac6f848b65f63faaec5ce1.map",
-      "size": 9201,
-      "hash": "0c91fb9117051e0ee8ac6f848b65f63faaec5ce1"
+      "sourceMapUrl": "/c0b5d4ce1d42b5b63ea30ecea6e7e7f12f84e289.map",
+      "size": 9215,
+      "hash": "c0b5d4ce1d42b5b63ea30ecea6e7e7f12f84e289"
     },
     {
       "path": "app/avatars/bee.png",

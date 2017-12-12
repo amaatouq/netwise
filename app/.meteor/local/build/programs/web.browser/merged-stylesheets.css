@@ -537,15 +537,7 @@ footer {
 .round {
   font-stretch: ultra-expanded;
   height: 100%;
-}
-
-.round .task {
-  align-items: center;
-  padding-top: 2rem;
-}
-
-.round .task .task-image {
-  width: 60rem;
+  display: flex;
 }
 
 .round .player-profile {
@@ -571,6 +563,15 @@ footer {
 .round .player-profile .profile-score span {
   font-size: 2em;
   font-weight: bold;
+}
+
+.round .task {
+  flex-grow: 2;
+  align-content: center;
+}
+
+.round .task .task-image {
+  width: 60rem;
 }
 
 .round .social {
