@@ -11,7 +11,7 @@ export default class Task extends React.Component {
 
     return (
       <main className="task">
-          <TaskStimulus task={task} />
+        <TaskStimulus task={task} />
       </main>
     );
   }

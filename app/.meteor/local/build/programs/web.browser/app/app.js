@@ -339,12 +339,12 @@ var TaskStimulus = function (_React$Component) {                                
                                                                                                                 //
   TaskStimulus.prototype.render = function () {                                                                 //
     function render() {                                                                                         //
-      console.log('taskPath', this.props.task.data.taskPath);                                                   // 8
-      return React.createElement("img", {                                                                       // 9
-        src: this.props.task.data.taskPath,                                                                     // 9
-        className: "task-image"                                                                                 // 9
-      });                                                                                                       // 9
-    }                                                                                                           // 10
+      console.log("taskPath", this.props.task.data.taskPath);                                                   // 6
+      return React.createElement("img", {                                                                       // 7
+        src: this.props.task.data.taskPath,                                                                     // 7
+        className: "task-image"                                                                                 // 7
+      });                                                                                                       // 7
+    }                                                                                                           // 8
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //
@@ -352,9 +352,9 @@ var TaskStimulus = function (_React$Component) {                                
   return TaskStimulus;                                                                                          //
 }(React.Component);                                                                                             //
                                                                                                                 //
-TaskStimulus.propTypes = {                                                                                      // 14
-  task: PropTypes.object                                                                                        // 15
-};                                                                                                              // 14
+TaskStimulus.propTypes = {                                                                                      // 11
+  task: PropTypes.object                                                                                        // 12
+};                                                                                                              // 11
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }},"interfaceFakeData":{"data.js":function(require,exports,module){
@@ -390,64 +390,64 @@ var avatars = ["/avatars/bee.png", "/avatars/bird.png", "/avatars/cat.png", "/av
                                                                                                                      Creating dummy Tasks data: we will shuffle them at the game level
                                                                                                                      */
                                                                                                                 //
-var Tasks = _.shuffle([{                                                                                        // 17
-  _id: "1",                                                                                                     // 19
-  data: {                                                                                                       // 20
-    taskPath: "/tasks/1.png",                                                                                   // 20
-    correctAnswer: 0.1,                                                                                         // 20
-    difficulty: "easy"                                                                                          // 20
-  }                                                                                                             // 20
-}, {                                                                                                            // 18
-  _id: "2",                                                                                                     // 23
-  data: {                                                                                                       // 24
-    taskPath: "/tasks/2.png",                                                                                   // 24
-    correctAnswer: 0.6,                                                                                         // 24
-    difficulty: "easy"                                                                                          // 24
-  }                                                                                                             // 24
-}, {                                                                                                            // 22
-  _id: "3",                                                                                                     // 27
-  data: {                                                                                                       // 28
-    taskPath: "/tasks/3.png",                                                                                   // 28
-    correctAnswer: 0.3,                                                                                         // 28
-    difficulty: "easy"                                                                                          // 28
-  }                                                                                                             // 28
-}, {                                                                                                            // 26
-  _id: "4",                                                                                                     // 31
-  data: {                                                                                                       // 32
-    taskPath: "/tasks/4.png",                                                                                   // 32
-    correctAnswer: 0.54,                                                                                        // 32
-    difficulty: "easy"                                                                                          // 32
-  }                                                                                                             // 32
-}]); /*                                                                                                         // 30
+var Tasks = _.shuffle([{                                                                                        // 15
+  _id: "1",                                                                                                     // 17
+  data: {                                                                                                       // 18
+    taskPath: "/tasks/1.png",                                                                                   // 18
+    correctAnswer: 0.1,                                                                                         // 18
+    difficulty: "easy"                                                                                          // 18
+  }                                                                                                             // 18
+}, {                                                                                                            // 16
+  _id: "2",                                                                                                     // 21
+  data: {                                                                                                       // 22
+    taskPath: "/tasks/2.png",                                                                                   // 22
+    correctAnswer: 0.6,                                                                                         // 22
+    difficulty: "easy"                                                                                          // 22
+  }                                                                                                             // 22
+}, {                                                                                                            // 20
+  _id: "3",                                                                                                     // 25
+  data: {                                                                                                       // 26
+    taskPath: "/tasks/3.png",                                                                                   // 26
+    correctAnswer: 0.3,                                                                                         // 26
+    difficulty: "easy"                                                                                          // 26
+  }                                                                                                             // 26
+}, {                                                                                                            // 24
+  _id: "4",                                                                                                     // 29
+  data: {                                                                                                       // 30
+    taskPath: "/tasks/4.png",                                                                                   // 30
+    correctAnswer: 0.54,                                                                                        // 30
+    difficulty: "easy"                                                                                          // 30
+  }                                                                                                             // 30
+}]); /*                                                                                                         // 28
      Creating dummy players data: this will be provided to us by netwise                                        //
      */ //create empty list of players                                                                          //
                                                                                                                 //
                                                                                                                 //
-var nPlayers = 3;                                                                                               // 42
-var players = []; //fill the list with random players information                                               // 43
+var nPlayers = 3;                                                                                               // 38
+var players = []; //fill the list with random players information                                               // 39
                                                                                                                 //
-_.times(nPlayers, function (i) {                                                                                // 45
-  players.push({                                                                                                // 46
-    _id: Random.id(),                                                                                           // 47
-    createdAt: new Date(),                                                                                      // 48
-    alters: null,                                                                                               // 49
-    data: {                                                                                                     // 50
-      avatar: avatars[i],                                                                                       // 51
-      score: _.random(0, 123)                                                                                   // 52
-    }                                                                                                           // 50
-  });                                                                                                           // 46
-}); //add alters                                                                                                // 55
+_.times(nPlayers, function (i) {                                                                                // 41
+  players.push({                                                                                                // 42
+    _id: Random.id(),                                                                                           // 43
+    createdAt: new Date(),                                                                                      // 44
+    alters: null,                                                                                               // 45
+    data: {                                                                                                     // 46
+      avatar: avatars[i],                                                                                       // 47
+      score: _.random(0, 123)                                                                                   // 48
+    }                                                                                                           // 46
+  });                                                                                                           // 42
+}); //add alters                                                                                                // 51
 //todo: we need to think of the network structure. What if it changes every round? how can we keep a history of the entire networks etc.
                                                                                                                 //
                                                                                                                 //
-var maxOutDegree = 2; //maximum number of out going degree (i.e., how many 'alters' the 'ego' is connected to   // 58
+var maxOutDegree = 2; //maximum number of out going degree (i.e., how many 'alters' the 'ego' is connected to   // 54
                                                                                                                 //
-players.forEach(function (player) {                                                                             // 59
-  player.alters = Array.from(new Set(_.sample(removeElement(players, player), maxOutDegree)));                  // 60
-}); //select one players at random to be the currentPlayer                                                      // 63
+players.forEach(function (player) {                                                                             // 55
+  player.alters = Array.from(new Set(_.sample(removeElement(players, player), maxOutDegree)));                  // 56
+}); //select one players at random to be the currentPlayer                                                      // 59
                                                                                                                 //
-var currentPlayer = Random.choice(players);                                                                     // 65
-/*                                                                                                              // 68
+var currentPlayer = Random.choice(players);                                                                     // 61
+/*                                                                                                              // 63
 Creating dummy round data: this will be created at the initiation of the game                                   //
 TODO: this round structure I do not like. The main unit of analysis is the user per round  for example:         //
     Players might have a different task for the same round                                                      //
@@ -457,49 +457,47 @@ TODO: this round structure I do not like. The main unit of analysis is the user 
     Therefore: we need better PlayerRound data structure                                                        //
     For now: I'll just assume that the Rounds object is for the current player (filtered)                       //
 */var nRounds = 3; //the number of rounds in this game                                                          //
-//stages per round                                                                                              // 79
+//stages per round                                                                                              // 74
                                                                                                                 //
 var stages = ["initial", "interactive", "outcome"]; //const currentStage = Random.choice(stages);//random stage
                                                                                                                 //
-var currentStage = stages[0];                                                                                   // 82
-var rounds = [];                                                                                                // 83
+var currentStage = stages[0];                                                                                   // 77
+var rounds = [];                                                                                                // 78
                                                                                                                 //
-_.times(nRounds, function (i) {                                                                                 // 84
-  rounds.push({                                                                                                 // 85
-    _id: i,                                                                                                     // 86
-    createdAt: new Date(),                                                                                      // 87
-    stages: stages,                                                                                             // 88
-    currentStage: currentStage,                                                                                 // 89
-    data: {                                                                                                     // 90
-      task: Tasks[i]                                                                                            // 90
-    }                                                                                                           // 90
-  });                                                                                                           // 85
-}); //TODO: can treatment be an array to describe factor experimental design?                                   // 92
-//Imagine we have two factors: number of players [high, mid, low] and network status [static,dynamic]           // 96
+_.times(nRounds, function (i) {                                                                                 // 79
+  rounds.push({                                                                                                 // 80
+    _id: i,                                                                                                     // 81
+    createdAt: new Date(),                                                                                      // 82
+    stages: stages,                                                                                             // 83
+    currentStage: currentStage,                                                                                 // 84
+    data: {                                                                                                     // 85
+      task: Tasks[i]                                                                                            // 85
+    }                                                                                                           // 85
+  });                                                                                                           // 80
+}); //TODO: can treatment be an array to describe factor experimental design?                                   // 87
+//Imagine we have two factors: number of players [high, mid, low] and network status [static,dynamic]           // 90
 //Then we will have 6 treatments: [high,static], [high, dynamic], [mid,static],[mid,dynamic],[low,static],[low,dynamic]
-//notice that the choice of high/low effects the recruitment of participants (number of players)                // 98
-//However static/dynamic effects the stage 'round outcome'                                                      // 99
-//It makes sense that in the round outcome I just have to check static/dynamic without checking                 // 100
+//notice that the choice of high/low effects the recruitment of participants (number of players)                // 92
+//However static/dynamic effects the stage 'round outcome'                                                      // 93
+//It makes sense that in the round outcome I just have to check static/dynamic without checking                 // 94
 //whether the number of players is high/low .. also, at recruitment, I should be able to specify the number of people I want, regardless of static/dynamic
                                                                                                                 //
                                                                                                                 //
-var game = {                                                                                                    // 102
-  _id: Random.id(),                                                                                             // 102
-  treatments: [],                                                                                               // 102
-  players: players,                                                                                             // 102
-  rounds: rounds,                                                                                               // 102
-  currentRoundId: _.random(0, nRounds - 1)                                                                      // 102
-};                                                                                                              // 102
+var game = {                                                                                                    // 96
+  _id: Random.id(),                                                                                             // 97
+  treatments: [],                                                                                               // 98
+  players: players,                                                                                             // 99
+  rounds: rounds,                                                                                               // 100
+  currentRoundId: _.random(0, nRounds - 1)                                                                      // 101
+};                                                                                                              // 96
                                                                                                                 //
-//Helper functions to create the dummy data                                                                     // 106
-//function to remove element from an array in an non-mutable way                                                // 107
-function removeElement(array, element) {                                                                        // 108
-  return array.filter(function (e) {                                                                            // 109
-    return e !== element;                                                                                       // 109
-  });                                                                                                           // 109
-}                                                                                                               // 110
-                                                                                                                //
-;                                                                                                               // 110
+//Helper functions to create the dummy data                                                                     // 104
+//function to remove element from an array in an non-mutable way                                                // 105
+function removeElement(array, element) {                                                                        // 106
+  return array.filter(function (e) {                                                                            // 107
+    return e !== element;                                                                                       // 107
+  });                                                                                                           // 107
+}                                                                                                               // 108
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }},"pages":{"Round.jsx":function(require,exports,module){
@@ -584,12 +582,12 @@ var Round = function (_React$Component) {                                       
         React.createElement(PlayerProfile, {                                                                    // 17
           currentPlayer: currentPlayer                                                                          // 17
         }),                                                                                                     // 17
-        React.createElement(Task, {                                                                             // 20
-          task: currentRound.data.task,                                                                         // 20
-          stage: currentRound.currentStage                                                                      // 20
-        })                                                                                                      // 20
+        React.createElement(Task, {                                                                             // 19
+          task: currentRound.data.task,                                                                         // 19
+          stage: currentRound.currentStage                                                                      // 19
+        })                                                                                                      // 19
       );                                                                                                        // 13
-    }                                                                                                           // 23
+    }                                                                                                           // 22
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //

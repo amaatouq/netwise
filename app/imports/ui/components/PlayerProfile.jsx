@@ -9,14 +9,12 @@ export default class PlayerProfile extends React.Component {
       <aside className="player-profile">
         <h3>Your Profile</h3>
         <img src={currentPlayer.data.avatar} className="profile-avatar" />
-  
+
         <div>ID:{currentPlayer._id}</div>
-        
-  
+
         {/*TODO: Why this does not work and breaks it?*/}
         {/*<div>created at: {currentPlayer.createdAt}</div>*/}
-  
-  
+
         <div className="profile-score">
           <h4>Total score</h4>
           <span>{currentPlayer.data.score}</span>
