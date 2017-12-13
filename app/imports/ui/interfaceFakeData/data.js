@@ -28,7 +28,7 @@ const Tasks = _.shuffle([
       difficultyPath: { easy: "/tasks/3.png", hard: "/tasks/4.png" }
     }
   },
-  
+
   {
     _id: "3",
     data: {
@@ -53,7 +53,7 @@ _.times(nPlayers, i => {
     data: {
       avatar: avatars[i],
       score: _.random(0, 123),
-      difficulty: Random.choice(['easy','hard'])
+      difficulty: Random.choice(["easy", "hard"])
     }
   });
 });
@@ -92,7 +92,7 @@ _.times(nRounds, i => {
     stages,
     currentStage: currentStage,
     task: Tasks[i],
-    data: { }
+    data: {}
   });
 });
 

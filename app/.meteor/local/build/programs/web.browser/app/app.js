@@ -273,24 +273,24 @@ var Task = function (_React$Component) {                                        
                                                                                                                 //
   Task.prototype.render = function () {                                                                         //
     function render() {                                                                                         //
-      var taskData = this.props.task.data;                                                                      // 11
+      var taskData = this.props.task.data;                                                                      // 10
       var taskPath = taskData.difficultyPath[this.props.currentPlayer.data.difficulty]; //get user specific task difficulty
                                                                                                                 //
       var stage = this.props.stage;                                                                             // 13
-      console.log('currentPlayer.difficulty', this.props.currentPlayer.data.difficulty);                        // 14
-      console.log("task from inside task", taskData);                                                           // 15
-      console.log("stage from inside task", stage);                                                             // 16
-      return React.createElement(                                                                               // 18
-        "div",                                                                                                  // 19
-        {                                                                                                       // 19
-          className: "task"                                                                                     // 19
-        },                                                                                                      // 19
-        React.createElement(TaskStimulus, {                                                                     // 20
-          taskParam: taskPath                                                                                   // 20
-        }),                                                                                                     // 20
+      console.log("currentPlayer.difficulty", this.props.currentPlayer.data.difficulty);                        // 14
+      console.log("task from inside task", taskData);                                                           // 18
+      console.log("stage from inside task", stage);                                                             // 19
+      return React.createElement(                                                                               // 21
+        "div",                                                                                                  // 22
+        {                                                                                                       // 22
+          className: "task"                                                                                     // 22
+        },                                                                                                      // 22
+        React.createElement(TaskStimulus, {                                                                     // 23
+          taskParam: taskPath                                                                                   // 23
+        }),                                                                                                     // 23
         stage !== "outcome" ? React.createElement(TaskResponse, null) : React.createElement(TaskFeedback, null)
-      );                                                                                                        // 19
-    }                                                                                                           // 24
+      );                                                                                                        // 22
+    }                                                                                                           // 27
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //
@@ -298,12 +298,12 @@ var Task = function (_React$Component) {                                        
   return Task;                                                                                                  //
 }(React.Component);                                                                                             //
                                                                                                                 //
-Task.propTypes = {                                                                                              // 27
-  // Current round index                                                                                        // 28
-  task: PropTypes.object.isRequired,                                                                            // 29
-  stage: PropTypes.string.isRequired,                                                                           // 30
-  currentPlayer: PropTypes.object.isRequired                                                                    // 31
-};                                                                                                              // 27
+Task.propTypes = {                                                                                              // 30
+  // Current round index                                                                                        // 31
+  task: PropTypes.object.isRequired,                                                                            // 32
+  stage: PropTypes.string.isRequired,                                                                           // 33
+  currentPlayer: PropTypes.object.isRequired                                                                    // 34
+};                                                                                                              // 30
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 },"TaskFeedback.jsx":function(require,exports,module){
@@ -408,78 +408,78 @@ module.watch(require("rc-slider"), {                                            
 var TaskResponse = function (_React$Component) {                                                                //
   (0, _inherits3.default)(TaskResponse, _React$Component);                                                      //
                                                                                                                 //
-  function TaskResponse(props, context) {                                                                       // 11
-    (0, _classCallCheck3.default)(this, TaskResponse);                                                          // 11
+  function TaskResponse(props, context) {                                                                       // 10
+    (0, _classCallCheck3.default)(this, TaskResponse);                                                          // 10
                                                                                                                 //
-    var _this = (0, _possibleConstructorReturn3.default)(this, _React$Component.call(this, props, context));    // 11
+    var _this = (0, _possibleConstructorReturn3.default)(this, _React$Component.call(this, props, context));    // 10
                                                                                                                 //
-    _this.handleChangeStart = function () {                                                                     // 11
-      console.log('Change event started');                                                                      // 19
-    };                                                                                                          // 20
+    _this.handleChangeStart = function () {                                                                     // 10
+      console.log("Change event started");                                                                      // 18
+    };                                                                                                          // 19
                                                                                                                 //
-    _this.handleChange = function (value) {                                                                     // 11
-      _this.setState({                                                                                          // 23
-        value: value                                                                                            // 23
-      });                                                                                                       // 23
-    };                                                                                                          // 24
+    _this.handleChange = function (value) {                                                                     // 10
+      _this.setState({                                                                                          // 22
+        value: value                                                                                            // 22
+      });                                                                                                       // 22
+    };                                                                                                          // 23
                                                                                                                 //
-    _this.handleChangeComplete = function () {                                                                  // 11
-      console.log('Change event completed'); //here log the data to the database                                // 27
-    };                                                                                                          // 29
+    _this.handleChangeComplete = function () {                                                                  // 10
+      console.log("Change event completed"); //here log the data to the database                                // 26
+    };                                                                                                          // 28
                                                                                                                 //
-    _this.state = {                                                                                             // 13
-      value: null                                                                                               // 14
-    };                                                                                                          // 13
-    return _this;                                                                                               // 11
-  }                                                                                                             // 16
+    _this.state = {                                                                                             // 12
+      value: null                                                                                               // 13
+    };                                                                                                          // 12
+    return _this;                                                                                               // 10
+  }                                                                                                             // 15
                                                                                                                 //
   TaskResponse.prototype.render = function () {                                                                 //
     function render() {                                                                                         //
-      var style = {                                                                                             // 32
-        width: 400,                                                                                             // 32
-        margin: 50                                                                                              // 32
+      var style = {                                                                                             // 31
+        width: 400,                                                                                             // 31
+        margin: 50                                                                                              // 31
+      };                                                                                                        // 31
+      var marks = {                                                                                             // 32
+        0: React.createElement(                                                                                 // 33
+          "strong",                                                                                             // 33
+          null,                                                                                                 // 33
+          "0"                                                                                                   // 33
+        ),                                                                                                      // 33
+        0.25: "0.25",                                                                                           // 34
+        0.5: "0.5",                                                                                             // 35
+        0.75: "0.75",                                                                                           // 36
+        1: {                                                                                                    // 37
+          style: {                                                                                              // 38
+            color: "red"                                                                                        // 39
+          },                                                                                                    // 38
+          label: React.createElement(                                                                           // 41
+            "strong",                                                                                           // 41
+            null,                                                                                               // 41
+            "1"                                                                                                 // 41
+          )                                                                                                     // 41
+        }                                                                                                       // 37
       };                                                                                                        // 32
-      var marks = {                                                                                             // 33
-        0: React.createElement(                                                                                 // 34
-          "strong",                                                                                             // 34
-          null,                                                                                                 // 34
-          "0"                                                                                                   // 34
-        ),                                                                                                      // 34
-        .25: '0.25',                                                                                            // 35
-        0.5: '0.5',                                                                                             // 36
-        0.75: '0.75',                                                                                           // 37
-        1: {                                                                                                    // 38
-          style: {                                                                                              // 39
-            color: 'red'                                                                                        // 40
-          },                                                                                                    // 39
-          label: React.createElement(                                                                           // 42
-            "strong",                                                                                           // 42
-            null,                                                                                               // 42
-            "1"                                                                                                 // 42
-          )                                                                                                     // 42
-        }                                                                                                       // 38
-      };                                                                                                        // 33
-      return React.createElement(                                                                               // 45
-        "div",                                                                                                  // 46
-        {                                                                                                       // 46
-          style: style                                                                                          // 46
-        },                                                                                                      // 46
-        React.createElement(                                                                                    // 47
-          "p",                                                                                                  // 47
-          null,                                                                                                 // 47
-          "Your current guess of the correlation is: ",                                                         // 47
-          this.state.value                                                                                      // 47
-        ),                                                                                                      // 47
-        React.createElement(Slider, {                                                                           // 48
+      return React.createElement(                                                                               // 44
+        "div",                                                                                                  // 45
+        {                                                                                                       // 45
+          style: style                                                                                          // 45
+        },                                                                                                      // 45
+        React.createElement(                                                                                    // 46
+          "p",                                                                                                  // 46
+          null,                                                                                                 // 46
+          "Your current guess of the correlation is: ",                                                         // 46
+          this.state.value                                                                                      // 46
+        ),                                                                                                      // 46
+        React.createElement(Slider, {                                                                           // 47
           min: 0,                                                                                               // 48
-          max: 1,                                                                                               // 48
-          marks: marks,                                                                                         // 48
-          step: 0.01,                                                                                           // 48
-          onChange: this.handleChange,                                                                          // 48
-          defaultValue: null                                                                                    // 48
-        })                                                                                                      // 48
-      );                                                                                                        // 46
-    }                                                                                                           // 51
+          max: 1,                                                                                               // 49
+          marks: marks,                                                                                         // 50
+          step: 0.01,                                                                                           // 51
+          onChange: this.handleChange,                                                                          // 52
+          defaultValue: null                                                                                    // 53
+        })                                                                                                      // 47
+      );                                                                                                        // 45
+    }                                                                                                           // 57
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //
@@ -538,7 +538,7 @@ var TaskStimulus = function (_React$Component) {                                
                                                                                                                 //
   TaskStimulus.prototype.render = function () {                                                                 //
     function render() {                                                                                         //
-      console.log('inside stim', this.props);                                                                   // 6
+      console.log("inside stim", this.props);                                                                   // 6
       return React.createElement(                                                                               // 7
         "div",                                                                                                  // 8
         null,                                                                                                   // 8
@@ -636,7 +636,7 @@ _.times(nPlayers, function (i) {                                                
     data: {                                                                                                     // 53
       avatar: avatars[i],                                                                                       // 54
       score: _.random(0, 123),                                                                                  // 55
-      difficulty: Random.choice(['easy', 'hard'])                                                               // 56
+      difficulty: Random.choice(["easy", "hard"])                                                               // 56
     }                                                                                                           // 53
   });                                                                                                           // 49
 }); //add alters                                                                                                // 59
