@@ -459,28 +459,27 @@ var TaskResponse = function (_React$Component) {                                
           )                                                                                                     // 42
         }                                                                                                       // 38
       };                                                                                                        // 33
-      var value = this.state.value;                                                                             // 31
-      return React.createElement(                                                                               // 46
-        "div",                                                                                                  // 47
-        {                                                                                                       // 47
-          style: style                                                                                          // 47
-        },                                                                                                      // 47
-        React.createElement(                                                                                    // 48
-          "p",                                                                                                  // 48
-          null,                                                                                                 // 48
-          "Your current guess of the correlation is: ",                                                         // 48
-          this.state.value                                                                                      // 48
-        ),                                                                                                      // 48
-        React.createElement(Slider, {                                                                           // 49
-          min: 0,                                                                                               // 49
-          max: 1,                                                                                               // 49
-          marks: marks,                                                                                         // 49
-          step: 0.01,                                                                                           // 49
-          onChange: this.handleChange,                                                                          // 49
-          defaultValue: null                                                                                    // 49
-        })                                                                                                      // 49
-      );                                                                                                        // 47
-    }                                                                                                           // 52
+      return React.createElement(                                                                               // 45
+        "div",                                                                                                  // 46
+        {                                                                                                       // 46
+          style: style                                                                                          // 46
+        },                                                                                                      // 46
+        React.createElement(                                                                                    // 47
+          "p",                                                                                                  // 47
+          null,                                                                                                 // 47
+          "Your current guess of the correlation is: ",                                                         // 47
+          this.state.value                                                                                      // 47
+        ),                                                                                                      // 47
+        React.createElement(Slider, {                                                                           // 48
+          min: 0,                                                                                               // 48
+          max: 1,                                                                                               // 48
+          marks: marks,                                                                                         // 48
+          step: 0.01,                                                                                           // 48
+          onChange: this.handleChange,                                                                          // 48
+          defaultValue: null                                                                                    // 48
+        })                                                                                                      // 48
+      );                                                                                                        // 46
+    }                                                                                                           // 51
                                                                                                                 //
     return render;                                                                                              //
   }();                                                                                                          //

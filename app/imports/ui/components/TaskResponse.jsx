@@ -42,7 +42,6 @@ export default class TaskResponse extends React.Component {
           label: <strong>1</strong>,
         },
       };
-      const { value } = this.state;
       return (
         <div style={style}>
           <p>Your current guess of the correlation is: {this.state.value}</p>
