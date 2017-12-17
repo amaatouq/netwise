@@ -1,16 +1,46 @@
 import { RegisterGame } from "../../../core/api/games/register";
 import { avatarPaths, difficulties, maxOutDegree, taskData } from "./constants";
 
+//   => Treatment are sets of conditions, automatically generated from game definition
+//     [high, lowConnectivity, dynamic]
+//     [low, lowConnectivity, dynamic]
+//     ...
+
+// "Treatment assignment" (Batch)
+//   => Complete randomization: x treatments * number of instances
+//   => Simple randomization: random treatments * number of instances
+//   => Custom randomization: x treatments where custom function decides treatment * number of instances
+
 RegisterGame("task", {
+  // treatmentAssignments: {
+  //   gender(players, treatments) {
+
+  //   }
+  // },
+  conditions: {
+    playersCount: {
+      high: 12,
+      medium: 6,
+      low: 3,
+      solo: 1
+    },
+    altersCount: {
+      highConnectivity: 8,
+      mediumConnectivity: 4,
+      lowConnectivity: 2
+    },
+    rewiring: {
+      static: false,
+      dynamic: true
+    }
+  },
+
   // init() is called when a new game instance is starting. It allows you
   // to define all proporties of this game run.
   //
   // Game runs are started from the admin UI with 2 attributes:
-  // - a `treatment` (String), which is an identifier for a (sub)game type.
-  //   You might only have one game treatment (say, "default"), that's fine.
-  //   In other cases, you might have a "solo" treatment, a "static" treatment
-  //   and a "cooperation" treament for example. This is just a way to identify
-  //   what type of subgame we want to run.
+  // - a `treatment` (Object), which is an object containing conditions for this
+  //   game.
   // - a `number of players` (Int). This number of players is the amount of
   //   players you want playing this game instance. Netwise takes care of
   //   running players through the introductory phases (rules, test, etc.)
@@ -61,12 +91,14 @@ RegisterGame("task", {
   // - `data` (Object, optional) is an open object for the game to add custom
   //   values needed in this stage, similarly to Rounds, Games and Players.
   //
-  //
   init(treatment, players) {
     const avatars = _.shuffle(avatarPaths);
 
     players.forEach((player, i) => {
-      const alters = _.sample(_.without(players, player), maxOutDegree);
+      const alters = _.sample(
+        _.without(players, player),
+        treatment.altersCount
+      );
       player.data = {
         avatar: avatars[i],
         difficulty: Random.choice(difficulties),
@@ -77,8 +109,7 @@ RegisterGame("task", {
     const tasks = _.shuffle(taskData);
 
     const rounds = [];
-    const roundCount = treatment === "solo" ? 8 : 10;
-    _.times(roundCount, i => {
+    _.times(10, i => {
       const stages = [
         {
           id: "response",
@@ -87,7 +118,7 @@ RegisterGame("task", {
         }
       ];
 
-      if (treatment !== "solo") {
+      if (treatment.playersCount !== 1) {
         stages.push({
           id: "interactive",
           name: "Interactive Response",
@@ -96,7 +127,7 @@ RegisterGame("task", {
       }
 
       // Dont't include a cooperative stage on the last round.
-      if (treatment === "cooperative" && i !== roundCount - 1) {
+      if (treatment.rewiring && i !== roundCount - 1) {
         stages.push({
           id: "network",
           name: "Network update",
@@ -119,8 +150,8 @@ RegisterGame("task", {
   },
 
   // onStageEnd is called each time a stage ends. It is a good time to
-  // update the player's scores and make needed otherwise calculations.
-  // onStageEnd is called for each player.
+  // update the players scores and make needed otherwise calculations.
+  // onStageEnd is called for all players at once.
   // It arguments are:
   // - `game`, which is the same object returned by init, plus current state
   //   of the game data. The game contains all `players` and `rounds`.
@@ -128,6 +159,8 @@ RegisterGame("task", {
   // - `stage`, the current Stage object (same as created in init). The Stage
   //   object pass in onStageEnd also has accessor methods get and set to read
   //   and write stage scoped player data.
-  // - `player` is the current player
-  onStageEnd(game, round, stage, player) {}
+  // - `players` is the array of all players
+  onStageEnd(game, round, stage, players) {
+    const currentPlayerValue = player.get("value");
+  }
 });
