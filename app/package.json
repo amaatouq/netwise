@@ -8,6 +8,7 @@
     "babel-runtime": "^6.26.0",
     "history": "^4.7.2",
     "indexof": "0.0.1",
+    "inflection": "^1.12.0",
     "meteor-node-stubs": "^0.3.2",
     "moment": "^2.19.3",
     "prop-types": "^15.6.0",

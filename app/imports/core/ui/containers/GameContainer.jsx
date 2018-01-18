@@ -1,7 +1,10 @@
 import { withTracker } from "meteor/react-meteor-data";
 
 import { Games } from "../../api/games/games";
-import { gameConfigs } from "../../api/games/register";
+import { Players } from "../../api/players/players";
+import { Rounds } from "../../api/rounds/rounds";
+import { Stages } from "../../api/stages/stages";
+import { config } from "../../../game/client";
 import Game from "../components/Game";
 
 // This will be part of the Game object eventually
@@ -22,11 +25,14 @@ export default withTracker(props => {
     throw new Error("game not found");
   }
 
-  const gameConfig = gameConfigs[game.name];
-  if (!gameConfig) {
-    throw new Error("unknown game: " + game.name);
-  }
-  const Round = gameConfig && gameConfig.RoundComponent;
+  const gameId = game._id;
+  game.players = Players.find({ gameId }).fetch();
+  game.rounds = Rounds.find({ gameId }).fetch();
+  game.rounds.forEach(round => {
+    round.stages = Stages.find({ roundId: round._id }).fetch();
+  });
+
+  const Round = config.RoundComponent;
 
   export const currentRound = game.rounds[0];
   export const currentStage = currentRound.stages[0];

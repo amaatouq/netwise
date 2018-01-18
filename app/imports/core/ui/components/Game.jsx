@@ -18,8 +18,11 @@ export default class Game extends React.Component {
           <ul>
             <li>Round: 1</li>
             {currentRound.stages.map(stage => (
-              <li className={stage.id === currentStage.id ? "current" : ""}>
-                {stage.name}
+              <li
+                key={stage.name}
+                className={stage.name === currentStage.name ? "current" : ""}
+              >
+                {stage.displayName}
               </li>
             ))}
             <li> </li>

@@ -1,4 +1,4 @@
 // Import server startup through a single index entry point
 
-import "../../../games/task/server";
+import "../both/index.js";
 import "./register-api.js";

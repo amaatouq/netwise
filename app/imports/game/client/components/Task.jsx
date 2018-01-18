@@ -16,7 +16,7 @@ export default class Task extends React.Component {
     return (
       <div className="task">
         <TaskStimulus taskParam={taskPath} />
-        {currentStage.id !== "outcome" ? <TaskResponse /> : <TaskFeedback />}
+        {currentStage.name !== "outcome" ? <TaskResponse /> : <TaskFeedback />}
       </div>
     );
   }
