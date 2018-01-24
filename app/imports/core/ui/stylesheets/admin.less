@@ -1,0 +1,39 @@
+.admin {
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 4rem auto;
+  grid-gap: 0;
+
+  header {
+    background-color: @admin-header-background-color;
+    color: @admin-header-text-color;
+
+    h1 {
+      color: @admin-header-text-color;
+    }
+
+    nav {
+      margin-top: 0.3rem;
+      margin-left: 2rem;
+
+      a {
+        color: fade(@admin-header-nav-color, 50%);
+        text-decoration: none;
+        margin-right: 1rem;
+
+        &.active {
+          color: @admin-header-nav-color;
+          // text-decoration: underline;
+          // font-weight: bold;
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  main {
+    padding: 2rem 1rem;
+  }
+}

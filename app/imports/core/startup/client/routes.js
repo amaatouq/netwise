@@ -1,23 +1,23 @@
-import { Route, Router } from "react-router";
-import { createBrowserHistory } from "history";
+import { BrowserRouter, Switch } from "react-router-dom";
 import React from "react";
 
-import GameContainer from "../../ui/containers/GameContainer";
+import Admin from "../../ui/components/Admin";
+import AuthorizedRoute from "../../ui/containers/AuthorizedRoute";
+import IdentifiedRoute from "../../ui/containers/IdentifiedRoute";
+import Login from "../../ui/components/Login";
+import Public from "../../ui/components/Public";
 
-const browserHistory = createBrowserHistory();
 export const renderRoutes = () => (
-  <Router history={browserHistory}>
-    <div className="grid">
-      <header>
-        <h1>Netwise</h1>
-      </header>
+  <BrowserRouter>
+    <div className="app">
+      <Switch>
+        {/* IdentifiedRoutes need to know which player the user is to play a game */}
+        <IdentifiedRoute path="/" exact component={Public} />
 
-      <main>
-        {/* <Route path="/" component={Home} /> */}
-        <Route path="/" component={GameContainer} />
-      </main>
-
-      <footer>footer</footer>
+        {/* AuthorizedRoutes need to know if the user is logged in for admin business */}
+        <AuthorizedRoute path="/admin" component={Admin} />
+        <AuthorizedRoute path="/login" component={Login} />
+      </Switch>
     </div>
-  </Router>
+  </BrowserRouter>
 );

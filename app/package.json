@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
+    "bcrypt": "^1.0.3",
     "history": "^4.7.2",
     "indexof": "0.0.1",
     "inflection": "^1.12.0",
@@ -15,7 +16,7 @@
     "rc-slider": "^8.5.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "simpl-schema": "^1.1.2"
   }
 }

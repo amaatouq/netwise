@@ -1,5 +1,7 @@
 import React from "react";
 
+import Loading from "./Loading";
+
 export default class Game extends React.Component {
   render() {
     const { Round, loading, ...rest } = this.props;
@@ -7,7 +9,7 @@ export default class Game extends React.Component {
     console.log(this.props);
 
     if (loading) {
-      return "Loading!";
+      return <Loading />;
     }
 
     console.log(currentRound.stages);

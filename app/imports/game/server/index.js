@@ -41,7 +41,7 @@ export const config = {
   // game run. All other conditions are game specific and they are ignored by
   // netwise core.
   conditions: {
-    playersCount: {
+    playerCount: {
       high: 12,
       medium: 6,
       low: 3,

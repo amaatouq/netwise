@@ -20,6 +20,11 @@ export const Treatments = new Mongo.Collection("treatments");
 // game runs, independently of the treatment. More thought needed here.
 const requiredConditions = ["playerCount"];
 
+Treatments.helpers({
+  displayName() {
+    return this.name || _.pluck(this.conditions, "name").join(",");
+  }
+});
 Treatments.schema = new SimpleSchema({
   // Optional experimenter given name for the treatment
   name: {
@@ -31,7 +36,7 @@ Treatments.schema = new SimpleSchema({
   // Array of conditions
   conditions: {
     type: Array,
-    min: 1,
+    min: requiredConditions.length,
 
     // Custom validation verifies required conditions are present and that
     // there are no duplicate conditions with the same key. We cannot easily
@@ -45,7 +50,7 @@ Treatments.schema = new SimpleSchema({
         return;
       }
 
-      // Verifying required condutions are present
+      // Verifying required conditions are present
       for (let i = 0; i < requiredConditions.length; i++) {
         const key = requiredConditions[i];
         const found = conditions.find(cond => cond.key === key);
@@ -74,10 +79,15 @@ Treatments.schema = new SimpleSchema({
       }
 
       if (errors.length > 0) {
+        console.log(errors);
         this.addValidationErrors(errors);
         return false;
       }
     }
+  },
+
+  "conditions.$": {
+    type: Object
   },
 
   // The key of the condition is the condition type.
@@ -111,5 +121,16 @@ Treatments.schema = new SimpleSchema({
   }
 });
 
+Treatments.schema.addDocValidator(({ conditions }) => {
+  if (Boolean(Treatments.findOne({ conditions }))) {
+    return [
+      {
+        name: "conditions",
+        type: "notUnique"
+      }
+    ];
+  }
+  return [];
+});
 Treatments.schema.extend(TimestampSchema);
 Treatments.attachSchema(Treatments.schema);

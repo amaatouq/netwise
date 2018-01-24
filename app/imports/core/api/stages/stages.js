@@ -14,6 +14,7 @@ Stages.schema = new SimpleSchema({
   displayName: {
     type: String,
     max: 128
+    // Add auto value to by default copy the name into the displayName
   },
   durationInSeconds: {
     type: SimpleSchema.Integer,

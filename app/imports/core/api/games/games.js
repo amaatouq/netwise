@@ -14,6 +14,7 @@ import { Treatments } from "../treatments/treatments";
 export const Games = new Mongo.Collection("games");
 
 Games.schema = new SimpleSchema({
+  // TODO change name to lobby something
   // Number of seconds for one player to wait in lobby before timeoutStrategy
   // is applied. This timeout applies only to the waiting for the game to start.
   timeoutInSeconds: {
@@ -65,5 +66,7 @@ Games.schema.extend(TimestampSchema);
 Games.schema.extend(HasOneByRef(Treatments));
 Games.schema.extend(HasManyByRef(Rounds));
 Games.schema.extend(HasManyByRef(Players));
-Games.schema.extend(BelongsTo(Batches));
+Meteor.startup(() => {
+  Games.schema.extend(BelongsTo(Batches));
+});
 Games.attachSchema(Games.schema);
