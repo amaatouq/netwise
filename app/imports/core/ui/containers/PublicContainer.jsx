@@ -1,20 +1,15 @@
 import { withTracker } from "meteor/react-meteor-data";
 
-import { Games } from "../../api/games/games";
-import { Players } from "../../api/players/players";
-import { Rounds } from "../../api/rounds/rounds";
-import { Stages } from "../../api/stages/stages";
-import { config } from "../../../game/client";
-import Game from "../components/Game";
+import Public from "../components/Public";
 
 const BatchAvailable = new Mongo.Collection("batchAvailable");
 
 export default withTracker(props => {
   const loading = !Meteor.subscribe("public").ready();
 
-  // const batch
+  const ba = BatchAvailable.findOne("batchAvailable");
   return {
-    batchAvailable: BatchAvailable.findOne("batchAvailable").batchAvailable,
+    batchAvailable: Boolean(ba) && ba.batchAvailable,
     loading
   };
-})(Game);
+})(Public);

@@ -22,9 +22,10 @@ const requiredConditions = ["playerCount"];
 
 Treatments.helpers({
   displayName() {
-    return this.name || _.pluck(this.conditions, "name").join(",");
+    return this.name || _.pluck(this.conditions, "name").join("|");
   }
 });
+
 Treatments.schema = new SimpleSchema({
   // Optional experimenter given name for the treatment
   name: {
