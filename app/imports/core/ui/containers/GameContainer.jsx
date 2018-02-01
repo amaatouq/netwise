@@ -1,17 +1,20 @@
 import { withTracker } from "meteor/react-meteor-data";
 
+import { GameLobbies } from "../../api/game-lobbies/game-lobbies";
 import { Games } from "../../api/games/games";
 import { Players } from "../../api/players/players";
 import { Rounds } from "../../api/rounds/rounds";
 import { Stages } from "../../api/stages/stages";
+import { Treatments } from "../../api/treatments/treatments";
 import { config } from "../../../game/client";
+import { removePlayerId } from "./IdentifiedRoute";
 import Game from "../components/Game";
 
 // This will be part of the Game object eventually
 export const gameName = "task";
 
-export default withTracker(props => {
-  const loading = !Meteor.subscribe("game").ready();
+export default withTracker(({ playerId, ...rest }) => {
+  const loading = !Meteor.subscribe("game", { playerId }).ready();
 
   if (loading) {
     return {
@@ -19,10 +22,24 @@ export default withTracker(props => {
     };
   }
 
+  const currentPlayer = Players.findOne(playerId);
+  if (!currentPlayer) {
+    removePlayerId(null);
+    return { loading: true };
+  }
+
   // There should always only be one game returned by the subscription
   const game = Games.findOne();
   if (!game) {
-    throw new Error("game not found");
+    const gameLobby = GameLobbies.findOne();
+    if (!gameLobby) {
+      throw new Error("game not found");
+    }
+    return {
+      gameLobby,
+      currentPlayer,
+      treatment: Treatments.findOne(gameLobby.treatmentId)
+    };
   }
 
   const gameId = game._id;
@@ -34,9 +51,9 @@ export default withTracker(props => {
 
   const Round = config.RoundComponent;
 
-  export const currentRound = game.rounds[0];
-  export const currentStage = currentRound.stages[0];
-  export const currentPlayer = game.players[0];
+  const currentRound = game.rounds[0];
+  const currentStage = currentRound.stages[0];
+  const treatment = Treatments.findOne(game.treatmentId);
 
   const params = {
     loading,
@@ -44,7 +61,9 @@ export default withTracker(props => {
     game,
     currentRound,
     currentStage,
-    currentPlayer
+    currentPlayer,
+    treatment,
+    ...rest
   };
 
   console.log("=================");

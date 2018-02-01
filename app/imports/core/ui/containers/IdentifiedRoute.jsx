@@ -28,6 +28,11 @@ export const setPlayerId = playerId => {
   playerIdDep.changed();
 };
 
+export const removePlayerId = playerId => {
+  localStorage.removeItem(playerIdKey);
+  playerIdDep.changed();
+};
+
 export default withTracker(rest => {
   return {
     ...rest,

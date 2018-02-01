@@ -7,7 +7,6 @@ import AdminTreatmentsContainer from "../containers/admin/AdminTreatmentsContain
 
 export default class Admin extends React.Component {
   componentDidMount() {
-    console.log("Admin", this.props);
     this.redirectLoggedOut(this.props);
   }
 
@@ -30,8 +29,6 @@ export default class Admin extends React.Component {
     if (loggingIn || !user) {
       return null;
     }
-
-    // console.log(this.props);
 
     return (
       <div className="admin">

@@ -22,7 +22,19 @@ const requiredConditions = ["playerCount"];
 
 Treatments.helpers({
   displayName() {
-    return this.name || _.pluck(this.conditions, "name").join("|");
+    return this.name || _.pluck(this.conditions, "name").join(" - ");
+  },
+
+  condition(key) {
+    return this.conditions.find(c => c.key === key);
+  },
+
+  conditionsObject() {
+    const obj = {};
+    _.each(this.conditions, cond => {
+      obj[cond.key] = cond.value;
+    });
+    return obj;
   }
 });
 

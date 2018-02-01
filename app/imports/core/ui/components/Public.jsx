@@ -1,7 +1,9 @@
 import React from "react";
 
+import { CoreWrapper } from "./Helpers";
 import GameContainer from "../containers/GameContainer";
 import Loading from "./Loading";
+import NewPlayer from "./NewPlayer";
 import NoBatch from "./NoBatch";
 
 export default class Public extends React.Component {
@@ -19,9 +21,13 @@ export default class Public extends React.Component {
 
     let content;
     if (!playerId) {
-      // Player ID input
+      content = (
+        <CoreWrapper>
+          <NewPlayer />
+        </CoreWrapper>
+      );
     } else {
-      content = <GameContainer />;
+      content = <GameContainer playerId={playerId} />;
     }
 
     return (

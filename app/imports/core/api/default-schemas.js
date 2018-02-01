@@ -1,6 +1,14 @@
 import SimpleSchema from "simpl-schema";
 import inflection from "inflection";
 
+export const IdSchema = new SimpleSchema({
+  _id: {
+    type: String,
+    optional: true,
+    regEx: SimpleSchema.RegEx.Id
+  }
+});
+
 export const TimestampSchema = new SimpleSchema({
   createdAt: {
     type: Date,
@@ -94,29 +102,14 @@ export const HasManyByRef = function(coll) {
     },
     [`${fieldName}.$`]: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id
+      regEx: SimpleSchema.RegEx.Id,
+      label: `${label} Item`
       // associatedMustExist: coll
     }
   });
 };
 
-export const HasOneByRef = function(coll) {
-  const singular = inflection.singularize(coll._name);
-  const camel = inflection.camelize(singular, true);
-  const label = inflection.titleize(singular);
-  const fieldName = `${camel}Id`;
-  return new SimpleSchema({
-    [fieldName]: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Id,
-      // associatedMustExist: coll,
-      label,
-      index: true
-    }
-  });
-};
-
-export const BelongsTo = function(coll, denyUpdate = true) {
+export const BelongsTo = function(coll, denyUpdate = true, required = true) {
   const singular = inflection.singularize(coll._name);
   const camel = inflection.camelize(singular, true);
   const label = inflection.titleize(singular);
@@ -128,7 +121,8 @@ export const BelongsTo = function(coll, denyUpdate = true) {
       label,
       denyUpdate,
       // associatedMustExist: coll,
-      index: true
+      index: true,
+      optional: !required
     }
   });
 };
