@@ -6,6 +6,7 @@ import { config } from "../../../game/server";
 
 export const createGameFromLobby = gameLobby => {
   const players = gameLobby.players();
+
   const batch = gameLobby.batch();
   const treatment = gameLobby.treatment();
   const conditions = treatment.conditionsObject();
@@ -33,9 +34,7 @@ export const createGameFromLobby = gameLobby => {
 
   // We want to copy over the changes made by the init function and save the
   // gameId in the player objects already in the DB
-  console.log(players);
   params.players.forEach(({ _id, data }) => {
-    console.log("updateplayer", _id, { $set: { gameId, data } });
     Players.update(_id, { $set: { gameId, data } });
   });
 

@@ -125,15 +125,16 @@ export const config = {
   init(conditions, players) {
     const avatars = _.shuffle(avatarPaths);
 
+    const playerIds = _.pluck(players, "_id");
     players.forEach((player, i) => {
       const alters = _.sample(
-        _.without(players, player),
+        _.without(playerIds, player._id),
         conditions.altersCount
       );
       player.data = {
         avatar: avatars[i],
         difficulty: Random.choice(difficulties),
-        alterIds: _.pluck(alters, "_id")
+        alterIds: alters
       };
     });
 
@@ -149,7 +150,7 @@ export const config = {
         }
       ];
 
-      if (conditions.playersCount !== 1) {
+      if (conditions.playerCount !== 1) {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",

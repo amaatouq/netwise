@@ -2,6 +2,7 @@ import { Batches } from "./batches";
 import { GameLobbies } from "../game-lobbies/game-lobbies";
 import { Treatments } from "../treatments/treatments";
 
+// Create GameLobbies
 Batches.after.insert(function(userId, batch) {
   const gameLobbies = [];
   switch (batch.assignment) {
@@ -14,7 +15,7 @@ Batches.after.insert(function(userId, batch) {
         });
       });
       break;
-    case "simple":
+    case "complete":
       batch.completeConfig.treatments.forEach(({ count, treatmentId }) => {
         _.times(count, () => {
           gameLobbies.push({ treatmentId });

@@ -30,7 +30,7 @@ export const createPlayer = new ValidatedMethod({
       return existing._id;
     }
 
-    player._id = Random.id();
+    player._id = Players.insert(player);
 
     // Adding player to a lobby
     while (!player.gameLobbyId) {
@@ -68,11 +68,10 @@ export const createPlayer = new ValidatedMethod({
       // We then verify the insert worked. If it didn't we can try again,
       // there might be another lobby availble.
       if (GameLobbies.find({ _id, playerIds: player._id })) {
-        player.gameLobbyId = _id;
+        Players.update(player._id, { $set: { gameLobbyId: _id } });
       }
     }
 
-    console.log(player);
-    return Players.insert(player);
+    return player._id;
   }
 });

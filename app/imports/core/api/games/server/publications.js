@@ -14,8 +14,6 @@ const treatment = {
 };
 
 publishComposite("game", function({ playerId }) {
-  console.log(playerId);
-
   return {
     find() {
       return Players.find(playerId);
