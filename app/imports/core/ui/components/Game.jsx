@@ -6,8 +6,7 @@ import Loading from "./Loading";
 export default class Game extends React.Component {
   render() {
     const { gameLobby, Round, loading, ...rest } = this.props;
-    const { currentRound, currentStage, treatment } = rest;
-    console.log(this.props);
+    const { game, treatment } = rest;
 
     if (loading) {
       return <Loading />;
@@ -17,24 +16,16 @@ export default class Game extends React.Component {
       return <GameLobby gameLobby={gameLobby} treatment={treatment} />;
     }
 
-    console.log(currentRound.stages);
+    if (game.finishedAt) {
+      return (
+        <div className="game">
+          <h1>Finished!</h1>
+        </div>
+      );
+    }
 
     return (
       <div className="game">
-        <nav className="round-nav">
-          <ul>
-            <li>Round: 1</li>
-            {currentRound.stages.map(stage => (
-              <li
-                key={stage.name}
-                className={stage.name === currentStage.name ? "current" : ""}
-              >
-                {stage.displayName}
-              </li>
-            ))}
-            <li> </li>
-          </ul>
-        </nav>
         <Round {...rest} />
       </div>
     );

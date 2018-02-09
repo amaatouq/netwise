@@ -1,4 +1,5 @@
 import { Games } from "./games";
+import { PlayerStages } from "../player-stages/player-stages";
 import { Players } from "../players/players";
 import { Rounds } from "../rounds/rounds";
 import { Stages } from "../stages/stages";
@@ -10,6 +11,7 @@ export const createGameFromLobby = gameLobby => {
   const batch = gameLobby.batch();
   const treatment = gameLobby.treatment();
   const conditions = treatment.conditionsObject();
+  const { batchId, treatmentId } = gameLobby;
 
   // Ask (experimenter designer) init function to configure this game
   // given the conditions and players given.
@@ -20,8 +22,8 @@ export const createGameFromLobby = gameLobby => {
   const gameId = Random.id();
   params._id = gameId;
   // We also add a few related objects
-  params.treatmentId = gameLobby.treatmentId;
-  params.batchId = gameLobby.batchId;
+  params.treatmentId = treatmentId;
+  params.batchId = batchId;
 
   // playerIds is the reference to players stored in the game object
   params.playerIds = params.players.map(p => p._id);
@@ -39,16 +41,31 @@ export const createGameFromLobby = gameLobby => {
   });
 
   // Create the round objects
-  params.roundIds = params.rounds.map(round => {
-    const roundId = Rounds.insert(_.extend({ gameId }, round));
+  let stageIndex = 0;
+  params.roundIds = params.rounds.map((round, index) => {
+    const roundId = Rounds.insert(_.extend({ gameId, index }, round));
     const stageIds = round.stages.map(stage => {
-      return Stages.insert(_.extend({ gameId, roundId }, stage));
+      const sParams = _.extend({ gameId, roundId, index: stageIndex }, stage);
+      const stageId = Stages.insert(sParams);
+      stageIndex++;
+      if (!params.currentStageId) {
+        params.currentStageId = stageId;
+      }
+      const playerStageIds = params.players.map(({ _id: playerId }) => {
+        return PlayerStages.insert({
+          playerId,
+          stageId,
+          roundId,
+          gameId,
+          batchId
+        });
+      });
+      Stages.update(stageId, { $set: { playerStageIds } });
+      return stageId;
     });
     Rounds.update(roundId, { $set: { stageIds } });
     return roundId;
   });
-
-  console.log(params);
 
   // Insert game. As soon as it comes online, the game will start for the
   // players so all related object (rounds, stages, players) must be created

@@ -68,7 +68,6 @@ export default class AdminBatches extends React.Component {
 
   handleStatusChange = (_id, status, event) => {
     event.preventDefault();
-    console.log(_id, status, event);
     updateBatchStatus.call({ _id, status });
   };
 
@@ -203,6 +202,7 @@ export default class AdminBatches extends React.Component {
                 <th>Assignment</th>
                 <th>Game Count</th>
                 <th>Created</th>
+                <th>Configuration</th>
                 <th>{/* Actions */}</th>
               </tr>
             </thead>
@@ -241,6 +241,35 @@ export default class AdminBatches extends React.Component {
                   );
                 }
 
+                let config;
+                switch (batch.assignment) {
+                  case "simple":
+                    config = batch.simpleConfig.treatmentIds.map(_id => {
+                      const t = treatments.find(t => t._id === _id);
+                      return (
+                        <div key={_id}>
+                          {t ? t.displayName() : "Unknown treatment"}
+                        </div>
+                      );
+                    });
+                    break;
+                  case "complete":
+                    config = batch.completeConfig.treatments.map(tt => {
+                      const t = treatments.find(t => t._id === tt.treatmentId);
+                      return (
+                        <div key={tt.treatmentId}>
+                          {t ? t.displayName() : "Unknown treatment"}
+                          {" x "}
+                          {tt.count}
+                        </div>
+                      );
+                    });
+                    break;
+                  default:
+                    console.error("unknown assignment");
+                    break;
+                }
+
                 return (
                   <tr key={batch._id}>
                     <td>{assignmentTypes[batch.assignment]}</td>
@@ -248,6 +277,7 @@ export default class AdminBatches extends React.Component {
                     <td title={moment(batch.createdAt).format()}>
                       {moment(batch.createdAt).fromNow()}
                     </td>
+                    <td>{config}</td>
                     <td>{actions}</td>
                   </tr>
                 );

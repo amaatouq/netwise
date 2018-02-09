@@ -1,21 +1,21 @@
 import React from "react";
 
 import PlayerProfile from "../components/PlayerProfile";
+import RoundNav from "./RoundNav";
 import Task from "../components/Task";
 
 export default class Round extends React.Component {
   render() {
-    const { currentRound, currentStage, currentPlayer } = this.props;
+    const { round, stage, player } = this.props;
 
     return (
       <div className="round">
-        <PlayerProfile currentPlayer={currentPlayer} />
+        <RoundNav round={round} stage={stage} />
+        <div className="content">
+          <PlayerProfile player={player} />
 
-        <Task
-          currentRound={currentRound}
-          currentStage={currentStage}
-          currentPlayer={currentPlayer}
-        />
+          <Task round={round} stage={stage} player={player} />
+        </div>
       </div>
     );
   }

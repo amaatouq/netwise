@@ -44,7 +44,7 @@ export const config = {
     playerCount: {
       high: 12,
       medium: 6,
-      low: 3,
+      low: 2,
       solo: 1
     },
     altersCount: {
@@ -141,7 +141,7 @@ export const config = {
     const tasks = _.shuffle(taskData);
 
     const rounds = [];
-    _.times(10, i => {
+    _.times(tasks.length, i => {
       const stages = [
         {
           name: "response",

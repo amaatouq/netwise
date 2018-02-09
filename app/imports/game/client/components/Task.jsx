@@ -7,23 +7,35 @@ import TaskFeedback from "./TaskFeedback";
 export default class Task extends React.Component {
   render() {
     const {
-      currentRound: { data: { task: { difficultyPath } } },
-      currentStage,
-      currentPlayer
+      round: { data: { task: { difficultyPath } } },
+      stage,
+      player
     } = this.props;
-    const taskPath = difficultyPath[currentPlayer.data.difficulty];
+    const taskPath = difficultyPath[player.data.difficulty];
+
+    let content = "";
+    if (stage.finished) {
+      content = <h3>Waiting on other players</h3>;
+    } else {
+      content =
+        stage.name !== "outcome" ? (
+          <TaskResponse stage={stage} />
+        ) : (
+          <TaskFeedback />
+        );
+    }
 
     return (
       <div className="task">
         <TaskStimulus taskParam={taskPath} />
-        {currentStage.name !== "outcome" ? <TaskResponse /> : <TaskFeedback />}
+        {content}
       </div>
     );
   }
 }
 
 Task.propTypes = {
-  currentRound: PropTypes.object.isRequired,
-  currentStage: PropTypes.object.isRequired,
-  currentPlayer: PropTypes.object.isRequired
+  round: PropTypes.object.isRequired,
+  stage: PropTypes.object.isRequired,
+  player: PropTypes.object.isRequired
 };

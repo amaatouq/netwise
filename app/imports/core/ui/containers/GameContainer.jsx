@@ -2,12 +2,17 @@ import { withTracker } from "meteor/react-meteor-data";
 
 import { GameLobbies } from "../../api/game-lobbies/game-lobbies";
 import { Games } from "../../api/games/games";
+import { PlayerStages } from "../../api/player-stages/player-stages";
 import { Players } from "../../api/players/players";
 import { Rounds } from "../../api/rounds/rounds";
 import { Stages } from "../../api/stages/stages";
 import { Treatments } from "../../api/treatments/treatments";
 import { config } from "../../../game/client";
 import { removePlayerId } from "./IdentifiedRoute";
+import {
+  submitPlayerRound,
+  updatePlayerRoundData
+} from "../../api/player-stages/methods";
 import Game from "../components/Game";
 
 // This will be part of the Game object eventually
@@ -22,8 +27,8 @@ export default withTracker(({ playerId, ...rest }) => {
     };
   }
 
-  const currentPlayer = Players.findOne(playerId);
-  if (!currentPlayer) {
+  const player = Players.findOne(playerId);
+  if (!player) {
     removePlayerId(null);
     return { loading: true };
   }
@@ -37,7 +42,7 @@ export default withTracker(({ playerId, ...rest }) => {
     }
     return {
       gameLobby,
-      currentPlayer,
+      player,
       treatment: Treatments.findOne(gameLobby.treatmentId)
     };
   }
@@ -51,26 +56,32 @@ export default withTracker(({ playerId, ...rest }) => {
 
   const Round = config.RoundComponent;
 
-  const currentRound = game.rounds[0];
-  const currentStage = currentRound.stages[0];
+  const stage = Stages.findOne(game.currentStageId);
+  const playerStage = PlayerStages.findOne({ stageId: stage._id, playerId });
+  const round = game.rounds.find(r => r._id === stage.roundId);
   const treatment = Treatments.findOne(game.treatmentId);
+
+  const playerStageId = playerStage._id;
+  stage.set = (key, value) => {
+    updatePlayerRoundData.call({ playerStageId, key, value });
+  };
+
+  stage.submit = () => {
+    submitPlayerRound.call({ playerStageId });
+  };
+
+  stage.finished = Boolean(playerStage.submittedAt);
 
   const params = {
     loading,
     Round,
     game,
-    currentRound,
-    currentStage,
-    currentPlayer,
+    round,
+    stage,
+    player,
     treatment,
     ...rest
   };
-
-  console.log("=================");
-  console.log(game);
-  console.log("-----------------");
-  console.log(params);
-  console.log("=================");
 
   return params;
 })(Game);

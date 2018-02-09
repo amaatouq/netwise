@@ -10,8 +10,6 @@ export const createTreatment = new ValidatedMethod({
       throw new Error("unauthorized");
     }
 
-    console.log(treatment);
-
     Treatments.insert(treatment);
   }
 });

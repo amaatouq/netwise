@@ -20,6 +20,10 @@ export const getPlayerId = () => {
 };
 
 export const setPlayerId = playerId => {
+  if (!playerId) {
+    // Avoid storing falsey value
+    return;
+  }
   const existing = localStorage.getItem(playerIdKey);
   if (existing === playerId) {
     return;

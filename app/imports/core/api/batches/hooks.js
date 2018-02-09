@@ -4,7 +4,7 @@ import { Treatments } from "../treatments/treatments";
 
 // Create GameLobbies
 Batches.after.insert(function(userId, batch) {
-  const gameLobbies = [];
+  let gameLobbies = [];
   switch (batch.assignment) {
     case "simple":
       _.times(batch.simpleConfig.count, index => {

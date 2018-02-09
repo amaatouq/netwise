@@ -1,12 +1,31 @@
 import SimpleSchema from "simpl-schema";
 
-import { BelongsTo, UserDataSchema, TimestampSchema } from "../default-schemas";
+import {
+  BelongsTo,
+  TimestampSchema,
+  UserDataSchema,
+  HasManyByRef
+} from "../default-schemas";
 import { Games } from "../games/games";
+import { PlayerStages } from "../player-stages/player-stages";
 import { Rounds } from "../rounds/rounds";
 
 export const Stages = new Mongo.Collection("stages");
 
+Stages.helpers({
+  round() {
+    return Rounds.findOne(this.roundId);
+  }
+});
+
 Stages.schema = new SimpleSchema({
+  // Index represents the 0 based position of the current stage in the ordered
+  // list of a all the game's stages. For display, add 1.
+  index: {
+    type: SimpleSchema.Integer,
+    min: 0,
+    max: 999999 // That's a lot of stages...
+  },
   name: {
     type: String,
     max: 64
@@ -32,5 +51,6 @@ Stages.schema.extend(UserDataSchema);
 Meteor.startup(function() {
   Stages.schema.extend(BelongsTo(Rounds));
   Stages.schema.extend(BelongsTo(Games));
+  Stages.schema.extend(HasManyByRef(PlayerStages));
 });
 Stages.attachSchema(Stages.schema);

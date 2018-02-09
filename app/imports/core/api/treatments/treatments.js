@@ -92,7 +92,6 @@ Treatments.schema = new SimpleSchema({
       }
 
       if (errors.length > 0) {
-        console.log(errors);
         this.addValidationErrors(errors);
         return false;
       }

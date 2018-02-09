@@ -8,7 +8,17 @@ import { Treatments } from "../treatments/treatments";
 
 export const Games = new Mongo.Collection("games");
 
-Games.schema = new SimpleSchema({});
+Games.schema = new SimpleSchema({
+  finishedAt: {
+    type: Date,
+    optional: true
+  },
+  currentStageId: {
+    type: String,
+    optional: true,
+    regEx: SimpleSchema.RegEx.Id
+  }
+});
 
 Games.schema.extend(TimestampSchema);
 Meteor.startup(() => {

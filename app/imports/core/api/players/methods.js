@@ -33,7 +33,7 @@ export const createPlayer = new ValidatedMethod({
     player._id = Players.insert(player);
 
     // Adding player to a lobby
-    while (!player.gameLobbyId) {
+    while (true) {
       // Looking for an running lobby that still has room
       const lobby = GameLobbies.findOne(
         { status: "running", availableSlots: { $gt: 0 } },
@@ -69,6 +69,7 @@ export const createPlayer = new ValidatedMethod({
       // there might be another lobby availble.
       if (GameLobbies.find({ _id, playerIds: player._id })) {
         Players.update(player._id, { $set: { gameLobbyId: _id } });
+        break;
       }
     }
 

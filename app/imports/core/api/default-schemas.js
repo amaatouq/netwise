@@ -15,13 +15,20 @@ export const TimestampSchema = new SimpleSchema({
     label: "Created at",
     denyUpdate: true,
     autoValue() {
-      return this.isInsert ? new Date() : undefined;
+      if (this.isInsert) {
+        return new Date();
+      } else if (this.isUpsert) {
+        return { $setOnInsert: new Date() };
+      } else {
+        this.unset(); // Prevent user from supplying their own value
+      }
     }
   },
   updatedAt: {
     type: Date,
     label: "Last updated at",
     optional: true,
+    denyInsert: true,
     autoValue() {
       if (this.isUpdate) {
         return new Date();
