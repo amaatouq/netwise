@@ -2,8 +2,8 @@ import SimpleSchema from "simpl-schema";
 
 import { PlayerStages } from "./player-stages";
 
-export const updatePlayerRoundData = new ValidatedMethod({
-  name: "PlayerRounds.methods.updateData",
+export const updatePlayerStageData = new ValidatedMethod({
+  name: "PlayerStages.methods.updateData",
 
   validate: new SimpleSchema({
     playerStageId: {
@@ -33,8 +33,8 @@ export const updatePlayerRoundData = new ValidatedMethod({
   }
 });
 
-export const submitPlayerRound = new ValidatedMethod({
-  name: "PlayerRounds.methods.submit",
+export const submitPlayerStage = new ValidatedMethod({
+  name: "PlayerStages.methods.submit",
 
   validate: new SimpleSchema({
     playerStageId: {

@@ -1,5 +1,6 @@
 import { Batches } from "./batches";
 import { GameLobbies } from "../game-lobbies/game-lobbies";
+import { Games } from "../games/games";
 import { Treatments } from "../treatments/treatments";
 
 // Create GameLobbies
@@ -44,24 +45,14 @@ Batches.after.insert(function(userId, batch) {
 
 // Update status on GameLobbies
 Batches.after.update(
-  function(userId, batch, fieldNames, modifier, options) {
+  function(userId, { _id: batchId, status }, fieldNames, modifier, options) {
     if (!fieldNames.includes("status")) {
       return;
     }
 
-    GameLobbies.update(
-      {
-        batchId: batch._id
-      },
-      {
-        $set: {
-          status: batch.status
-        }
-      },
-      {
-        multi: true
-      }
-    );
+    [Games, GameLobbies].forEach(coll => {
+      coll.update({ batchId }, { $set: { status } }, { multi: true });
+    });
   },
   { fetchPrevious: false }
 );

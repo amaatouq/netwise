@@ -70,7 +70,7 @@ export const UserDataSchema = new SimpleSchema({
   data: {
     type: Object,
     blackbox: true,
-    optional: true
+    defaultValue: {}
   }
 });
 

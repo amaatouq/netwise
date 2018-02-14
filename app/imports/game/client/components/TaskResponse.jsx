@@ -23,39 +23,55 @@ const marks = {
 // null. Eventually we can create our own slider that can handle nil and report
 // and error if someone submits null.
 export default class TaskResponse extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      value: 0
-    };
-  }
-
   handleChange = value => {
-    this.setState({ value });
+    const { stage, round } = this.props;
+    if (stage.name !== "network") {
+      round.set("guess", value);
+    }
   };
 
   handleSubmit = event => {
     event.preventDefault();
-
-    const { stage } = this.props;
-
-    stage.set("value", this.state.value);
-    stage.submit();
+    this.props.stage.submit();
   };
 
   render() {
+    const { stage, round } = this.props;
+    const isResult = stage.name === "network";
     return (
       <div className="task-response">
         <form onSubmit={this.handleSubmit}>
-          <p>Your current guess of the correlation is: {this.state.value}</p>
+          {isResult ? (
+            ""
+          ) : (
+            <p>
+              Your current guess of the correlation is: {round.get("guess")}
+            </p>
+          )}
+
           <Slider
             min={0}
             max={1}
             marks={marks}
             step={0.01}
             onChange={this.handleChange}
-            defaultValue={0}
+            value={round.get("guess")}
+            disabled={isResult}
           />
+
+          {isResult ? (
+            <dl>
+              <dt>Your guess:</dt>
+              <dd>{round.get("guess")}</dd>
+              <dt>Actual correlation:</dt>
+              <dd>{round.data.task.correctAnswer}</dd>
+              <dt>Score increment:</dt>
+              <dd>{round.get("score")}</dd>
+            </dl>
+          ) : (
+            ""
+          )}
+
           <p>
             <input type="submit" />
           </p>

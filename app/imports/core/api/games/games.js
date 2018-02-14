@@ -26,5 +26,7 @@ Meteor.startup(() => {
   Games.schema.extend(HasManyByRef(Rounds));
   Games.schema.extend(HasManyByRef(Players));
   Games.schema.extend(BelongsTo(Batches));
+  // We are denormalizing the parent batch status in order to make clean queries
+  Games.schema.extend(Batches.statusSchema);
 });
 Games.attachSchema(Games.schema);

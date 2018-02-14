@@ -1,4 +1,5 @@
 import { Games } from "./games";
+import { PlayerRounds } from "../player-rounds/player-rounds";
 import { PlayerStages } from "../player-stages/player-stages";
 import { Players } from "../players/players";
 import { Rounds } from "../rounds/rounds";
@@ -11,7 +12,7 @@ export const createGameFromLobby = gameLobby => {
   const batch = gameLobby.batch();
   const treatment = gameLobby.treatment();
   const conditions = treatment.conditionsObject();
-  const { batchId, treatmentId } = gameLobby;
+  const { batchId, treatmentId, status } = gameLobby;
 
   // Ask (experimenter designer) init function to configure this game
   // given the conditions and players given.
@@ -24,6 +25,7 @@ export const createGameFromLobby = gameLobby => {
   // We also add a few related objects
   params.treatmentId = treatmentId;
   params.batchId = batchId;
+  params.status = status;
 
   // playerIds is the reference to players stored in the game object
   params.playerIds = params.players.map(p => p._id);
@@ -63,7 +65,15 @@ export const createGameFromLobby = gameLobby => {
       Stages.update(stageId, { $set: { playerStageIds } });
       return stageId;
     });
-    Rounds.update(roundId, { $set: { stageIds } });
+    const playerRoundIds = params.players.map(({ _id: playerId }) => {
+      return PlayerRounds.insert({
+        playerId,
+        roundId,
+        gameId,
+        batchId
+      });
+    });
+    Rounds.update(roundId, { $set: { stageIds, playerRoundIds } });
     return roundId;
   });
 

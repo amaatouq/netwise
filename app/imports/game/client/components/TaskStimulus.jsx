@@ -4,7 +4,7 @@ import React from "react";
 export default class TaskStimulus extends React.Component {
   render() {
     return (
-      <div>
+      <div className="task-stimulus">
         <img src={this.props.taskParam} className="task-image" />
       </div>
     );

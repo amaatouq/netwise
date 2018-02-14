@@ -1,6 +1,5 @@
 import { withTracker } from "meteor/react-meteor-data";
 
-import { removePlayerId } from "./IdentifiedRoute";
 import Public from "../components/Public";
 
 const BatchAvailable = new Mongo.Collection("batchAvailable");

@@ -1,4 +1,4 @@
-import Collection2 from "meteor/aldeed:collection2-core";
+import Collection2 from "meteor/aldeed:collection2";
 import SimpleSchema from "simpl-schema";
 
 // The field is a reference to another record of the given type. For ex.

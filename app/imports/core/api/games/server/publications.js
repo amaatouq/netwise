@@ -2,6 +2,7 @@ import { publishComposite } from "meteor/reywood:publish-composite";
 
 import { GameLobbies } from "../../game-lobbies/game-lobbies";
 import { Games } from "../games";
+import { PlayerRounds } from "../../player-rounds/player-rounds";
 import { PlayerStages } from "../../player-stages/player-stages";
 import { Players } from "../../players/players";
 import { Rounds } from "../../rounds/rounds";
@@ -55,8 +56,20 @@ publishComposite("game", function({ playerId }) {
             children: [
               {
                 find({ _id: stageId }) {
-                  return PlayerStages.find({ playerId, stageId });
+                  return PlayerStages.find({ stageId });
                 }
+              },
+              {
+                find({ roundId }) {
+                  return Rounds.find(roundId);
+                },
+                children: [
+                  {
+                    find({ _id: roundId }) {
+                      return PlayerRounds.find({ roundId });
+                    }
+                  }
+                ]
               }
             ]
           }

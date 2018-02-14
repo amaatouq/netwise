@@ -7,6 +7,7 @@ import "../../api/game-lobbies/hooks.js";
 import "../../api/games/hooks.js";
 import "../../api/games/server/publications.js";
 import "../../api/players/methods.js";
+import "../../api/player-rounds/methods.js";
 import "../../api/player-stages/methods.js";
 import "../../api/player-stages/hooks.js";
 import "../../api/treatments/methods.js";

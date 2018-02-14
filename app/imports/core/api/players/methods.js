@@ -76,3 +76,34 @@ export const createPlayer = new ValidatedMethod({
     return player._id;
   }
 });
+
+export const updatePlayerData = new ValidatedMethod({
+  name: "Players.methods.updateData",
+
+  validate: new SimpleSchema({
+    playerId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    },
+    key: {
+      type: String
+    },
+    value: {
+      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Array, Date)
+    }
+  }).validator(),
+
+  run({ playerId, key, value }) {
+    const player = Players.findOne(playerId);
+    if (!player) {
+      throw new Error("player not found");
+    }
+    // TODO check can update this record player
+
+    const $set = {
+      [`data.${key}`]: value
+    };
+
+    Players.update(playerId, { $set });
+  }
+});

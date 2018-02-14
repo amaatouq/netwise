@@ -1,5 +1,6 @@
 import React from "react";
 
+import { DevNote } from "./Helpers";
 import GameLobby from "./GameLobby";
 import Loading from "./Loading";
 
@@ -18,8 +19,12 @@ export default class Game extends React.Component {
 
     if (game.finishedAt) {
       return (
-        <div className="game">
+        <div className="finished">
           <h1>Finished!</h1>
+          <p>Thank you for participating.</p>
+          <DevNote block>
+            There should be some outro steps here, including payment.
+          </DevNote>
         </div>
       );
     }

@@ -127,14 +127,15 @@ export const config = {
 
     const playerIds = _.pluck(players, "_id");
     players.forEach((player, i) => {
-      const alters = _.sample(
+      const alterIds = _.sample(
         _.without(playerIds, player._id),
         conditions.altersCount
       );
       player.data = {
         avatar: avatars[i],
         difficulty: Random.choice(difficulties),
-        alterIds: alters
+        alterIds,
+        score: 0
       };
     });
 
@@ -193,6 +194,35 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
-    const currentPlayerValue = player.get("value");
+    if (stage.name !== "interactive") {
+      return;
+    }
+
+    players.forEach(player => {
+      const guess = player.round.get("guess");
+      const score = Math.round(
+        (1 - Math.abs(round.data.task.correctAnswer - guess)) * 100
+      );
+      console.log(guess, score);
+      player.round.set("score", score);
+    });
+  },
+
+  // onRoundEnd is called each time a round ends. It is a good time to
+  // update the players scores and make needed otherwise calculations.
+  // onStageEnd is called for all players at once.
+  // It arguments are:
+  // - `game`, which is the same object returned by init, plus current state
+  //   of the game data. The game contains all `players` and `rounds`.
+  // - `round`, the current Round object (same as created in init).
+  // - `players` is the array of all players at this stage
+  onRoundEnd(game, round, players) {
+    players.forEach(player => {
+      const guess = player.round.get("guess");
+      const currentScore = player.get("score");
+      const roundScore = player.round.get("score");
+      console.log(guess, currentScore, roundScore);
+      player.set("score", Math.round(currentScore + roundScore));
+    });
   }
 };

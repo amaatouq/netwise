@@ -199,9 +199,10 @@ export default class AdminBatches extends React.Component {
           <table>
             <thead>
               <tr>
-                <th>Assignment</th>
+                <th>Status</th>
                 <th>Game Count</th>
                 <th>Created</th>
+                <th>Assignment</th>
                 <th>Configuration</th>
                 <th>{/* Actions */}</th>
               </tr>
@@ -272,11 +273,12 @@ export default class AdminBatches extends React.Component {
 
                 return (
                   <tr key={batch._id}>
-                    <td>{assignmentTypes[batch.assignment]}</td>
+                    <td>{batch.status}</td>
                     <td>{batch.gameCount()}</td>
                     <td title={moment(batch.createdAt).format()}>
                       {moment(batch.createdAt).fromNow()}
                     </td>
+                    <td>{assignmentTypes[batch.assignment]}</td>
                     <td>{config}</td>
                     <td>{actions}</td>
                   </tr>
