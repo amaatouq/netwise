@@ -6,14 +6,21 @@ export default class RoundNav extends React.Component {
 
     return (
       <nav className="round-nav">
-        <ul>
-          <li>Round {round.index + 1}</li>
-          {round.stages.map(s => (
-            <li key={s.name} className={s.name === stage.name ? "current" : ""}>
-              {s.displayName}
-            </li>
-          ))}
-          <li> </li>
+        <ul className="pt-breadcrumbs">
+          <li>
+            <span className="pt-breadcrumb">Round {round.index + 1}</span>
+          </li>
+          {round.stages.map(s => {
+            const current =
+              s.name === stage.name ? "pt-breadcrumb-current" : "pt-disabled";
+            return (
+              <li key={s.name}>
+                <span className={`pt-breadcrumb ${current}`}>
+                  {s.displayName}
+                </span>
+              </li>
+            );
+          })}
         </ul>
       </nav>
     );

@@ -44,8 +44,9 @@ PlayerStages.after.update(
 
       if (nextStage) {
         // go to next stage
+        const currentStageId = nextStage._id;
         Games.update(gameId, {
-          $set: { currentStageId: nextStage._id }
+          $set: { currentStageId }
         });
       } else {
         Games.update(gameId, {

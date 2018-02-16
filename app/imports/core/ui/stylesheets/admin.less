@@ -1,10 +1,11 @@
 .admin {
   height: 100%;
+  width: 100%;
 
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: 4rem auto;
-  grid-gap: 0;
+  // display: grid;
+  // grid-template-columns: auto;
+  // grid-template-rows: 4rem auto;
+  // grid-gap: 0;
 
   header {
     background-color: @admin-header-background-color;
@@ -34,10 +35,15 @@
   }
 
   main {
-    padding: 2rem 1rem;
+    overflow: auto;
+    padding: 7rem 1.5rem;
   }
 
   .batches {
+    .new-batch {
+      width: 50rem;
+    }
+
     .add-treatment {
       background-color: #eee;
       border-radius: 1rem;
@@ -47,6 +53,12 @@
 
       select {
         margin-right: 1rem;
+      }
+    }
+
+    table {
+      td {
+        text-transform: capitalize;
       }
     }
   }

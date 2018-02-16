@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
 import React from "react";
+import { Slider } from "@blueprintjs/core";
 
 export default class SocialExposure extends React.Component {
   render() {
@@ -16,27 +16,26 @@ export default class SocialExposure extends React.Component {
       } else {
         content = alterIds.map(alterId => {
           const otherPlayer = game.players.find(p => p._id === alterId);
-
+          // "or 0" here if the user hasn't submitted a guess, defaulting to 0
+          const guess = otherPlayer.round.get("guess") || 0;
           return (
-            <div className="alter" key={alterId}>
+            <div className="alter pt-card pt-elevation-2" key={alterId}>
               <img
-                src={otherPlayer.data.avatar}
+                src={otherPlayer.get("avatar")}
                 className="profile-avatar"
                 title={otherPlayer._id}
               />
-              <span className="guess">
-                {otherPlayer.round.get("guess")}
-                {otherPlayer.stage.finished ? " (final)" : ""}
-              </span>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={otherPlayer.round.get("guess")}
-                readOnly
-                disabled
-              />
+              <div className="range">
+                <Slider
+                  min={0}
+                  max={1}
+                  stepSize={0.01}
+                  labelRenderer={() => ""}
+                  value={guess}
+                  showTrackFill={false}
+                  disabled
+                />
+              </div>
             </div>
           );
         });

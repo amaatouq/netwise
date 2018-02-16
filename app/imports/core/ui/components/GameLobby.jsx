@@ -11,13 +11,19 @@ export default class GameLobby extends React.Component {
     return (
       <CoreWrapper>
         <div className="game-lobby">
-          <h1>Lobby</h1>
+          <div class="pt-non-ideal-state">
+            <div class="pt-non-ideal-state-visual pt-non-ideal-state-icon">
+              <span class="pt-icon pt-icon-time" />
+            </div>
+            <h4 class="pt-non-ideal-state-title">Lobby</h4>
+            <div class="pt-non-ideal-state-description">
+              <p>Waiting message here...</p>
 
-          <p>Waiting message here...</p>
-
-          <p>
-            {exisiting} / {total} players ready.
-          </p>
+              <p>
+                {exisiting} / {total} players ready.
+              </p>
+            </div>
+          </div>
         </div>
       </CoreWrapper>
     );

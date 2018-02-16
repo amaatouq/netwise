@@ -19,12 +19,25 @@ export default class Game extends React.Component {
 
     if (game.finishedAt) {
       return (
-        <div className="finished">
-          <h1>Finished!</h1>
-          <p>Thank you for participating.</p>
-          <DevNote block>
-            There should be some outro steps here, including payment.
-          </DevNote>
+        // <div className="finished">
+        //   <h1>Finished!</h1>
+        //   <p>Thank you for participating.</p>
+        //   <DevNote block>
+        //     There should be some outro steps here, including payment.
+        //   </DevNote>
+        // </div>
+
+        <div class="pt-non-ideal-state">
+          <div class="pt-non-ideal-state-visual pt-non-ideal-state-icon">
+            <span class="pt-icon pt-icon-tick" />
+          </div>
+          <h4 class="pt-non-ideal-state-title">Finished!</h4>
+          <div class="pt-non-ideal-state-description">
+            Thank you for participating.
+            <DevNote block>
+              There should be some outro steps here, including payment.
+            </DevNote>
+          </div>
         </div>
       );
     }

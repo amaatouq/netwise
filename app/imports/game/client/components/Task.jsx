@@ -10,17 +10,10 @@ export default class Task extends React.Component {
     const { data: { task: { difficultyPath } } } = round;
     const taskPath = difficultyPath[player.data.difficulty];
 
-    let content = "";
-    if (stage.finished) {
-      content = <h3>Waiting on other players</h3>;
-    } else {
-      content = <TaskResponse round={round} stage={stage} />;
-    }
-
     return (
       <div className="task">
         <TaskStimulus taskParam={taskPath} />
-        {content}
+        <TaskResponse round={round} stage={stage} />
       </div>
     );
   }

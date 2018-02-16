@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import React from "react";
 
 import { CoreWrapper } from "./Helpers";
@@ -31,13 +32,25 @@ export default class Public extends React.Component {
 
     return (
       <div className="grid">
-        <header>
-          <h1>Netwise</h1>
-        </header>
+        <nav className="pt-navbar pt-dark header">
+          <div className="pt-navbar-group pt-align-left">
+            <div className="pt-navbar-heading">
+              <Link
+                className="pt-button pt-large pt-minimal pt-icon-exchange"
+                to="/"
+              >
+                Netwise
+              </Link>
+            </div>
+          </div>
+          <div className="pt-navbar-group pt-align-right">
+            <Link className="pt-button pt-minimal pt-icon-info-sign" to="/">
+              About
+            </Link>
+          </div>
+        </nav>
 
         <main>{content}</main>
-
-        <footer>footer</footer>
       </div>
     );
   }

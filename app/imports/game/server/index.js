@@ -200,10 +200,12 @@ export const config = {
 
     players.forEach(player => {
       const guess = player.round.get("guess");
-      const score = Math.round(
-        (1 - Math.abs(round.data.task.correctAnswer - guess)) * 100
-      );
-      console.log(guess, score);
+      // If no guess given, score is 0
+      const score = !guess
+        ? 0
+        : Math.round(
+            (1 - Math.abs(round.data.task.correctAnswer - guess)) * 100
+          );
       player.round.set("score", score);
     });
   },
@@ -218,10 +220,8 @@ export const config = {
   // - `players` is the array of all players at this stage
   onRoundEnd(game, round, players) {
     players.forEach(player => {
-      const guess = player.round.get("guess");
       const currentScore = player.get("score");
       const roundScore = player.round.get("score");
-      console.log(guess, currentScore, roundScore);
       player.set("score", Math.round(currentScore + roundScore));
     });
   }

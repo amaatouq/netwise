@@ -1,19 +1,5 @@
 import React from "react";
-import "rc-slider/assets/index.css";
-import Slider from "rc-slider";
-
-const marks = {
-  0: <strong>0</strong>,
-  0.25: "0.25",
-  0.5: "0.5",
-  0.75: "0.75",
-  1: {
-    style: {
-      color: "red"
-    },
-    label: <strong>1</strong>
-  }
-};
+import { Slider } from "@blueprintjs/core";
 
 //TODO: this is not a good component as is for the following reasons
 //    It should have a 'null' default value while this can't be done with the default HTML <input> .. having a default value would lead to anchoring bias for the participant
@@ -23,9 +9,11 @@ const marks = {
 // null. Eventually we can create our own slider that can handle nil and report
 // and error if someone submits null.
 export default class TaskResponse extends React.Component {
-  handleChange = value => {
+  handleChange = num => {
     const { stage, round } = this.props;
     if (stage.name !== "network") {
+      const value = Math.round(num * 100) / 100;
+      stage.set("guess", value);
       round.set("guess", value);
     }
   };
@@ -37,44 +25,71 @@ export default class TaskResponse extends React.Component {
 
   render() {
     const { stage, round } = this.props;
+
+    if (stage.finished) {
+      return (
+        <div className="task-response">
+          <div class="pt-callout .modifier">
+            <h5>Waiting on other players...</h5>
+            Please wait until all players are ready
+          </div>
+        </div>
+      );
+    }
+
     const isResult = stage.name === "network";
     return (
       <div className="task-response">
         <form onSubmit={this.handleSubmit}>
+          <div className="pt-form-group">
+            {isResult ? (
+              ""
+            ) : (
+              <label className="pt-label">
+                Your current guess of the correlation is: {round.get("guess")}
+              </label>
+            )}
+
+            <div className="pt-form-content">
+              <Slider
+                min={0}
+                max={1}
+                stepSize={0.01}
+                labelStepSize={0.25}
+                onChange={this.handleChange}
+                value={round.get("guess")}
+                showTrackFill={false}
+                disabled={isResult}
+              />
+            </div>
+          </div>
+
           {isResult ? (
-            ""
+            <table class="pt-table  pt-html-table pt-html-table-bordered">
+              <thead>
+                <tr>
+                  <th>Your guess</th>
+                  <th>Actual correlation</th>
+                  <th>Score increment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{round.get("guess") || "No guess given"}</td>
+                  <td>{round.data.task.correctAnswer}</td>
+                  <td>{round.get("score")}</td>
+                </tr>
+              </tbody>
+            </table>
           ) : (
-            <p>
-              Your current guess of the correlation is: {round.get("guess")}
-            </p>
+            ""
           )}
 
-          <Slider
-            min={0}
-            max={1}
-            marks={marks}
-            step={0.01}
-            onChange={this.handleChange}
-            value={round.get("guess")}
-            disabled={isResult}
-          />
-
-          {isResult ? (
-            <dl>
-              <dt>Your guess:</dt>
-              <dd>{round.get("guess")}</dd>
-              <dt>Actual correlation:</dt>
-              <dd>{round.data.task.correctAnswer}</dd>
-              <dt>Score increment:</dt>
-              <dd>{round.get("score")}</dd>
-            </dl>
-          ) : (
-            ""
-          )}
-
-          <p>
-            <input type="submit" />
-          </p>
+          <div className="pt-form-group">
+            <button type="submit" className="pt-button pt-icon-tick pt-large">
+              {isResult ? "Next" : "Submit"}
+            </button>
+          </div>
         </form>
       </div>
     );

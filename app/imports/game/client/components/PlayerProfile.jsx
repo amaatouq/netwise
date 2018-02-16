@@ -6,11 +6,9 @@ export default class PlayerProfile extends React.Component {
     const { player } = this.props;
 
     return (
-      <aside className="player-profile">
+      <aside className="pt-card player-profile">
         <h3>Your Profile</h3>
         <img src={player.data.avatar} className="profile-avatar" />
-
-        <div>ID: {player._id}</div>
 
         {/*TODO: Why this does not work and breaks it?*/}
         {/*<div>created at: {player.createdAt}</div>*/}

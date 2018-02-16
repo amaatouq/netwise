@@ -1,6 +1,8 @@
 import React from "react";
 import moment from "moment";
 
+import { Dialog } from "@blueprintjs/core";
+
 import { assignmentTypes, maxGamesCount } from "../../../api/batches/batches";
 import { createBatch, updateBatchStatus } from "../../../api/batches/methods";
 import Loading from "../Loading";
@@ -13,9 +15,12 @@ export default class AdminBatches extends React.Component {
       simpleTreatments: [],
       completeTreatments: [],
       simpleGamesCount: 0,
-      gamesCount: 0
+      gamesCount: 0,
+      isOpen: false
     };
   }
+
+  toggleDialog = () => this.setState({ isOpen: !this.state.isOpen });
 
   handleNewBatch = event => {
     event.preventDefault();
@@ -107,7 +112,7 @@ export default class AdminBatches extends React.Component {
     const { assignment, simpleGamesCount } = this.state;
     const treatmentId = this.treatmentRef.value;
     const key = `${assignment}Treatments`;
-    const params = {};
+    const params = { isOpen: false };
 
     const existing = this.state[key].find(tt => tt.treatmentId === treatmentId);
     const treatment = existing || { treatmentId, count: 1 };
@@ -150,7 +155,7 @@ export default class AdminBatches extends React.Component {
   handleRemoveTreatment = event => {
     event.preventDefault();
 
-    const { assignment, simpleGamesCount } = this.state;
+    const { assignment, simpleGamesCount, gamesCount } = this.state;
     const key = `${assignment}Treatments`;
 
     const id = event.currentTarget.dataset.id;
@@ -159,11 +164,8 @@ export default class AdminBatches extends React.Component {
     const params = { [key]: val };
 
     if (assignment === "complete") {
-      params.gamesCount = this.gamesCountCalc(
-        assignment,
-        this.state[key],
-        simpleGamesCount
-      );
+      console.log(treatment);
+      params.gamesCount = gamesCount - treatment.count;
     }
 
     this.setState(params);
@@ -191,12 +193,12 @@ export default class AdminBatches extends React.Component {
 
     return (
       <div className="batches">
-        <h3>Batches</h3>
+        <h2>Batches</h2>
 
         {batches.length === 0 ? (
           <p>No batches yet, create one bellow.</p>
         ) : (
-          <table>
+          <table className="pt-table pt-html-table">
             <thead>
               <tr>
                 <th>Status</th>
@@ -215,6 +217,8 @@ export default class AdminBatches extends React.Component {
                 if (batch.status === "init" || batch.status === "stopped") {
                   actions.push(
                     <button
+                      type="button"
+                      className="pt-button  pt-intent-success pt-icon-play"
                       key="start"
                       onClick={this.handleStatusChange.bind(
                         this,
@@ -230,6 +234,8 @@ export default class AdminBatches extends React.Component {
                 if (batch.status === "init" || batch.status === "running") {
                   actions.push(
                     <button
+                      type="button"
+                      className="pt-button pt-icon-pause"
                       key="stop"
                       onClick={this.handleStatusChange.bind(
                         this,
@@ -237,7 +243,7 @@ export default class AdminBatches extends React.Component {
                         "stopped"
                       )}
                     >
-                      {batch.status === "init" ? "Cancel" : "Stop"}
+                      {batch.status === "init" ? "Cancel" : "Pause"}
                     </button>
                   );
                 }
@@ -280,7 +286,9 @@ export default class AdminBatches extends React.Component {
                     </td>
                     <td>{assignmentTypes[batch.assignment]}</td>
                     <td>{config}</td>
-                    <td>{actions}</td>
+                    <td>
+                      <div className="pt-button-group">{actions}</div>
+                    </td>
                   </tr>
                 );
               })}
@@ -288,118 +296,174 @@ export default class AdminBatches extends React.Component {
           </table>
         )}
 
-        <form onSubmit={this.handleNewBatch}>
+        <form
+          className="pt-card pt-elevation-3 new-batch"
+          onSubmit={this.handleNewBatch}
+        >
           <h3>New Batch</h3>
 
-          <label htmlFor="assignment">Assignment Method</label>
-          <select
-            name="assignment"
-            id="assignment"
-            onChange={this.handleAssignmentChange}
-            value={assignment}
-          >
-            {_.map(assignmentTypes, (name, key) => (
-              <option key={key} value={key}>
-                {name}
-              </option>
-            ))}
-            {/* <option value="complete">Complete</option> */}
-            {/* <option value="custom" disabled>
+          <div className="pt-form-group">
+            <label className="pt-label" htmlFor="assignment">
+              Assignment Method
+            </label>
+            <div className="pt-form-content">
+              <div className="pt-select">
+                <select
+                  className="pt-input"
+                  name="assignment"
+                  id="assignment"
+                  onChange={this.handleAssignmentChange}
+                  value={assignment}
+                >
+                  {_.map(assignmentTypes, (name, key) => (
+                    <option key={key} value={key}>
+                      {name}
+                    </option>
+                  ))}
+                  {/* <option value="complete">Complete</option> */}
+                  {/* <option value="custom" disabled>
               Custom
             </option> */}
-          </select>
-
-          <br />
-          <br />
-
-          <h4>Treatments</h4>
-
-          <div className="add-treatment">
-            <select
-              name="treatment"
-              id="treatment"
-              ref={i => (this.treatmentRef = i)}
-            >
-              {_.map(treatments, t => (
-                <option key={t._id} value={t._id}>
-                  {t.displayName()}
-                </option>
-              ))}
-            </select>
-            <button onClick={this.handleAddTreatment}>Add treatment</button>
+                </select>
+              </div>
+            </div>
           </div>
 
-          {currentTreatments.length === 0 ? (
-            <p>No treatments configured, add some above.</p>
-          ) : (
-            ""
-          )}
-          <br />
-          <table>
-            <tbody>
-              {_.map(currentTreatments, t => {
-                const id = `gamesCount${t.treatmentId}`;
-                const treatment = treatments.find(
-                  tt => tt._id === t.treatmentId
-                );
-                return (
-                  <tr key={id}>
-                    <td>{treatment.displayName()} </td>
+          <div className="pt-form-group">
+            <label className="pt-label">Treatments</label>
+            <div className="pt-form-content">
+              <table className="pt-table pt-html-table">
+                <tbody>
+                  {_.map(currentTreatments, t => {
+                    const id = `gamesCount${t.treatmentId}`;
+                    const treatment = treatments.find(
+                      tt => tt._id === t.treatmentId
+                    );
+                    return (
+                      <tr key={id}>
+                        <td>{treatment.displayName()} </td>
 
-                    <td>
-                      {isComplete ? (
-                        <input
-                          type="number"
-                          name={id}
-                          id={id}
-                          min="1"
-                          max={maxGamesCount}
-                          step="1"
-                          value={t.count}
-                          onChange={this.handleTreatmentCountChange}
-                          data-id={t.treatmentId}
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </td>
-                    <td>
+                        <td>
+                          {isComplete ? (
+                            <input
+                              type="number"
+                              name={id}
+                              id={id}
+                              min="1"
+                              max={maxGamesCount}
+                              step="1"
+                              value={t.count}
+                              onChange={this.handleTreatmentCountChange}
+                              data-id={t.treatmentId}
+                            />
+                          ) : (
+                            ""
+                          )}
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className="pt-button pt-intent-danger"
+                            onClick={this.handleRemoveTreatment}
+                            data-id={t.treatmentId}
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+
+              {currentTreatments.length === 0 ? (
+                <span className="pt-text-muted">
+                  No treatments yet, add some:
+                </span>
+              ) : (
+                ""
+              )}
+
+              <div>
+                <button
+                  type="button"
+                  className="pt-button"
+                  onClick={this.toggleDialog}
+                >
+                  Add treatment
+                </button>
+
+                <Dialog
+                  iconName="inbox"
+                  isOpen={this.state.isOpen}
+                  onClose={this.toggleDialog}
+                  title="Add Treatment to Batch"
+                >
+                  <div className="pt-dialog-body">
+                    <div className="add-treatment">
+                      <div className="pt-select">
+                        {" "}
+                        <select
+                          name="treatment"
+                          id="treatment"
+                          ref={i => (this.treatmentRef = i)}
+                        >
+                          {_.map(treatments, t => (
+                            <option key={t._id} value={t._id}>
+                              {t.displayName()}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pt-dialog-footer">
+                    <div className="pt-dialog-footer-actions">
                       <button
-                        onClick={this.handleRemoveTreatment}
-                        data-id={t.treatmentId}
+                        type="button"
+                        className="pt-button pt-intent-primary"
+                        onClick={this.handleAddTreatment}
                       >
-                        Remove
+                        Add treatment
                       </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </div>
+                  </div>
+                </Dialog>
+              </div>
+            </div>
+          </div>
 
-          <p>
-            <label htmlFor="gamesCount" disabled={assignment === "complete"}>
-              {assignment === "complete" ? "Total " : ""}
+          <div className="pt-form-group">
+            <label className="pt-label" htmlFor="gamesCount">
               Game Count
             </label>
             {assignment === "complete" ? (
-              gamesCount
+              <div className="pt-form-content">{gamesCount}</div>
             ) : (
-              <input
-                type="number"
-                name="gamesCount"
-                id="gamesCount"
-                min="1"
-                max={maxGamesCount}
-                step="1"
-                value={gamesCount}
-                onChange={this.handleGamesCountChange}
-              />
+              <div className="pt-form-content">
+                <input
+                  className="pt-input"
+                  type="number"
+                  name="gamesCount"
+                  id="gamesCount"
+                  min="1"
+                  max={maxGamesCount}
+                  step="1"
+                  value={gamesCount}
+                  onChange={this.handleGamesCountChange}
+                />
+
+                <div className="pt-form-helper-text">
+                  The total number of games to run
+                </div>
+              </div>
             )}
-          </p>
+          </div>
 
           <p>
-            <input type="submit" value="Create Batch" />
+            <button type="submit" className="pt-button pt-intent-primary">
+              Create Batch
+            </button>
           </p>
         </form>
       </div>

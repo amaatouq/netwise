@@ -2,24 +2,20 @@
   margin: 1rem;
 
   .alter {
-    border: 1px solid black;
-    padding: 1rem;
+    // TODO remove "css grid", no necessary here
     display: grid;
-    // grid-template-columns: auto auto;
-    // grid-template-rows: auto auto;
-    grid-gap: 1rem;
-    grid-template-areas:
-      "img guess"
-      "img range";
+    grid-gap: 3rem;
+    grid-template-areas: "img range";
+    padding-right: 3rem;
 
     img {
       grid-area: img;
     }
-    .guess {
-      grid-area: guess;
-    }
-    input {
+    .range {
       grid-area: range;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

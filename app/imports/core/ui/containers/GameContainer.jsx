@@ -16,8 +16,11 @@ import Game from "../components/Game";
 // This will be part of the Game object eventually
 export const gameName = "task";
 
+// Loads top level Players, Game, Round and Stage data
 export default withTracker(({ playerId, ...rest }) => {
-  const loading = !Meteor.subscribe("game", { playerId }).ready();
+  const loadingGameLobby = !Meteor.subscribe("gameLobby", { playerId }).ready();
+  const loadingGame = !Meteor.subscribe("game", { playerId }).ready();
+  const loading = loadingGameLobby || loadingGame;
 
   if (loading) {
     return {
@@ -71,7 +74,6 @@ export default withTracker(({ playerId, ...rest }) => {
     playerId: { $in: playerIds }
   }).count();
 
-  console.log(playerIds.length, playerStagesCount, playerRoundsCount);
   if (
     playerIds.length !== playerStagesCount ||
     playerIds.length !== playerRoundsCount

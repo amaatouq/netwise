@@ -32,23 +32,49 @@ export default class Admin extends React.Component {
 
     return (
       <div className="admin">
-        <header>
-          <h1>Netwise Admin</h1>
-          <nav>
-            <NavLink exact to="/admin">
+        <nav className="pt-navbar header">
+          <div className="pt-navbar-group pt-align-left">
+            <div className="pt-navbar-heading">Netwise Admin</div>
+            <NavLink
+              exact
+              to="/admin"
+              activeClassName="pt-active"
+              className="pt-button pt-minimal"
+            >
               Batches
             </NavLink>
-            <NavLink exact to="/admin/games">
+            <NavLink
+              exact
+              to="/admin/games"
+              activeClassName="pt-active"
+              className="pt-button pt-minimal"
+            >
               Games
             </NavLink>
-            <NavLink exact to="/admin/players">
+            <NavLink
+              exact
+              to="/admin/players"
+              activeClassName="pt-active"
+              className="pt-button pt-minimal"
+            >
               Players
             </NavLink>
-            <NavLink exact to="/admin/treatments">
+            <NavLink
+              exact
+              to="/admin/treatments"
+              activeClassName="pt-active"
+              className="pt-button pt-minimal"
+            >
               Treatments
             </NavLink>
-          </nav>
-        </header>
+          </div>
+          <div className="pt-navbar-group pt-align-right">
+            <button className="pt-button pt-minimal pt-icon-log-out">
+              Logout
+            </button>
+          </div>
+        </nav>
+
         <main>
           <Switch>
             <Route path="/admin" exact component={AdminBatchesContainer} />

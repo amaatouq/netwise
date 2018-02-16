@@ -51,30 +51,46 @@ export default class NewPlayer extends React.Component {
     const { id } = this.state;
 
     return (
-      <div className="player-id">
+      <div className="new-player">
         <form onSubmit={this.handleForm}>
           <h1>Identification</h1>
-          <DevNote>
-            Maybe here we have a couple of options in the batch to configure
-            this form.
-          </DevNote>
-          <p>
-            <label htmlFor="id">
-              Please enter your player identification (email, provided ID, etc.)
+
+          <div className="pt-form-group">
+            <label className="pt-label" htmlFor="id">
+              Player ID
             </label>
-            <input
-              type="text"
-              name="id"
-              id="id"
-              value={id}
-              onChange={this.handleIdUpdate}
-              required
-            />
-          </p>
-          <p>
-            <input type="submit" value="Submit" />
-          </p>
+            <div className="pt-form-content">
+              <input
+                className="pt-input"
+                type="text"
+                name="id"
+                id="id"
+                value={id}
+                onChange={this.handleIdUpdate}
+                placeholder="e.g. john@example.com"
+                required
+              />
+
+              <div className="pt-form-helper-text">
+                Enter your player identification{" "}
+                <span className="pt-text-muted">
+                  (email, provided ID, etc.)
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-form-group">
+            <button className="pt-button pt-icon-key-enter" type="submit">
+              Submit
+            </button>
+          </div>
         </form>
+
+        <DevNote>
+          Maybe here we have a couple of options in the batch to configure this
+          form.
+        </DevNote>
       </div>
     );
   }
