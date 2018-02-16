@@ -29,7 +29,7 @@ export default class TaskResponse extends React.Component {
     if (stage.finished) {
       return (
         <div className="task-response">
-          <div class="pt-callout .modifier">
+          <div className="pt-callout .modifier">
             <h5>Waiting on other players...</h5>
             Please wait until all players are ready
           </div>
@@ -65,7 +65,7 @@ export default class TaskResponse extends React.Component {
           </div>
 
           {isResult ? (
-            <table class="pt-table  pt-html-table pt-html-table-bordered">
+            <table className="pt-table  pt-html-table pt-html-table-bordered">
               <thead>
                 <tr>
                   <th>Your guess</th>

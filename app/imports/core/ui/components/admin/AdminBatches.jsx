@@ -1,7 +1,12 @@
 import React from "react";
 import moment from "moment";
 
-import { Dialog } from "@blueprintjs/core";
+import {
+  Dialog,
+  Popover,
+  NumericInput,
+  PopoverInteractionKind
+} from "@blueprintjs/core";
 
 import { assignmentTypes, maxGamesCount } from "../../../api/batches/batches";
 import { createBatch, updateBatchStatus } from "../../../api/batches/methods";
@@ -16,11 +21,15 @@ export default class AdminBatches extends React.Component {
       completeTreatments: [],
       simpleGamesCount: 0,
       gamesCount: 0,
-      isOpen: false
+      popoverIsOpen: false,
+      dialogIsOpen: false
     };
   }
 
-  toggleDialog = () => this.setState({ isOpen: !this.state.isOpen });
+  toggleDialog = () =>
+    this.setState({ dialogIsOpen: !this.state.dialogIsOpen });
+  togglePopover = () =>
+    this.setState({ popoverIsOpen: !this.state.popoverIsOpen });
 
   handleNewBatch = event => {
     event.preventDefault();
@@ -66,7 +75,8 @@ export default class AdminBatches extends React.Component {
         simpleTreatments: [],
         completeTreatments: [],
         simpleGamesCount: 0,
-        gamesCount: 0
+        gamesCount: 0,
+        dialogIsOpen: false
       });
     });
   };
@@ -95,11 +105,7 @@ export default class AdminBatches extends React.Component {
     });
   };
 
-  handleGamesCountChange = event => {
-    const simpleGamesCount = parseInt(event.currentTarget.value, 10);
-    if (_.isNaN(simpleGamesCount)) {
-      simpleGamesCount = "";
-    }
+  handleGamesCountChange = simpleGamesCount => {
     this.setState({
       simpleGamesCount,
       gamesCount: simpleGamesCount
@@ -112,29 +118,33 @@ export default class AdminBatches extends React.Component {
     const { assignment, simpleGamesCount } = this.state;
     const treatmentId = this.treatmentRef.value;
     const key = `${assignment}Treatments`;
-    const params = { isOpen: false };
+    const params = { popoverIsOpen: false };
 
-    const existing = this.state[key].find(tt => tt.treatmentId === treatmentId);
-    const treatment = existing || { treatmentId, count: 1 };
+    if (treatmentId) {
+      const existing = this.state[key].find(
+        tt => tt.treatmentId === treatmentId
+      );
+      const treatment = existing || { treatmentId, count: 1 };
 
-    if (!existing) {
-      this.state[key].push(treatment);
-    } else {
-      existing.count++;
-    }
-    params[key] = this.state[key];
-    if (assignment === "complete") {
-      params.gamesCount = this.state.gamesCount + 1;
+      if (!existing) {
+        this.state[key].push(treatment);
+      } else {
+        existing.count++;
+      }
+      params[key] = this.state[key];
+      if (assignment === "complete") {
+        params.gamesCount = this.state.gamesCount + 1;
+      }
     }
 
     this.setState(params);
   };
 
-  handleTreatmentCountChange = event => {
+  handleTreatmentCountChange = (id, count) => {
     const { assignment, completeTreatments, simpleGamesCount } = this.state;
 
-    const count = parseInt(event.currentTarget.value, 10);
-    const id = event.currentTarget.dataset.id;
+    // const count = parseInt(event.currentTarget.value, 10);
+    // const id = event.currentTarget.dataset.id;
 
     const key = `${assignment}Treatments`;
     const t = this.state[key].find(tt => tt.treatmentId === id);
@@ -234,7 +244,7 @@ export default class AdminBatches extends React.Component {
                   actions.push(
                     <button
                       type="button"
-                      className="pt-button pt-icon-pause"
+                      className="pt-button pt-icon-stop"
                       key="stop"
                       onClick={this.handleStatusChange.bind(
                         this,
@@ -242,7 +252,7 @@ export default class AdminBatches extends React.Component {
                         "stopped"
                       )}
                     >
-                      {batch.status === "init" ? "Cancel" : "Pause"}
+                      {batch.status === "init" ? "Cancel" : "Stop"}
                     </button>
                   );
                 }
@@ -295,110 +305,147 @@ export default class AdminBatches extends React.Component {
           </table>
         )}
 
-        <form
-          className="pt-card pt-elevation-3 new-batch"
-          onSubmit={this.handleNewBatch}
+        <button type="button" className="pt-button" onClick={this.toggleDialog}>
+          New Batch
+        </button>
+
+        <Dialog
+          iconName="inbox"
+          isOpen={this.state.dialogIsOpen}
+          onClose={this.toggleDialog}
+          title="New Batch"
         >
-          <h3>New Batch</h3>
-
-          <div className="pt-form-group">
-            <label className="pt-label" htmlFor="assignment">
-              Assignment Method
-            </label>
-            <div className="pt-form-content">
-              <div className="pt-select">
-                <select
-                  className="pt-input"
-                  name="assignment"
-                  id="assignment"
-                  onChange={this.handleAssignmentChange}
-                  value={assignment}
-                >
-                  {_.map(assignmentTypes, (name, key) => (
-                    <option key={key} value={key}>
-                      {name}
-                    </option>
-                  ))}
-                  {/* <option value="complete">Complete</option> */}
-                  {/* <option value="custom" disabled>
-              Custom
-            </option> */}
-                </select>
+          <form className="new-batch" onSubmit={this.handleNewBatch}>
+            <div className="pt-dialog-body">
+              <div className="pt-form-group">
+                <label className="pt-label" htmlFor="assignment">
+                  Assignment Method
+                </label>
+                <div className="pt-form-content">
+                  <div className="pt-select">
+                    <select
+                      className="pt-input"
+                      name="assignment"
+                      id="assignment"
+                      onChange={this.handleAssignmentChange}
+                      value={assignment}
+                    >
+                      {_.map(assignmentTypes, (name, key) => (
+                        <option key={key} value={key}>
+                          {name}
+                        </option>
+                      ))}
+                      {/* <option value="complete">Complete</option> */}
+                      {/* <option value="custom" disabled>
+                        Custom
+                      </option> */}
+                    </select>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div className="pt-form-group">
-            <label className="pt-label">Treatments</label>
-            <div className="pt-form-content">
-              <table className="pt-table pt-html-table">
-                <tbody>
-                  {_.map(currentTreatments, t => {
-                    const id = `gamesCount${t.treatmentId}`;
-                    const treatment = treatments.find(
-                      tt => tt._id === t.treatmentId
-                    );
-                    return (
-                      <tr key={id}>
-                        <td>{treatment.displayName()} </td>
+              <div className="pt-form-group">
+                <label className="pt-label">Treatments</label>
+                <div className="pt-form-content">
+                  <table className="pt-table pt-table-bordered pt-html-table pt-html-table-bordered">
+                    <tbody>
+                      {_.map(currentTreatments, t => {
+                        const id = `gamesCount${t.treatmentId}`;
+                        const treatment = treatments.find(
+                          tt => tt._id === t.treatmentId
+                        );
+                        return (
+                          <tr key={id}>
+                            <td>{treatment.displayName()} </td>
 
-                        <td>
-                          {isComplete ? (
-                            <input
-                              type="number"
-                              name={id}
-                              id={id}
-                              min="1"
-                              max={maxGamesCount}
-                              step="1"
-                              value={t.count}
-                              onChange={this.handleTreatmentCountChange}
-                              data-id={t.treatmentId}
-                            />
-                          ) : (
-                            ""
-                          )}
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            className="pt-button pt-intent-danger"
-                            onClick={this.handleRemoveTreatment}
-                            data-id={t.treatmentId}
-                          >
-                            Remove
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                            <td>
+                              {isComplete ? (
+                                <NumericInput
+                                  name={id}
+                                  id={id}
+                                  min="1"
+                                  max={maxGamesCount}
+                                  stepSize="1"
+                                  onValueChange={this.handleTreatmentCountChange.bind(
+                                    this,
+                                    t.treatmentId
+                                  )}
+                                  value={t.count}
+                                />
+                              ) : (
+                                // <input
+                                //   type="number"
+                                //   name={id}
+                                //   id={id}
+                                //   min="1"
+                                //   max={maxGamesCount}
+                                //   step="1"
+                                //   value={t.count}
+                                //   onChange={this.handleTreatmentCountChange}
+                                //   data-id={t.treatmentId}
+                                // />
+                                ""
+                              )}
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                className="pt-button pt-intent-danger"
+                                onClick={this.handleRemoveTreatment}
+                                data-id={t.treatmentId}
+                              >
+                                Remove
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
 
-              {currentTreatments.length === 0 ? (
-                <span className="pt-text-muted">
-                  No treatments yet, add some:
-                </span>
-              ) : (
-                ""
-              )}
+                  {currentTreatments.length === 0 ? (
+                    <span className="pt-text-muted">
+                      No treatments yet, add some:{" "}
+                    </span>
+                  ) : (
+                    ""
+                  )}
 
-              <div>
-                <button
-                  type="button"
-                  className="pt-button"
-                  onClick={this.toggleDialog}
-                >
-                  Add treatment
-                </button>
+                  <Popover
+                    autoFocus={false}
+                    // isOpen={this.state.popoverIsOpen}
+                    interactionKind={PopoverInteractionKind.HOVER}
+                    // isModal
+                  >
+                    <button
+                      type="button"
+                      className="pt-button pt-small"
+                      // onClick={this.togglePopover}
+                    >
+                      Add treatment
+                    </button>
 
-                <Dialog
-                  iconName="inbox"
-                  isOpen={this.state.isOpen}
-                  onClose={this.toggleDialog}
-                  title="Add Treatment to Batch"
-                >
-                  <div className="pt-dialog-body">
+                    <div className="add-treatment-popover">
+                      <div className="pt-select">
+                        <select
+                          name="treatment"
+                          id="treatment"
+                          ref={i => (this.treatmentRef = i)}
+                          onChange={this.handleAddTreatment}
+                          value={""}
+                        >
+                          <option value="">Choose an treatment...</option>
+                          {_.map(treatments, t => (
+                            <option key={t._id} value={t._id}>
+                              {t.displayName()}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </Popover>
+
+                  {/* <div>
                     <div className="add-treatment">
                       <div className="pt-select">
                         {" "}
@@ -416,55 +463,44 @@ export default class AdminBatches extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <div className="pt-dialog-footer">
-                    <div className="pt-dialog-footer-actions">
-                      <button
-                        type="button"
-                        className="pt-button pt-intent-primary"
-                        onClick={this.handleAddTreatment}
-                      >
-                        Add treatment
-                      </button>
-                    </div>
-                  </div>
-                </Dialog>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-form-group">
-            <label className="pt-label" htmlFor="gamesCount">
-              Game Count
-            </label>
-            {assignment === "complete" ? (
-              <div className="pt-form-content">{gamesCount}</div>
-            ) : (
-              <div className="pt-form-content">
-                <input
-                  className="pt-input"
-                  type="number"
-                  name="gamesCount"
-                  id="gamesCount"
-                  min="1"
-                  max={maxGamesCount}
-                  step="1"
-                  value={gamesCount}
-                  onChange={this.handleGamesCountChange}
-                />
-
-                <div className="pt-form-helper-text">
-                  The total number of games to run
+              </div> */}
                 </div>
               </div>
-            )}
-          </div>
 
-          <p>
-            <button type="submit" className="pt-button pt-intent-primary">
-              Create Batch
-            </button>
-          </p>
-        </form>
+              <div className="pt-form-group">
+                <label className="pt-label" htmlFor="gamesCount">
+                  Game Count
+                </label>
+                {assignment === "complete" ? (
+                  <div className="pt-form-content">{gamesCount}</div>
+                ) : (
+                  <div className="pt-form-content">
+                    <NumericInput
+                      name="gamesCount"
+                      id="gamesCount"
+                      min="1"
+                      max={maxGamesCount}
+                      stepSize="1"
+                      onValueChange={this.handleGamesCountChange}
+                      value={gamesCount}
+                    />
+
+                    <div className="pt-form-helper-text">
+                      The total number of games to run
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="pt-dialog-footer">
+              <div className="pt-dialog-footer-actions">
+                <button type="submit" className="pt-button pt-intent-primary">
+                  Create Batch
+                </button>
+              </div>
+            </div>
+          </form>
+        </Dialog>
       </div>
     );
   }
