@@ -164,7 +164,6 @@ export default class AdminBatches extends React.Component {
     const params = { [key]: val };
 
     if (assignment === "complete") {
-      console.log(treatment);
       params.gamesCount = gamesCount - treatment.count;
     }
 
