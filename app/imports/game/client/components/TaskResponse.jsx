@@ -11,7 +11,7 @@ import { Slider } from "@blueprintjs/core";
 export default class TaskResponse extends React.Component {
   handleChange = num => {
     const { stage, round } = this.props;
-    if (stage.name !== "network") {
+    if (stage.name !== "outcome") {
       const value = Math.round(num * 100) / 100;
       stage.set("guess", value);
       round.set("guess", value);
@@ -37,7 +37,7 @@ export default class TaskResponse extends React.Component {
       );
     }
 
-    const isResult = stage.name === "network";
+    const isResult = stage.name === "outcome";
     return (
       <div className="task-response">
         <form onSubmit={this.handleSubmit}>

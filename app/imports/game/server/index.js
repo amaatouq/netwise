@@ -124,7 +124,7 @@ export const config = {
   //
   init(conditions, players) {
     const avatars = _.shuffle(avatarPaths);
-
+    
     const playerIds = _.pluck(players, "_id");
     players.forEach((player, i) => {
       const alterIds = _.sample(
@@ -162,8 +162,8 @@ export const config = {
       // Dont't include a cooperative stage on the last round.
       if (conditions.rewiring && i !== roundCount - 1) {
         stages.push({
-          name: "network",
-          displayName: "Network update",
+          name: "outcome",
+          displayName: "Round outcome",
           durationInSeconds: 30
         });
       }
