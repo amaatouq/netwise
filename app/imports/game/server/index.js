@@ -151,7 +151,7 @@ export const config = {
         }
       ];
 
-      if (conditions.playerCount !== 1) {
+      if (conditions.playerCount > 1) {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",
