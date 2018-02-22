@@ -163,7 +163,7 @@ export const config = {
       if (conditions.rewiring && i !== roundCount - 1) {
         stages.push({
           name: "outcome",
-          displayName: "Round outcome",
+          displayName: "Round Outcome",
           durationInSeconds: 30
         });
       }
