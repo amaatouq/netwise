@@ -19,6 +19,6 @@
     "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
-    "simpl-schema": "^1.1.2"
+    "simpl-schema": "^1.4.2"
   }
 }

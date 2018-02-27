@@ -14,7 +14,12 @@ export const updatePlayerRoundData = new ValidatedMethod({
       type: String
     },
     value: {
-      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Array, Date)
+      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Date, Array)
+    },
+    "value.$": {
+      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Date),
+      blackbox: true,
+      optional: true
     }
   }).validator(),
 
