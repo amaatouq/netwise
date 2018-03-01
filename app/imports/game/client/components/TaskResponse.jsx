@@ -64,8 +64,8 @@ export default class TaskResponse extends React.Component {
   renderActions() {
     return (
       <div className="task-actions">
-        <button className="pt-button pt-large" onClick={() => this.handleSubmit('cooperate')}>Cooperate</button>
-        <button className="pt-button pt-large" onClick={() => this.handleSubmit('compete')}>Compete</button>
+        <button className="pt-button pt-large cooperate" onClick={() => this.handleSubmit('cooperate')}>Cooperate</button>
+        <button className="pt-button pt-large compete" onClick={() => this.handleSubmit('compete')}>Compete</button>
       </div>
     );
   }
