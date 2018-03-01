@@ -185,20 +185,43 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
-    if (stage.name !== "interactive") {
-      return;
-    }
+    // console.log("stage", stage);
+    // console.log("game", game);
+    // console.log("round", round);
+    // console.log("players", players);
+    if (stage.name === "response") {
+      game.playerIds.forEach(id => {
+        const player = players.find(p => p._id === id);
+        const partnerId = player.get("alterIds")[0];
+        const partner = players.find(p => p._id === partnerId);
 
-    players.forEach(player => {
-      const guess = player.round.get("guess");
-      // If no guess given, score is 0
-      const score = !guess
-        ? 0
-        : Math.round(
-            (1 - Math.abs(round.data.task.correctAnswer - guess)) * 100
-          );
-      player.round.set("score", score);
-    });
+        const action = player.round.get("action");
+        const partnerAction = partner.round.get("action");
+
+        const payoutKey = action + "_" + partnerAction;
+        const payoutAmt = round.data.task.payout[payoutKey];
+
+        const currentScore = player.get("score");
+        player.set("score", currentScore + payoutAmt);
+        player.round.set("payoutAmt", payoutAmt);
+
+        // console.log(player, partner);
+        console.log(action, partnerAction);
+      });
+
+    //   players.forEach(player => {
+    //     const action = round.get("action");
+
+    //     const partnerId = player.get("alterIds")[0];
+    //     const partner = game.players.find(p => p._id === partnerId);
+    //     const partnerAction = partner.round.get("action");
+    //     const payoutAmt = round.data.task.payout[action + "_" + partnerAction];
+
+    //     const currentScore = player.get("score");
+    //     player.set("score", Math.round(currentScore + payoutAmt));
+    //     player.round.set("payoutAmt", payoutAmt);
+    //   });
+    }
   },
 
   // onRoundEnd is called each time a round ends. It is a good time to
@@ -210,10 +233,5 @@ export const config = {
   // - `round`, the current Round object (same as created in init).
   // - `players` is the array of all players at this stage
   onRoundEnd(game, round, players) {
-    players.forEach(player => {
-      const currentScore = player.get("score");
-      const roundScore = player.round.get("score");
-      player.set("score", Math.round(currentScore + roundScore));
-    });
   }
 };

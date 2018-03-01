@@ -7,22 +7,26 @@ import TaskStimulus from "./TaskStimulus";
 export default class Task extends React.Component {
 
   calculatePlayerIndex() {
-    if (this.props.game.players[0]._id === this.props.player._id) {
+    if (this.props.game.playerIds[0] === this.props.player._id) {
+      console.log("this player is player 0", this.props.player._id);
       return 0;
     }
+    console.log("this player is player 1", this.props.player._id);
     return 1;
   }
 
   render() {
     const { round, stage, player, game } = this.props;
     const { data: { task: { payout } } } = round;
-    console.log("round", round);
-    console.log("player", player);
-    console.log("game", game);
     return (
       <div className="task">
         <TaskStimulus payout={ payout } playerIndex={ this.calculatePlayerIndex() }/>
-        <TaskResponse round={ round } stage={ stage } />
+        <TaskResponse
+          round={ round }
+          stage={ stage }
+          game={ game }
+          player={ player }
+        />
       </div>
     );
   }

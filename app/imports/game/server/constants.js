@@ -9,37 +9,26 @@ export const avatarPaths = [
   "/games/task/avatars/pig.png"
 ];
 
-export const taskData = [
-  {
-    payout: {
-      coopCoop: 5.5,
-      coopComp: 1.7,
-      compCoop: 7.1,
-      compComp: 3.3
-    }
-  },
-  {
-    payout: {
-      coopCoop: 5.9,
-      coopComp: 2.0,
-      compCoop: 6.3,
-      compComp: 4.3
-    }
-  },
-  {
-    payout: {
-      coopCoop: 3.8,
-      coopComp: 4.8,
-      compCoop: 8.1,
-      compComp: 2.6
-    }
-  },
-  {
-    payout: {
-      coopCoop: 8.5,
-      coopComp: 1.6,
-      compCoop: 2.7,
-      compComp: 4.3
-    }
-  },
-];
+const payouts = [
+  [5.5, 1.7, 7.1, 3.3],
+  [5.9, 2.0, 6.3, 4.3],
+  [3.8, 4.8, 8.1, 2.6],
+  [8.5, 1.6, 2.7, 4.3],
+  [6.6, 3.5, 8.5, 4.2],
+  [1.0, 2.0, 3.0, 4.0],
+  [4.0, 3.0, 2.0, 1.0],
+  [6.0, 2.0, 8.0, 3.0]
+]
+
+export const taskData = payouts.map(
+  payoutAmts => {
+    return {
+      payout: {
+        cooperate_cooperate: payoutAmts[0],
+        cooperate_compete: payoutAmts[1],
+        compete_cooperate: payoutAmts[2],
+        compete_compete: payoutAmts[3],
+      }
+    };
+  }
+);

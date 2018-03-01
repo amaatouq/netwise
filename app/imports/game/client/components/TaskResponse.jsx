@@ -4,13 +4,31 @@ import { Slider } from "@blueprintjs/core";
 export default class TaskResponse extends React.Component {
 
   handleSubmit = action => {
-    console.log("handleSubmit called with arg:", action)
-
     const { stage, round } = this.props;
-    stage.set("action", action);
     round.set("action", action);
     stage.submit();
   };
+
+  handleNext = () => {
+    this.props.stage.submit();
+  }
+
+  getPayout() {
+    const { round, game, player } = this.props;
+    const payoutAmt = round.get("payoutAmt");
+    const partnerId = player.get("alterIds")[0];
+    const partner = game.players.find(p => p._id === partnerId);
+    const partnerPayoutAmt = partner.round.get("payoutAmt");
+    console.log("payout", payoutAmt, partnerPayoutAmt);
+
+    return [payoutAmt, partnerPayoutAmt];
+  }
+
+  getPartnerAction() {
+    const alterId = this.props.player.get("alterIds")[0];
+    const partner = this.props.game.players.find(p => p._id === alterId);
+    return partner.round.get("action");
+  }
 
   renderStageFinished() {
     return (
@@ -22,6 +40,7 @@ export default class TaskResponse extends React.Component {
   }
 
   renderResult(round) {
+    const payout = this.getPayout();
     return (
       <table className="pt-table  pt-html-table pt-html-table-bordered">
         <thead>
@@ -35,9 +54,9 @@ export default class TaskResponse extends React.Component {
         <tbody>
           <tr>
             <td>{ round.get("action") }</td>
-            <td>??</td>
-            <td>??</td>
-            <td>??</td>
+            <td>{ this.getPartnerAction() }</td>
+            <td>{ payout[0] }</td>
+            <td>{ payout[1] }</td>
           </tr>
         </tbody>
       </table>
@@ -47,29 +66,28 @@ export default class TaskResponse extends React.Component {
   renderActions() {
     return (
       <div className="task-actions">
-        <button onClick={() => this.handleSubmit('cooperate')}>Cooperate</button>
-        <button onClick={() => this.handleSubmit('compete')}>Compete</button>
+        <button className="pt-button pt-large" onClick={() => this.handleSubmit('cooperate')}>Cooperate</button>
+        <button className="pt-button pt-large" onClick={() => this.handleSubmit('compete')}>Compete</button>
       </div>
     );
   }
 
   renderNextButton() {
     return (
-      <button className="pt-button pt-icon-tick pt-large" onClick={() => {}}>Next</button>
+      <button className="pt-button pt-large" onClick={this.handleNext}>Next</button>
     );
   }
 
   render() {
     const { stage, round } = this.props;
-    console.log("stage", stage.get("action"));
-    console.log("round", round.get("action"));
     const isResult = stage.name === "outcome";
 
     return (
       <div className="task-response">
-        { stage.finished ? this.renderStageFinished() : this.renderActions() }
+        { !stage.finished && !isResult ? this.renderActions() : null }
+        { stage.finished ? this.renderStageFinished() : null }
         { isResult ? this.renderResult(round) : null }
-        { isResult ? this.renderNextButton() : null }
+        { !stage.finished && isResult ? this.renderNextButton() : null }
       </div>
     );
   }
