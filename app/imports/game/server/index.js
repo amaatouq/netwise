@@ -1,6 +1,6 @@
 // config contains the server side configuration for this game. It is used by
 // netwise core to initialize and run the game.
-import { avatarPaths, difficulties, roundCount, taskData } from "./constants";
+import { avatarPaths, roundCount, taskData } from "./constants";
 
 export const config = {
   // treatmentAssignments is TBD, the following is a draft of how it might work.
@@ -133,7 +133,6 @@ export const config = {
       );
       player.data = {
         avatar: avatars[i],
-        difficulty: Random.choice(difficulties),
         alterIds,
         score: 0
       };
@@ -150,14 +149,6 @@ export const config = {
           durationInSeconds: 45
         }
       ];
-
-      if (conditions.playerCount > 1) {
-        stages.push({
-          name: "interactive",
-          displayName: "Interactive Response",
-          durationInSeconds: 30
-        });
-      }
 
       // Dont't include a cooperative stage on the last round.
       if (conditions.rewiring && i !== roundCount - 1) {

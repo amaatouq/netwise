@@ -14,7 +14,7 @@ export default class Round extends React.Component {
         <RoundNav round={round} stage={stage} />
         <div className="content">
           <PlayerProfile player={player} />
-          <Task round={round} stage={stage} player={player} />
+          <Task round={round} stage={stage} player={player} game={game}/>
           <SocialExposure stage={stage} player={player} game={game} />
         </div>
       </div>

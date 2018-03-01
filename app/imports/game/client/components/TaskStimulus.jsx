@@ -3,7 +3,9 @@ import React from "react";
 
 export default class TaskStimulus extends React.Component {
   render() {
-    console.log("payout", this.props.payout);
+    const { payout, playerIndex } = this.props;
+    console.log("payout", payout);
+    console.log("playerIndex", playerIndex);
     return (
       <div className="task-stimulus">
         <table className="pt-table task-table">
@@ -15,13 +17,13 @@ export default class TaskStimulus extends React.Component {
                 </tr>
                 <tr>
                     <td className="cooperate">Cooperate (You)</td>
-                    <td>{ this.props.payout["compComp"] }</td>
-                    <td>1.7</td>
+                    <td>{ payout["compComp"] }</td>
+                    <td>{ playerIndex ? payout["compCoop"] : payout["coopComp"] }</td>
                 </tr>
                 <tr>
                     <td className="compete">Compete (You)</td>
-                    <td>7.1</td>
-                    <td>3.3</td>
+                    <td>{ playerIndex ? payout["coopComp"] : payout["compCoop"] }</td>
+                    <td>{ payout["compComp"] }</td>
                 </tr>
             </tbody>
         </table>
@@ -31,5 +33,6 @@ export default class TaskStimulus extends React.Component {
 }
 
 TaskStimulus.propTypes = {
-  payout: PropTypes.object
+  payout: PropTypes.object,
+  playerIndex: PropTypes.number
 };
