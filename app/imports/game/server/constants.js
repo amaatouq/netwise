@@ -9,29 +9,37 @@ export const avatarPaths = [
   "/games/task/avatars/pig.png"
 ];
 
-export const difficulties = ["easy", "hard"];
 export const taskData = [
   {
-    correctAnswer: 0.1,
-    difficultyPath: {
-      easy: "/games/task/tasks/1.png",
-      hard: "/games/task/tasks/2.png"
+    payout: {
+      coopCoop: 5.5,
+      coopComp: 1.7,
+      compCoop: 7.1,
+      compComp: 3.3
     }
   },
-
   {
-    correctAnswer: 0.5,
-    difficultyPath: {
-      easy: "/games/task/tasks/3.png",
-      hard: "/games/task/tasks/4.png"
+    payout: {
+      coopCoop: 5.9,
+      coopComp: 2.0,
+      compCoop: 6.3,
+      compComp: 4.3
     }
   },
-
   {
-    correctAnswer: 1.0,
-    difficultyPath: {
-      easy: "/games/task/tasks/5.png",
-      hard: "/games/task/tasks/6.png"
+    payout: {
+      coopCoop: 3.8,
+      coopComp: 4.8,
+      compCoop: 8.1,
+      compComp: 2.6
     }
-  }
+  },
+  {
+    payout: {
+      coopCoop: 8.5,
+      coopComp: 1.6,
+      compCoop: 2.7,
+      compComp: 4.3
+    }
+  },
 ];

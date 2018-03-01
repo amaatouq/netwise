@@ -3,6 +3,7 @@ import React from "react";
 
 export default class TaskStimulus extends React.Component {
   render() {
+    console.log("payout", this.props.payout);
     return (
       <div className="task-stimulus">
         <table className="pt-table task-table">
@@ -14,7 +15,7 @@ export default class TaskStimulus extends React.Component {
                 </tr>
                 <tr>
                     <td className="cooperate">Cooperate (You)</td>
-                    <td>5.5</td>
+                    <td>{ this.props.payout["compComp"] }</td>
                     <td>1.7</td>
                 </tr>
                 <tr>
@@ -30,5 +31,5 @@ export default class TaskStimulus extends React.Component {
 }
 
 TaskStimulus.propTypes = {
-  task: PropTypes.object
+  payout: PropTypes.object
 };

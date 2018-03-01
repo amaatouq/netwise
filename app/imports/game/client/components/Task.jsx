@@ -7,12 +7,11 @@ import TaskStimulus from "./TaskStimulus";
 export default class Task extends React.Component {
   render() {
     const { round, stage, player } = this.props;
-    const { data: { task: { difficultyPath } } } = round;
-    const taskPath = difficultyPath[player.data.difficulty];
-
+    const { data: { task: { payout } } } = round;
+    console.log("round", round);
     return (
       <div className="task">
-        <TaskStimulus taskParam={taskPath} />
+        <TaskStimulus payout={ payout } />
         <TaskResponse round={round} stage={stage} />
       </div>
     );

@@ -14,11 +14,9 @@ export default class TaskResponse extends React.Component {
 
   renderStageFinished() {
     return (
-      <div className="task-response">
-        <div className="pt-callout .modifier">
-          <h5>Waiting on other players...</h5>
-          Please wait until all players are ready
-        </div>
+      <div className="pt-callout .modifier">
+        <h5>Waiting on other players...</h5>
+        Please wait until all players are ready
       </div>
     );
   }
@@ -55,23 +53,23 @@ export default class TaskResponse extends React.Component {
     );
   }
 
+  renderNextButton() {
+    return (
+      <button className="pt-button pt-icon-tick pt-large" onClick={() => {}}>Next</button>
+    );
+  }
+
   render() {
     const { stage, round } = this.props;
     console.log("stage", stage.get("action"));
     console.log("round", round.get("action"));
     const isResult = stage.name === "outcome";
 
-    { stage.finished ? this.renderStageFinished() : null }
-
     return (
       <div className="task-response">
-        { isResult ? this.renderResult(round) : this.renderActions() }
-
-{/*          <div className="pt-form-group">
-            <button type="submit" className="pt-button pt-icon-tick pt-large">
-              {isResult ? "Next" : "Submit"}
-            </button>
-          </div>*/}
+        { stage.finished ? this.renderStageFinished() : this.renderActions() }
+        { isResult ? this.renderResult(round) : null }
+        { isResult ? this.renderNextButton() : null }
       </div>
     );
   }
