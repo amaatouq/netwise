@@ -1,5 +1,5 @@
-// config contains the server side configuration for this game. It is used by
-// netwise core to initialize and run the game.
+import SimpleSchema from "simpl-schema";
+
 import { avatarPaths, difficulties, roundCount, taskData } from "./constants";
 
 export const config = {
@@ -25,7 +25,6 @@ export const config = {
   // the game runs.
   // treatmentAssignments: {
   //   gender(players, treatments) {
-
   //   }
   // },
 
@@ -42,19 +41,32 @@ export const config = {
   // netwise core.
   conditions: {
     playerCount: {
-      high: 12,
-      medium: 6,
-      low: 2,
-      solo: 1
+      description: "The Number of players participating in the given game",
+      type: SimpleSchema.Integer,
+      min: 1,
+      max: 100
     },
     altersCount: {
-      highConnectivity: 8,
-      mediumConnectivity: 4,
-      lowConnectivity: 2
+      description: "The Number of alter player each player is associated with",
+      type: SimpleSchema.Integer,
+      min: 0,
+      max: 12
     },
     rewiring: {
-      static: false,
-      dynamic: true
+      description: "Can the user change their alters on each round",
+      type: Boolean
+    },
+    uselessConditionHere: {
+      // description: "",
+      type: String,
+      regEx: /[a-zA-Z]+/,
+      optional: true
+    },
+    mode: {
+      description: "This is an example of multiple choice selector",
+      type: String,
+      allowedValues: ["A", "B", "C"],
+      optional: true
     }
   },
 
@@ -124,7 +136,7 @@ export const config = {
   //
   init(conditions, players) {
     const avatars = _.shuffle(avatarPaths);
-    
+
     const playerIds = _.pluck(players, "_id");
     players.forEach((player, i) => {
       const alterIds = _.sample(

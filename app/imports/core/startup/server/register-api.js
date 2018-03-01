@@ -1,8 +1,12 @@
 // Register your apis here
 
+// import "../../../game/server/index.js";
+import "../../api/admin/methods.js";
 import "../../api/batches/methods.js";
 import "../../api/batches/hooks.js";
 import "../../api/batches/server/publications.js";
+import "../../api/conditions/methods.js";
+import "../../api/conditions/server/publications.js";
 import "../../api/game-lobbies/hooks.js";
 import "../../api/game-lobbies/server/publications.js";
 import "../../api/games/hooks.js";

@@ -35,3 +35,4 @@ mdg:validated-method              # Define Meteor methods in a structured way
 random@1.1.0
 dynamic-import@0.3.0
 accounts-password@1.5.0
+mizzao:timesync

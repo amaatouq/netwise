@@ -4,6 +4,7 @@ import moment from "moment";
 import {
   Dialog,
   Popover,
+  Position,
   NumericInput,
   PopoverInteractionKind
 } from "@blueprintjs/core";
@@ -202,7 +203,9 @@ export default class AdminBatches extends React.Component {
 
     return (
       <div className="batches">
-        <h2>Batches</h2>
+        <h2>
+          <span className="pt-icon-large pt-icon-layers" /> Batches
+        </h2>
 
         {batches.length === 0 ? (
           <p>No batches yet, create one bellow.</p>
@@ -227,7 +230,7 @@ export default class AdminBatches extends React.Component {
                   actions.push(
                     <button
                       type="button"
-                      className="pt-button  pt-intent-success pt-icon-play"
+                      className="pt-button pt-small pt-intent-success pt-icon-play"
                       key="start"
                       onClick={this.handleStatusChange.bind(
                         this,
@@ -244,7 +247,7 @@ export default class AdminBatches extends React.Component {
                   actions.push(
                     <button
                       type="button"
-                      className="pt-button pt-icon-stop"
+                      className="pt-button pt-small pt-icon-stop"
                       key="stop"
                       onClick={this.handleStatusChange.bind(
                         this,
@@ -296,7 +299,9 @@ export default class AdminBatches extends React.Component {
                     <td>{assignmentTypes[batch.assignment]}</td>
                     <td>{config}</td>
                     <td>
-                      <div className="pt-button-group">{actions}</div>
+                      <div className="pt-button-group pt-minimal">
+                        {actions}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -310,7 +315,7 @@ export default class AdminBatches extends React.Component {
         </button>
 
         <Dialog
-          iconName="inbox"
+          iconName="layers"
           isOpen={this.state.dialogIsOpen}
           onClose={this.toggleDialog}
           title="New Batch"
@@ -404,15 +409,14 @@ export default class AdminBatches extends React.Component {
                   </table>
 
                   {currentTreatments.length === 0 ? (
-                    <span className="pt-text-muted">
-                      No treatments yet, add some:{" "}
-                    </span>
+                    <p className="pt-text-muted">No treatments yet, add one:</p>
                   ) : (
                     ""
                   )}
 
                   <Popover
                     autoFocus={false}
+                    position={Position.BOTTOM}
                     // isOpen={this.state.popoverIsOpen}
                     interactionKind={PopoverInteractionKind.HOVER}
                     // isModal

@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import AdminBatchesContainer from "../containers/admin/AdminBatchesContainer";
+import AdminConditionsContainer from "../containers/admin/AdminConditionsContainer.jsx";
+import AdminGames from "./admin/AdminGames.jsx";
+import AdminPlayers from "./admin/AdminPlayers.jsx";
 import AdminTreatmentsContainer from "../containers/admin/AdminTreatmentsContainer";
 
 export default class Admin extends React.Component {
@@ -13,6 +16,27 @@ export default class Admin extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.redirectLoggedOut(nextProps);
   }
+
+  handleLogout = () => {
+    Meteor.logout();
+  };
+
+  handleReset = () => {
+    const confirmed = confirm(
+      "You are about to delete all data in the DB, are you sure you want to do that?"
+    );
+    if (!confirmed) {
+      return;
+    }
+    const confirmed2 = confirm("Are you really sure?");
+    if (!confirmed2) {
+      return;
+    }
+    if (Meteor.isProduction) {
+      return;
+    }
+    Meteor.call("adminResetDB");
+  };
 
   redirectLoggedOut(props) {
     const { user, loggingIn } = props;
@@ -67,22 +91,52 @@ export default class Admin extends React.Component {
             >
               Treatments
             </NavLink>
+            <NavLink
+              exact
+              to="/admin/conditions"
+              activeClassName="pt-active"
+              className="pt-button pt-minimal"
+            >
+              Conditions
+            </NavLink>
           </div>
+
           <div className="pt-navbar-group pt-align-right">
-            <button className="pt-button pt-minimal pt-icon-log-out">
+            <button
+              className="pt-button pt-minimal pt-icon-log-out"
+              onClick={this.handleLogout}
+            >
               Logout
             </button>
           </div>
+
+          {Meteor.isDevelopment ? (
+            <div className="pt-navbar-group pt-align-right">
+              <button
+                className="pt-button pt-minimal pt-icon-repeat"
+                onClick={this.handleReset}
+              >
+                Reset app
+              </button>
+              <span className="pt-navbar-divider" />
+            </div>
+          ) : (
+            ""
+          )}
         </nav>
 
         <main>
           <Switch>
             <Route path="/admin" exact component={AdminBatchesContainer} />
-            <Route path="/admin/games" render={() => "Not implemented"} />
-            <Route path="/admin/players" render={() => "Not implemented"} />
+            <Route path="/admin/games" component={AdminGames} />
+            <Route path="/admin/players" component={AdminPlayers} />
             <Route
               path="/admin/treatments"
               component={AdminTreatmentsContainer}
+            />
+            <Route
+              path="/admin/conditions"
+              component={AdminConditionsContainer}
             />
           </Switch>
         </main>

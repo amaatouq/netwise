@@ -2,35 +2,15 @@
   height: 100%;
   width: 100%;
 
-  // display: grid;
-  // grid-template-columns: auto;
-  // grid-template-rows: 4rem auto;
-  // grid-gap: 0;
-
-  header {
-    background-color: @admin-header-background-color;
+  h2 {
     color: @admin-header-text-color;
 
-    h1 {
-      color: @admin-header-text-color;
-    }
-
-    nav {
-      margin-top: 0.3rem;
-      margin-left: 2rem;
-
-      a {
-        color: fade(@admin-header-nav-color, 50%);
-        text-decoration: none;
-        margin-right: 1rem;
-
-        &.active {
-          color: @admin-header-nav-color;
-          // text-decoration: underline;
-          // font-weight: bold;
-          font-style: italic;
-        }
-      }
+    .pt-icon-standard,
+    .pt-icon-large {
+      color: @admin-header-icon-color;
+      margin-right: 0.6rem;
+      position: relative;
+      top: -0.1em;
     }
   }
 
@@ -40,10 +20,6 @@
   }
 
   .batches {
-    // .new-batch {
-    //   width: 50rem;
-    // }
-
     .add-treatment {
       background-color: #eee;
       border-radius: 1rem;
@@ -69,10 +45,48 @@
 }
 
 .new-batch {
-  // .pt-numeric-input {
-  //   width: 10rem;
-  // }
   .pt-input-group .pt-input {
     width: 5rem;
   }
+}
+
+.conditions {
+  .conditions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40rem, 1fr));
+    grid-gap: 3rem;
+
+    // .condition {
+    //   width: 40rem;
+    // }
+  }
+}
+
+.condition {
+  .pt-button {
+    float: right;
+  }
+}
+
+.required {
+  label:not(.pt-radio)::after {
+    content: "*";
+    position: relative;
+    left: 0.2em;
+    color: red;
+  }
+}
+
+.admin {
+  .games,
+  .players {
+    height: calc(~"100vh - 14rem");
+  }
+}
+
+.treatments {
+  .inner-table tbody tr td {
+    box-shadow: none !important;
+  }
+  // table.pt-table.pt-bordered tbody tr td:not(:first-child)
 }

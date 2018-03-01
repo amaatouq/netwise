@@ -13,7 +13,7 @@ export const augmentPlayerStageRound = (player, stage, round) => {
     return player.data[key];
   };
   player.set = (key, value) => {
-    updatePlayerData.call({ playerId, key, value });
+    updatePlayerData.call({ playerId, key, value: JSON.stringify(value) });
   };
 
   const playerStageId = playerStage._id;
@@ -21,7 +21,11 @@ export const augmentPlayerStageRound = (player, stage, round) => {
     return playerStage.data[key];
   };
   stage.set = (key, value) => {
-    updatePlayerStageData.call({ playerStageId, key, value });
+    updatePlayerStageData.call({
+      playerStageId,
+      key,
+      value: JSON.stringify(value)
+    });
   };
   stage.submit = () => {
     submitPlayerStage.call({ playerStageId });
@@ -32,6 +36,10 @@ export const augmentPlayerStageRound = (player, stage, round) => {
     return playerRound.data[key];
   };
   round.set = (key, value) => {
-    updatePlayerRoundData.call({ playerRoundId: playerRound._id, key, value });
+    updatePlayerRoundData.call({
+      playerRoundId: playerRound._id,
+      key,
+      value: JSON.stringify(value)
+    });
   };
 };

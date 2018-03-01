@@ -1,5 +1,6 @@
 import { publishComposite } from "meteor/reywood:publish-composite";
 
+import { Conditions } from "../../conditions/conditions.js";
 import { Games } from "../games";
 import { PlayerRounds } from "../../player-rounds/player-rounds";
 import { PlayerStages } from "../../player-stages/player-stages";
@@ -17,7 +18,14 @@ publishComposite("game", function({ playerId }) {
       {
         find({ treatmentId }) {
           return Treatments.find(treatmentId);
-        }
+        },
+        children: [
+          {
+            find({ conditionIds }) {
+              return Conditions.find({ _id: { $in: conditionIds } });
+            }
+          }
+        ]
       },
       {
         find({ _id: gameId, currentStageId }) {

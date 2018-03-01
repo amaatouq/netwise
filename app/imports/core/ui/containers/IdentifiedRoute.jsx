@@ -32,7 +32,7 @@ export const setPlayerId = playerId => {
   playerIdDep.changed();
 };
 
-export const removePlayerId = playerId => {
+export const removePlayerId = () => {
   localStorage.removeItem(playerIdKey);
   playerIdDep.changed();
 };

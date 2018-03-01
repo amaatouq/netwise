@@ -18,6 +18,16 @@ To develop a new game, you will only be interested in a couple of folders:
 All other folders contain `core` Netwise code, which you should not need to
 change in the vast majority of cases.
 
+## Running locally
+
+You will need Meteor, for which you can find installation instruction
+[here](https://meteor.com/install).
+
+Then run `meteor npm install` to update local npm dependencies and start the
+local webserver by running `meteor`. The app boot on http://localhost:3000/
+by default. You can access the admin at http://localhost:3000/admin, the login
+credentials can be found in `/import/core/startup/server/bootstrap.js`.
+
 ## Deployment
 
 There are many ways the app can be deployed. Netwise has no special dependencies

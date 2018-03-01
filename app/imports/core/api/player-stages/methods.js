@@ -14,12 +14,7 @@ export const updatePlayerStageData = new ValidatedMethod({
       type: String
     },
     value: {
-      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Date, Array)
-    },
-    "value.$": {
-      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Date),
-      blackbox: true,
-      optional: true
+      type: String
     }
   }).validator(),
 
@@ -30,11 +25,12 @@ export const updatePlayerStageData = new ValidatedMethod({
     }
     // TODO check can update this record playerStage
 
+    const val = JSON.parse(value);
     const $set = {
-      [`data.${key}`]: value
+      [`data.${key}`]: val
     };
 
-    PlayerStages.update(playerStageId, { $set });
+    PlayerStages.update(playerStageId, { $set }, { autoConvert: false });
   }
 });
 

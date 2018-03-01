@@ -9,6 +9,9 @@ import { Treatments } from "../treatments/treatments";
 export const Games = new Mongo.Collection("games");
 
 Games.schema = new SimpleSchema({
+  estFinishedTime: {
+    type: Date
+  },
   finishedAt: {
     type: Date,
     optional: true

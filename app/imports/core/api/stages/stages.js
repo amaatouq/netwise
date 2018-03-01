@@ -1,4 +1,5 @@
 import SimpleSchema from "simpl-schema";
+import moment from "moment";
 
 import {
   BelongsTo,
@@ -18,6 +19,8 @@ Stages.helpers({
   }
 });
 
+Stages.stagePaddingDuration = moment.duration(5, "seconds");
+
 Stages.schema = new SimpleSchema({
   // Index represents the 0 based position of the current stage in the ordered
   // list of a all the game's stages. For display, add 1.
@@ -33,7 +36,13 @@ Stages.schema = new SimpleSchema({
   displayName: {
     type: String,
     max: 128
-    // Add auto value to by default copy the name into the displayName
+    // TODO Add auto value to by default copy the name into the displayName?
+  },
+  // This will synchronize the clients timer start time and record start time
+  // for the record
+  startTimeAt: {
+    type: Date,
+    optional: true
   },
   durationInSeconds: {
     type: SimpleSchema.Integer,

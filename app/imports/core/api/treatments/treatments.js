@@ -1,5 +1,6 @@
 import SimpleSchema from "simpl-schema";
 
+import { Conditions } from "../conditions/conditions.js";
 import { TimestampSchema } from "../default-schemas";
 
 export const Treatments = new Mongo.Collection("treatments");
@@ -20,18 +21,78 @@ export const Treatments = new Mongo.Collection("treatments");
 // game runs, independently of the treatment. More thought needed here.
 const requiredConditions = ["playerCount"];
 
+//
+// Add playerCount to conditions if missing
+//
+
+// This is the default playerCount definition
+const defaultPlayerCount = {
+  description: "The Number of players participating in the given game",
+  type: SimpleSchema.Integer,
+  min: 1,
+  max: 100
+};
+
+// We have a string version since SimpleSchema.Integer would be transformed
+// to "SimpleSchema.Integer" by JSON.stringify. Better have the example output
+// be something people can simply copy and paste
+const defaultPlayerCountString = `{
+  description: "The Number of players participating in the given game",
+  type: SimpleSchema.Integer,
+  min: 1,
+  max: 100
+};`;
+
+// The actual conditions insert, server only
+let conditionsSchema;
+Meteor.startup(() => {
+  if (!Meteor.isServer) {
+    return;
+  }
+
+  import("../../../game/server").then(server => {
+    const { config } = server;
+    if (!config.conditions) {
+      throw new Error(
+        "config.conditions in game/server/index.js are required!"
+      );
+    }
+
+    if (!config.conditions.playerCount) {
+      console.warn(
+        "no playerCount conditions defined, adding default defintion: \n" +
+          defaultPlayerCountString
+      );
+      config.conditions.playerCount = defaultPlayerCount;
+    }
+
+    const schema = {};
+    _.each(config.conditions, (condition, key) => {
+      schema[key] = _.omit(condition, "description", "stringType");
+    });
+    conditionsSchema = new SimpleSchema(schema);
+  });
+});
+
 Treatments.helpers({
   displayName() {
-    return this.name || _.pluck(this.conditions, "name").join(" - ");
+    return (
+      this.name || _.map(this.conditions(), c => c.fullLabel()).join(" - ")
+    );
   },
 
-  condition(key) {
-    return this.conditions.find(c => c.key === key);
+  condition(type) {
+    return this.conditions().find(c => c.type === type);
+  },
+
+  conditions() {
+    const query = { _id: { $in: this.conditionIds } };
+    return Conditions.find(query).fetch();
   },
 
   conditionsObject() {
     const obj = {};
-    _.each(this.conditions, cond => {
+    _.each(this.conditions(), cond => {
       obj[cond.key] = cond.value;
     });
     return obj;
@@ -43,106 +104,67 @@ Treatments.schema = new SimpleSchema({
   name: {
     type: String,
     max: 256,
-    optional: true
+    optional: true,
+    regEx: /^[a-zA-Z0-9_]+$/
   },
 
-  // Array of conditions
-  conditions: {
+  // Array of conditionIds
+  conditionIds: {
     type: Array,
-    min: requiredConditions.length,
-
+    minCount: requiredConditions.length,
+    label: "Conditions",
+    index: true,
     // Custom validation verifies required conditions are present and that
     // there are no duplicate conditions with the same key. We cannot easily
     // verify one of each conditions is present.
     custom() {
-      const errors = [];
-
-      const conditions = this.value;
-      // Ignore null/empty, caught by min: 1
-      if (!conditions || conditions.length === 0) {
+      if (!Meteor.isServer) {
         return;
       }
 
-      // Verifying required conditions are present
-      for (let i = 0; i < requiredConditions.length; i++) {
-        const key = requiredConditions[i];
-        const found = conditions.find(cond => cond.key === key);
-        if (!found) {
-          errors.push({
-            name: this.genericKey,
-            type: SimpleSchema.ErrorTypes.REQUIRED,
-            value: key
-          });
-        }
-      }
+      const conditions = Conditions.find({ _id: { $in: this.value } }).fetch();
+      const doc = {};
+      conditions.forEach(c => (doc[c.type] = c.value));
 
-      // Verifying all keys are unique
-      const keys = {};
-      for (let i = 0; i < conditions.length; i++) {
-        const cond = conditions[i];
-        if (keys[cond.key]) {
-          errors.push({
-            name: this.genericKey,
-            type: "notUnique",
-            value: cond.key
-          });
-        } else {
-          keys[cond.key] = true;
-        }
-      }
-
-      if (errors.length > 0) {
-        this.addValidationErrors(errors);
-        return false;
+      const context = conditionsSchema.newContext();
+      context.validate(doc);
+      if (!context.isValid()) {
+        const error = {
+          name: "conditionIds",
+          type: "invalid",
+          details: context.validationErrors()
+        };
+        this.addValidationErrors([error]);
+        return "invalid";
       }
     }
   },
 
-  "conditions.$": {
-    type: Object
-  },
-
-  // The key of the condition is the condition type.
-  // e.g. altersCount, rewiring...
-  "conditions.$.key": {
+  "conditionIds.$": {
     type: String,
-    max: 64,
-    // no spaces, chars only
-    regEx: /^[a-zA-Z_\-]+$/
-  },
-
-  // The selected name for condition.
-  // e.g. could be hight, medium or low.
-  // The name is only here as an easier human readable value of the condition.
-  "conditions.$.name": {
-    type: String,
-    max: 64,
-    // no spaces, chars only
-    regEx: /^[a-zA-Z_\-]+$/
-  },
-
-  // The actual value of the condition.
-  // e.g For an altersCount condition could 0, 4 or 6. For an rewiring condition
-  // could be true or false. The value is not relevant to Netwise (except for
-  // the required conditions) and can be whatever the String, Number or Boolean
-  // value.
-  "conditions.$.value": {
-    // Not sure there are other types that might be valid, these seem
-    // like enough for now.
-    type: SimpleSchema.oneOf(String, Number, Boolean)
+    regEx: SimpleSchema.RegEx.Id,
+    label: `Condition Item`,
+    associatedMustExist: Conditions
   }
 });
 
-Treatments.schema.addDocValidator(({ conditions }) => {
-  if (Boolean(Treatments.findOne({ conditions }))) {
+Treatments.schema.addDocValidator(({ conditionIds }) => {
+  const query = {
+    conditionIds: {
+      $size: conditionIds.length,
+      $all: conditionIds
+    }
+  };
+  if (Boolean(Treatments.findOne(query))) {
     return [
       {
-        name: "conditions",
+        name: "conditionIds",
         type: "notUnique"
       }
     ];
   }
   return [];
 });
+
 Treatments.schema.extend(TimestampSchema);
 Treatments.attachSchema(Treatments.schema);

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import { Games } from "./games";
 import { PlayerRounds } from "../player-rounds/player-rounds";
 import { PlayerStages } from "../player-stages/player-stages";
@@ -5,6 +7,7 @@ import { Players } from "../players/players";
 import { Rounds } from "../rounds/rounds";
 import { Stages } from "../stages/stages";
 import { config } from "../../../game/server";
+import { endOfStage } from "../stages/finish.js";
 
 export const createGameFromLobby = gameLobby => {
   const players = gameLobby.players();
@@ -44,10 +47,18 @@ export const createGameFromLobby = gameLobby => {
 
   // Create the round objects
   let stageIndex = 0;
+  let totalDuration = 0;
   params.roundIds = params.rounds.map((round, index) => {
     const roundId = Rounds.insert(_.extend({ gameId, index }, round));
     const stageIds = round.stages.map(stage => {
+      totalDuration += stage.durationInSeconds;
       const sParams = _.extend({ gameId, roundId, index: stageIndex }, stage);
+      if (!params.currentStageId) {
+        // Set startTimeAt of first stage
+        sParams.startTimeAt = moment()
+          .add(Stages.stagePaddingDuration)
+          .toDate();
+      }
       const stageId = Stages.insert(sParams);
       stageIndex++;
       if (!params.currentStageId) {
@@ -77,8 +88,35 @@ export const createGameFromLobby = gameLobby => {
     return roundId;
   });
 
+  // An estimation of the finish time to help querying.
+  // At the moment, this will 100% break with pausing the game/batch.
+  params.estFinishedTime = moment()
+    .add(totalDuration + 30, "seconds")
+    .toDate();
+
   // Insert game. As soon as it comes online, the game will start for the
   // players so all related object (rounds, stages, players) must be created
   // and ready
   return Games.insert(params);
 };
+
+// TODO Improve this, it's super hacky
+// At least dedup running this.
+Meteor.startup(() => {
+  setInterval(
+    Meteor.bindEnvironment(() => {
+      Games.find({ estFinishedTime: { $gte: new Date() } }).forEach(game => {
+        const stage = Stages.findOne(game.currentStageId);
+
+        const now = moment();
+        const startTimeAt = moment(stage.startTimeAt);
+        const endTimeAt = startTimeAt.add(stage.durationInSeconds, "seconds");
+        const ended = now.isSameOrAfter(endTimeAt);
+        if (ended) {
+          endOfStage(stage._id);
+        }
+      });
+    }),
+    1000
+  );
+});

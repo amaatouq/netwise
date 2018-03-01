@@ -89,12 +89,7 @@ export const updatePlayerData = new ValidatedMethod({
       type: String
     },
     value: {
-      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Date, Array)
-    },
-    "value.$": {
-      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Date),
-      blackbox: true,
-      optional: true
+      type: String
     }
   }).validator(),
 
@@ -105,10 +100,11 @@ export const updatePlayerData = new ValidatedMethod({
     }
     // TODO check can update this record player
 
+    const val = JSON.parse(value);
     const $set = {
-      [`data.${key}`]: value
+      [`data.${key}`]: val
     };
 
-    Players.update(playerId, { $set });
+    Players.update(playerId, { $set }, { autoConvert: false });
   }
 });

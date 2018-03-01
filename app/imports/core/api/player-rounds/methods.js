@@ -14,12 +14,7 @@ export const updatePlayerRoundData = new ValidatedMethod({
       type: String
     },
     value: {
-      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Date, Array)
-    },
-    "value.$": {
-      type: SimpleSchema.oneOf(String, Number, Boolean, Object, Date),
-      blackbox: true,
-      optional: true
+      type: String
     }
   }).validator(),
 
@@ -30,10 +25,11 @@ export const updatePlayerRoundData = new ValidatedMethod({
     }
     // TODO check can update this record playerRound
 
+    const val = JSON.parse(value);
     const $set = {
-      [`data.${key}`]: value
+      [`data.${key}`]: val
     };
 
-    PlayerRounds.update(playerRoundId, { $set });
+    PlayerRounds.update(playerRoundId, { $set }, { autoConvert: false });
   }
 });

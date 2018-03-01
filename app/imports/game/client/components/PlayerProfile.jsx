@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
 import React from "react";
 
+import Timer from "./Timer.jsx";
+
 export default class PlayerProfile extends React.Component {
   render() {
-    const { player } = this.props;
+    const { player, remainingSeconds } = this.props;
 
     return (
       <aside className="pt-card player-profile">
@@ -15,8 +17,10 @@ export default class PlayerProfile extends React.Component {
 
         <div className="profile-score">
           <h4>Total score</h4>
-          <span>{player.get("score")}</span>
+          <span>{player.get("score") || 0}</span>
         </div>
+
+        <Timer remainingSeconds={remainingSeconds} />
       </aside>
     );
   }

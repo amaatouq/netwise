@@ -1,0 +1,19 @@
+.timer {
+  margin-top: 2rem;
+  text-align: center;
+
+  .seconds {
+    font-size: 3rem;
+  }
+
+  &.lessThan5 {
+    .seconds {
+      color: red;
+    }
+  }
+  &.lessThan10 {
+    .seconds {
+      color: orange;
+    }
+  }
+}

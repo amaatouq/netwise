@@ -1,4 +1,6 @@
+import { TimeSync } from "meteor/mizzao:timesync";
 import { withTracker } from "meteor/react-meteor-data";
+import moment from "moment";
 
 import { GameLobbies } from "../../api/game-lobbies/game-lobbies";
 import { Games } from "../../api/games/games";
@@ -15,6 +17,30 @@ import Game from "../components/Game";
 
 // This will be part of the Game object eventually
 export const gameName = "task";
+
+// Handles all the timing stuff
+const withTimer = withTracker(({ stage, ...rest }) => {
+  const now = moment(TimeSync.serverTime());
+  const startTimeAt = stage && moment(stage.startTimeAt);
+  const started = stage && now.isSameOrAfter(startTimeAt);
+  const endTimeAt =
+    stage && startTimeAt.add(stage.durationInSeconds, "seconds");
+  const ended = stage && now.isSameOrAfter(endTimeAt);
+  const timedOut = stage && !stage.finished && ended;
+  const roundOver = (stage && stage.finished) || timedOut;
+  const remainingSeconds = stage && endTimeAt.diff(now, "seconds");
+  return {
+    timedOut,
+    roundOver,
+    stage,
+    started,
+    ended,
+    endTimeAt,
+    now,
+    remainingSeconds,
+    ...rest
+  };
+})(Game);
 
 // Loads top level Players, Game, Round and Stage data
 export default withTracker(({ playerId, ...rest }) => {
@@ -102,4 +128,4 @@ export default withTracker(({ playerId, ...rest }) => {
   };
 
   return params;
-})(Game);
+})(withTimer);
