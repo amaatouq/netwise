@@ -19,8 +19,6 @@ export default class TaskResponse extends React.Component {
     const partnerId = player.get("alterIds")[0];
     const partner = game.players.find(p => p._id === partnerId);
     const partnerPayoutAmt = partner.round.get("payoutAmt");
-    console.log("payout", payoutAmt, partnerPayoutAmt);
-
     return [payoutAmt, partnerPayoutAmt];
   }
 

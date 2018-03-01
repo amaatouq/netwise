@@ -185,10 +185,6 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
-    // console.log("stage", stage);
-    // console.log("game", game);
-    // console.log("round", round);
-    // console.log("players", players);
     if (stage.name === "response") {
       game.playerIds.forEach(id => {
         const player = players.find(p => p._id === id);
@@ -204,23 +200,7 @@ export const config = {
         const currentScore = player.get("score");
         player.set("score", currentScore + payoutAmt);
         player.round.set("payoutAmt", payoutAmt);
-
-        // console.log(player, partner);
-        console.log(action, partnerAction);
       });
-
-    //   players.forEach(player => {
-    //     const action = round.get("action");
-
-    //     const partnerId = player.get("alterIds")[0];
-    //     const partner = game.players.find(p => p._id === partnerId);
-    //     const partnerAction = partner.round.get("action");
-    //     const payoutAmt = round.data.task.payout[action + "_" + partnerAction];
-
-    //     const currentScore = player.get("score");
-    //     player.set("score", Math.round(currentScore + payoutAmt));
-    //     player.round.set("payoutAmt", payoutAmt);
-    //   });
     }
   },
 

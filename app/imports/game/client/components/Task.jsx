@@ -8,10 +8,8 @@ export default class Task extends React.Component {
 
   calculatePlayerIndex() {
     if (this.props.game.playerIds[0] === this.props.player._id) {
-      console.log("this player is player 0", this.props.player._id);
       return 0;
     }
-    console.log("this player is player 1", this.props.player._id);
     return 1;
   }
 
