@@ -89,7 +89,7 @@ export default class AdminNewCondition extends React.Component {
 
     return (
       <Dialog
-        iconName="properties"
+        iconName="property"
         isOpen={isOpen}
         onClose={onClose}
         title={`New ${type._id} Condition`}
@@ -125,7 +125,7 @@ export default class AdminNewCondition extends React.Component {
               <div className="pt-form-content">{input}</div>
               {properties.length > 0 ? (
                 <div className="pt-form-helper-text">
-                  {properties.join(". ")}.
+                  {properties.join(" - ")}
                 </div>
               ) : (
                 ""

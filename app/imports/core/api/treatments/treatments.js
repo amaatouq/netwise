@@ -91,11 +91,9 @@ Treatments.helpers({
   },
 
   conditionsObject() {
-    const obj = {};
-    _.each(this.conditions(), cond => {
-      obj[cond.key] = cond.value;
-    });
-    return obj;
+    const doc = {};
+    this.conditions().forEach(c => (doc[c.type] = c.value));
+    return doc;
   }
 });
 

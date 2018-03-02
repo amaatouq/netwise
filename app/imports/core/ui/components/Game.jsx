@@ -8,7 +8,15 @@ export default class Game extends React.Component {
   render() {
     const { gameLobby, Round, loading, ...rest } = this.props;
     const { game, treatment } = rest;
-    const { started, ended, endTime, now, remainingSeconds, roundOver } = rest;
+    const {
+      started,
+      ended,
+      endTime,
+      now,
+      remainingSeconds,
+      roundOver,
+      timedOut
+    } = rest;
     const time = {
       started,
       ended,
@@ -27,14 +35,6 @@ export default class Game extends React.Component {
 
     if (game.finishedAt) {
       return (
-        // <div className="finished">
-        //   <h1>Finished!</h1>
-        //   <p>Thank you for participating.</p>
-        //   <DevNote block>
-        //     There should be some outro steps here, including payment.
-        //   </DevNote>
-        // </div>
-
         <div className="pt-non-ideal-state">
           <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
             <span className="pt-icon pt-icon-tick" />
@@ -50,7 +50,7 @@ export default class Game extends React.Component {
       );
     }
 
-    if (roundOver || !started) {
+    if (timedOut || !started) {
       return (
         <div className="game waiting">
           <div className="pt-non-ideal-state">
@@ -70,10 +70,6 @@ export default class Game extends React.Component {
 
     return (
       <div className="game">
-        {/* <pre>
-          <code>{JSON.stringify(time, null, "  ")}</code>
-        </pre> */}
-
         <Round {...rest} />
       </div>
     );
