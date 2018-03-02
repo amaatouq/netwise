@@ -76,7 +76,7 @@ export const config = {
     nRounds: {
       description: "This is the number of rounds for the game",
       type: SimpleSchema.Integer,
-      min: 1,
+      min: 1
     }
   },
 
@@ -164,7 +164,7 @@ export const config = {
     const tasks = _.shuffle(taskData);
 
     const rounds = [];
-    _.times(conditions.nRounds, i => {
+    _.times(treatment.nRounds, i => {
       const stages = [
         {
           name: "response",
