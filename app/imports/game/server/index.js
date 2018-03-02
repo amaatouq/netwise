@@ -39,6 +39,9 @@ export const config = {
   // defined and determined how many players will be participating in a certain
   // game run. All other conditions are game specific and they are ignored by
   // netwise core.
+
+  //TODO: maybe for now (while we have them in the code) we should move them to another file called
+  //'conditions' so we don't clutter index.js in server
   conditions: {
     playerCount: {
       description: "The Number of players participating in the given game",
@@ -50,24 +53,31 @@ export const config = {
       description: "The Number of alter player each player is associated with",
       type: SimpleSchema.Integer,
       min: 0,
-      max: 12
+      max: 12,
+      optional: true
     },
     rewiring: {
       description: "Can the user change their alters on each round",
-      type: Boolean
+      type: Boolean,
+      optional: true
+    },
+    uselessConditionHere: {
+      // description: "",
+      type: String,
+      regEx: /[a-zA-Z]+/,
+      optional: true
+    },
+    mode: {
+      description: "This is an example of multiple choice selector",
+      type: String,
+      allowedValues: ["stationary", "nonStationary", "semiStationary"],
+      optional: true
+    },
+    nRounds: {
+      description: "This is the number of rounds for the game",
+      type: SimpleSchema.Integer,
+      min: 1,
     }
-    // uselessConditionHere: {
-    //   // description: "",
-    //   type: String,
-    //   regEx: /[a-zA-Z]+/,
-    //   optional: true
-    // },
-    // mode: {
-    //   description: "This is an example of multiple choice selector",
-    //   type: String,
-    //   allowedValues: ["A", "B", "C"],
-    //   optional: true
-    // }
   },
 
   // init() is called when a new game instance is starting. It allows you
@@ -154,7 +164,7 @@ export const config = {
     const tasks = _.shuffle(taskData);
 
     const rounds = [];
-    _.times(tasks.length, i => {
+    _.times(conditions.nRounds, i => {
       const stages = [
         {
           name: "response",
