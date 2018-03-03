@@ -55,7 +55,7 @@ export default class AdminNewTreatment extends React.Component {
               .join(" ");
             AlertToaster.show({ message: out });
           } catch (e) {
-            console.error(e);
+            console.error(JSON.stringify(err));
             AlertToaster.show({ message: String(err.message) });
           }
         } else {

@@ -11,6 +11,7 @@ import "../../api/game-lobbies/hooks.js";
 import "../../api/game-lobbies/server/publications.js";
 import "../../api/games/hooks.js";
 import "../../api/games/server/publications.js";
+import "../../api/games/sync.js";
 import "../../api/players/methods.js";
 import "../../api/player-rounds/methods.js";
 import "../../api/player-stages/methods.js";

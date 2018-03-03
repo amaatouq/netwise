@@ -1,3 +1,4 @@
+import { Tooltip, Position, Intent } from "@blueprintjs/core";
 import { NavLink, Route, Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 import React from "react";
@@ -112,12 +113,19 @@ export default class Admin extends React.Component {
 
           {Meteor.isDevelopment ? (
             <div className="pt-navbar-group pt-align-right">
-              <button
-                className="pt-button pt-minimal pt-icon-repeat"
-                onClick={this.handleReset}
+              {/* <Tooltip2 content={<span>This button also has a popover!</span>} placement="right" inline={true}> */}
+              <Tooltip
+                content="Clears entire database!"
+                position={Position.BOTTOM}
+                intent={Intent.DANGER}
               >
-                Reset app
-              </button>
+                <button
+                  className="pt-button pt-minimal pt-icon-repeat"
+                  onClick={this.handleReset}
+                >
+                  Reset app
+                </button>
+              </Tooltip>
               <span className="pt-navbar-divider" />
             </div>
           ) : (

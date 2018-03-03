@@ -52,11 +52,20 @@ Meteor.publish("public", function({ playerId }) {
     const game = Games.findOne(player.gameId);
     const gameLobby = !game && GameLobbies.findOne(player.gameLobbyId);
 
+    console.log(playerId, player.gameId, game);
+    if (!player.gameId) {
+      console.log("NO GAME ID");
+      console.log(JSON.stringify(player));
+    }
+
     return (
       // If there is a game lobby running
       (gameLobby && gameLobby.status === "running") ||
       // Or a game that is running/finished
-      (game && (game.status === "running" || game.finishedAt))
+      (game &&
+        (game.status === "running" ||
+          game.status === "finished" ||
+          game.finishedAt))
     );
   };
 

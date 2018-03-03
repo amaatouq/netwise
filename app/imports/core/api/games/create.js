@@ -7,7 +7,6 @@ import { Players } from "../players/players";
 import { Rounds } from "../rounds/rounds";
 import { Stages } from "../stages/stages";
 import { config } from "../../../game/server";
-import { endOfStage } from "../stages/finish.js";
 
 export const createGameFromLobby = gameLobby => {
   const players = gameLobby.players();
@@ -91,7 +90,7 @@ export const createGameFromLobby = gameLobby => {
   // An estimation of the finish time to help querying.
   // At the moment, this will 100% break with pausing the game/batch.
   params.estFinishedTime = moment()
-    .add(totalDuration + 30, "seconds")
+    .add(totalDuration + 300, "seconds") // Give it a 5min window for sync
     .toDate();
 
   // Insert game. As soon as it comes online, the game will start for the
@@ -99,24 +98,3 @@ export const createGameFromLobby = gameLobby => {
   // and ready
   return Games.insert(params);
 };
-
-// TODO Improve this, it's super hacky
-// At least dedup running this.
-Meteor.startup(() => {
-  setInterval(
-    Meteor.bindEnvironment(() => {
-      Games.find({ estFinishedTime: { $gte: new Date() } }).forEach(game => {
-        const stage = Stages.findOne(game.currentStageId);
-
-        const now = moment();
-        const startTimeAt = moment(stage.startTimeAt);
-        const endTimeAt = startTimeAt.add(stage.durationInSeconds, "seconds");
-        const ended = now.isSameOrAfter(endTimeAt);
-        if (ended) {
-          endOfStage(stage._id);
-        }
-      });
-    }),
-    1000
-  );
-});

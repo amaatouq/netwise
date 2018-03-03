@@ -20,8 +20,13 @@ export default class SocialExposure extends React.Component {
           const guess = otherPlayer.round.get("guess") || 0;
           return (
             <div className="alter pt-card pt-elevation-2" key={alterId}>
-              <img
+              {/* <img
                 src={otherPlayer.get("avatar")}
+                className="profile-avatar"
+                title={otherPlayer._id}
+              /> */}
+              <img
+                src={`/avatars/identicon/${otherPlayer._id}`}
                 className="profile-avatar"
                 title={otherPlayer._id}
               />

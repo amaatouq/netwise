@@ -20,6 +20,16 @@ Batches.helpers({
       (sum, t) => sum + t.count,
       0
     );
+  },
+
+  duplicate() {
+    const { assignment, simpleConfig, completeConfig } = this;
+    Batches.insert({
+      assignment,
+      simpleConfig,
+      completeConfig,
+      status: "init"
+    });
   }
 });
 
@@ -36,8 +46,14 @@ Batches.statusSchema = new SimpleSchema({
     allowedValues: [
       "init", // Batch created, not running yet
       "running", // Batch is running and available
-      "stopped", // Batch has been stopped, ongoing games keep on going but no more new players are accepted. Can be restarted.
-      "finished" // Batch has finished and cannot be restarted
+
+      // NOTE(np): paused: for now, we don't support paused because we need to do something about timers
+      // "paused", // Batch has been pause, ongoing games keep on going but no more new players are accepted. Can be restarted.
+
+      "finished", // Batch has finished and cannot be restarted
+
+      // NOTE(np): canceled might break a game if it's running at the moment, gotta be careful
+      "canceled" // Batch was canceled and cannot be restarted
     ],
     defaultValue: "init"
   }
@@ -61,8 +77,8 @@ Batches.schema = new SimpleSchema({
   },
   "simpleConfig.count": {
     type: SimpleSchema.Integer,
-    minCount: 1,
-    maxCount: maxGamesCount
+    min: 1,
+    max: maxGamesCount
   },
   "simpleConfig.treatmentIds": {
     type: Array,
@@ -109,6 +125,14 @@ Batches.schema = new SimpleSchema({
   }
 });
 
+if (Meteor.isDevelopment) {
+  Batches.schema.extend({
+    debugMode: {
+      type: Boolean,
+      defaultValue: false
+    }
+  });
+}
 Batches.schema.extend(Batches.statusSchema);
 Batches.schema.extend(TimestampSchema);
 Meteor.startup(function() {

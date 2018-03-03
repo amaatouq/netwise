@@ -35,22 +35,30 @@ export default class Game extends React.Component {
 
     if (game.finishedAt) {
       return (
-        <div className="pt-non-ideal-state">
-          <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-            <span className="pt-icon pt-icon-tick" />
-          </div>
-          <h4 className="pt-non-ideal-state-title">Finished!</h4>
-          <div className="pt-non-ideal-state-description">
-            Thank you for participating.
-            <DevNote block>
-              There should be some outro steps here, including payment.
-            </DevNote>
+        <div className="game finished">
+          <div className="pt-non-ideal-state">
+            <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
+              <span className="pt-icon pt-icon-tick" />
+            </div>
+            <h4 className="pt-non-ideal-state-title">Finished!</h4>
+            <div className="pt-non-ideal-state-description">
+              Thank you for participating.
+              <DevNote block>
+                There should be some outro steps here, including payment.
+              </DevNote>
+            </div>
           </div>
         </div>
       );
     }
 
     if (timedOut || !started) {
+      // If there's only one player, don't say waiting on other players,
+      // just show the loading screen.
+      if (treatment.condition("playerCount").value === 1) {
+        return <Loading />;
+      }
+
       return (
         <div className="game waiting">
           <div className="pt-non-ideal-state">

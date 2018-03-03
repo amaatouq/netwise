@@ -5,7 +5,15 @@ export default class NoBatch extends React.Component {
     return (
       <div className="pt-non-ideal-state">
         <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-          <span className="pt-icon pt-icon-warning-sign" />
+          {/* 
+            Not sure what works best:
+            - pt-icon-small-cross
+            - pt-icon-ban-circle
+            - pt-icon-error
+            - pt-icon-disable
+            - pt-icon-warning-sign
+         */}
+          <span className="pt-icon pt-icon-ban-circle" />
         </div>
         <h4 className="pt-non-ideal-state-title">No experiments available</h4>
         <div className="pt-non-ideal-state-description">
