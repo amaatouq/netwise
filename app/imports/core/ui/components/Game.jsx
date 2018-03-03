@@ -58,7 +58,8 @@ export default class Game extends React.Component {
               <span className="pt-icon pt-icon-automatic-updates" />
             </div>
             <h4 className="pt-non-ideal-state-title">
-              Waiting on other players...
+              {/*a more neutral message in case it was a single player*/}
+              Waiting for server response...
             </h4>
             <div className="pt-non-ideal-state-description">
               Please wait until all players are ready.

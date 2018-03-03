@@ -50,14 +50,14 @@ export const config = {
       max: 100
     },
     altersCount: {
-      description: "The Number of alter player each player is associated with",
+      description: "The Number of connections for each player",
       type: SimpleSchema.Integer,
       min: 0,
       max: 12,
       optional: true
     },
     rewiring: {
-      description: "Can the user change their alters on each round",
+      description: "Can the player change their alters on each round",
       type: Boolean,
       optional: true
     },
@@ -145,8 +145,8 @@ export const config = {
   //   values needed in this stage, similarly to Rounds, Games and Players.
   //
   init(treatment, players) {
+    console.log(treatment);
     const avatars = _.shuffle(avatarPaths);
-
     const playerIds = _.pluck(players, "_id");
     players.forEach((player, i) => {
       const alterIds = _.sample(
@@ -169,7 +169,7 @@ export const config = {
         {
           name: "response",
           displayName: "Response",
-          durationInSeconds: 45
+          durationInSeconds: 15
         }
       ];
 
@@ -177,16 +177,16 @@ export const config = {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",
-          durationInSeconds: 30
+          durationInSeconds: 20
         });
       }
 
-      // Dont't include a cooperative stage on the last round.
-      if (treatment.rewiring && i !== roundCount - 1) {
+      // Dont't include an outcome stage on the last round.
+      if (i !== roundCount - 1) {
         stages.push({
           name: "outcome",
           displayName: "Round Outcome",
-          durationInSeconds: 30
+          durationInSeconds: 15
         });
       }
 
@@ -204,6 +204,11 @@ export const config = {
     };
   },
 
+  //TODO: should we have onGameStart or onGameEnd?
+  // for example, if one wants to play a special sound when the game starts to grab attention
+  //or maybe conventing from 'game' score to real $ at the end of the game (to be shown at the exit survey)
+  //I can't think of other use cases .. but maybe some people can.
+
   // onStageEnd is called each time a stage ends. It is a good time to
   // update the players scores and make needed otherwise calculations.
   // onStageEnd is called for all players at once.
@@ -216,20 +221,24 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
-    if (stage.name !== "interactive") {
+    //TODO: why the 'game' object doesn't have the treatment object (only a reference)?
+    //for example, I want to compute the score if it is the end of the interactive stage
+    //or if it is the end of the response stage if the treatment.playerCount == 1 (i.e., solo)
+
+    if (stage.name==='outcome'){
       return;
     }
-
-    players.forEach(player => {
-      const guess = player.round.get("guess");
-      // If no guess given, score is 0
-      const score = !guess
-        ? 0
-        : Math.round(
-            (1 - Math.abs(round.data.task.correctAnswer - guess)) * 100
-          );
-      player.round.set("score", score);
-    });
+    
+      players.forEach(player => {
+        const guess = player.round.get("guess");
+        // If no guess given, score is 0
+        const score = !guess
+          ? 0
+          : Math.round(
+              (1 - Math.abs(round.data.task.correctAnswer - guess)) * 100
+            );
+        player.round.set("score", score);
+      });
   },
 
   // onRoundEnd is called each time a round ends. It is a good time to
