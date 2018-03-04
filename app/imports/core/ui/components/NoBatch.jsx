@@ -13,7 +13,7 @@ export default class NoBatch extends React.Component {
             - pt-icon-disable
             - pt-icon-warning-sign
          */}
-          <span className="pt-icon pt-icon-ban-circle" />
+          <span className="pt-icon pt-icon-error" />
         </div>
         <h4 className="pt-non-ideal-state-title">No experiments available</h4>
         <div className="pt-non-ideal-state-description">

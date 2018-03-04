@@ -15,7 +15,7 @@ Meteor.publish("admin-batches", function() {
 });
 
 Meteor.publish("public", function({ playerId }) {
-  const player = Players.findOne(playerId);
+  let player = Players.findOne(playerId);
 
   const cursorRunningFinished = Batches.find({
     status: { $in: ["running", "finished"] }
@@ -52,11 +52,11 @@ Meteor.publish("public", function({ playerId }) {
     const game = Games.findOne(player.gameId);
     const gameLobby = !game && GameLobbies.findOne(player.gameLobbyId);
 
-    console.log(playerId, player.gameId, game);
-    if (!player.gameId) {
-      console.log("NO GAME ID");
-      console.log(JSON.stringify(player));
-    }
+    // console.log(playerId, player.gameId, game);
+    // if (!player.gameId) {
+    //   console.log("NO GAME ID");
+    //   console.log(JSON.stringify(player));
+    // }
 
     return (
       // If there is a game lobby running
@@ -90,18 +90,41 @@ Meteor.publish("public", function({ playerId }) {
     changed: update
   });
 
-  const gameHandle = Games.find(player && player.gameId).observeChanges({
-    added: update,
-    removed: update,
-    changed: update
-  });
+  let gameHandle;
+  const followGame = () => {
+    if (gameHandle || !player || !player.gameId) {
+      return;
+    }
+    gameHandle = Games.find(player.gameId).observeChanges({
+      added: update,
+      removed: update,
+      changed: update
+    });
+  };
+  let gameLobbyHandle;
+  const followGameLobby = () => {
+    if (gameLobbyHandle || !player || !player.gameLobbyId) {
+      return;
+    }
+    gameLobbyHandle = GameLobbies.find(player.gameLobbyId).observeChanges({
+      added: update,
+      removed: update,
+      changed: update
+    });
+  };
 
-  const gameLobbyHandle = GameLobbies.find(
-    player && player.gameLobbyId
-  ).observeChanges({
-    added: update,
-    removed: update,
-    changed: update
+  followGame();
+  followGameLobby();
+
+  const updatePlayer = () => {
+    player = Players.findOne(playerId);
+    followGame();
+    followGameLobby();
+  };
+  playerHandle = Players.find(playerId).observeChanges({
+    added: updatePlayer,
+    removed: updatePlayer,
+    changed: updatePlayer
   });
 
   initializing = false;
@@ -109,7 +132,8 @@ Meteor.publish("public", function({ playerId }) {
   this.ready();
   this.onStop(() => {
     batchHandle.stop();
-    gameHandle.stop();
-    gameLobbyHandle.stop();
+    playerHandle && playerHandle.stop();
+    gameHandle && gameHandle.stop();
+    gameLobbyHandle && gameLobbyHandle.stop();
   });
 });

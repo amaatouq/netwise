@@ -137,7 +137,7 @@ export default class AdminNewBatch extends React.Component {
         });
         break;
       default:
-        alert("unknown assignement type?!");
+        AlertToaster.show({ message: "unknown assignement type?!" });
         return;
     }
 

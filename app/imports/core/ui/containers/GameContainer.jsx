@@ -10,7 +10,10 @@ import { Players } from "../../api/players/players";
 import { Rounds } from "../../api/rounds/rounds";
 import { Stages } from "../../api/stages/stages";
 import { Treatments } from "../../api/treatments/treatments";
-import { augmentPlayerStageRound } from "../../api/player-stages/augment";
+import {
+  augmentPlayerStageRound,
+  augmentStageRound
+} from "../../api/player-stages/augment";
 import { config } from "../../../game/client";
 import { removePlayerId } from "./IdentifiedRoute";
 import Game from "../components/Game";
@@ -19,20 +22,21 @@ import Game from "../components/Game";
 export const gameName = "task";
 
 // Handles all the timing stuff
-const withTimer = withTracker(({ stage, ...rest }) => {
+const withTimer = withTracker(({ stage, player, ...rest }) => {
   const now = moment(TimeSync.serverTime());
   const startTimeAt = stage && moment(stage.startTimeAt);
   const started = stage && now.isSameOrAfter(startTimeAt);
   const endTimeAt =
     stage && startTimeAt.add(stage.durationInSeconds, "seconds");
   const ended = stage && now.isSameOrAfter(endTimeAt);
-  const timedOut = stage && !stage.finished && ended;
-  const roundOver = (stage && stage.finished) || timedOut;
+  const timedOut = stage && !player.stage.submitted && ended;
+  const roundOver = (stage && player.stage.submitted) || timedOut;
   const remainingSeconds = stage && endTimeAt.diff(now, "seconds");
   return {
     timedOut,
     roundOver,
     stage,
+    player,
     started,
     ended,
     endTimeAt,
@@ -107,12 +111,14 @@ export default withTracker(({ playerId, ...rest }) => {
     return { loading: true };
   }
 
-  augmentPlayerStageRound(player, stage, round);
-  game.players.forEach(player => {
+  augmentStageRound(stage, round);
+  const applyAugment = player => {
     player.stage = { _id: stage._id };
     player.round = { _id: round._id };
     augmentPlayerStageRound(player, player.stage, player.round);
-  });
+  };
+  applyAugment(player);
+  game.players.forEach(applyAugment);
 
   const params = {
     loading,

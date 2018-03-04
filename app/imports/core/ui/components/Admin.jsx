@@ -22,6 +22,13 @@ export default class Admin extends React.Component {
     Meteor.logout();
   };
 
+  handleClear = () => {
+    if (Meteor.isProduction) {
+      return;
+    }
+    Meteor.call("adminResetDB", true);
+  };
+
   handleReset = () => {
     const confirmed = confirm(
       "You are about to delete all data in the DB, are you sure you want to do that?"
@@ -115,15 +122,27 @@ export default class Admin extends React.Component {
             <div className="pt-navbar-group pt-align-right">
               {/* <Tooltip2 content={<span>This button also has a popover!</span>} placement="right" inline={true}> */}
               <Tooltip
-                content="Clears entire database!"
+                content="This will remove batches/games/players and keep treatments/conditions"
+                position={Position.BOTTOM}
+                // intent={Intent.DANGER}
+              >
+                <button
+                  className="pt-button pt-minimal pt-icon-eraser"
+                  onClick={this.handleClear}
+                >
+                  Clear games
+                </button>
+              </Tooltip>
+              <Tooltip
+                content="This clears the entire database!"
                 position={Position.BOTTOM}
                 intent={Intent.DANGER}
               >
                 <button
-                  className="pt-button pt-minimal pt-icon-repeat"
+                  className="pt-button pt-minimal pt-icon-trash"
                   onClick={this.handleReset}
                 >
-                  Reset app
+                  Reset entire app
                 </button>
               </Tooltip>
               <span className="pt-navbar-divider" />

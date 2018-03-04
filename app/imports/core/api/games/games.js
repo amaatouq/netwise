@@ -2,6 +2,7 @@ import SimpleSchema from "simpl-schema";
 
 import { Batches } from "../batches/batches";
 import { BelongsTo, HasManyByRef, TimestampSchema } from "../default-schemas";
+import { DebugModeSchema } from "../default-schemas.js";
 import { Players } from "../players/players";
 import { Rounds } from "../rounds/rounds";
 import { Treatments } from "../treatments/treatments";
@@ -22,6 +23,10 @@ Games.schema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id
   }
 });
+
+if (Meteor.isDevelopment) {
+  Games.schema.extend(DebugModeSchema);
+}
 
 Games.schema.extend(TimestampSchema);
 Meteor.startup(() => {

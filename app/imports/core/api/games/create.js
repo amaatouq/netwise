@@ -14,11 +14,27 @@ export const createGameFromLobby = gameLobby => {
   const batch = gameLobby.batch();
   const treatment = gameLobby.treatment();
   const conditions = treatment.conditionsObject();
-  const { batchId, treatmentId, status } = gameLobby;
+  const { batchId, treatmentId, status, debugMode } = gameLobby;
+
+  players.forEach(player => {
+    player.data = {};
+    player.set = (key, value) => {
+      player.data[key] = value;
+    };
+    player.get = key => {
+      return player.data[key];
+    };
+  });
 
   // Ask (experimenter designer) init function to configure this game
   // given the conditions and players given.
   const params = config.init(conditions, players);
+
+  // Extract top level data fields into the the data subfield
+  params.data = _.omit(params, "players", "rounds");
+
+  // Keep debug mode from lobby
+  params.debugMode = debugMode;
 
   // We need to create/configure stuff associated with the game before we
   // create it so we generate the id early
@@ -48,8 +64,17 @@ export const createGameFromLobby = gameLobby => {
   let stageIndex = 0;
   let totalDuration = 0;
   params.roundIds = params.rounds.map((round, index) => {
+    // Extract top level data fields into the the data subfield
+    round.data = _.omit(round, "stages");
+
     const roundId = Rounds.insert(_.extend({ gameId, index }, round));
     const stageIds = round.stages.map(stage => {
+      // Extract top level data fields into the the data subfield
+      stage.data = _.omit(stage, "name", "displayName", "durationInSeconds");
+
+      if (batch.debugMode) {
+        stage.durationInSeconds = 60 * 60; // Stage time in debugMode is 1h
+      }
       totalDuration += stage.durationInSeconds;
       const sParams = _.extend({ gameId, roundId, index: stageIndex }, stage);
       if (!params.currentStageId) {

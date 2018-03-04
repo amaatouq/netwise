@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
 
+import { AlertToaster } from "./AlertToaster.jsx";
+
 export default class Login extends React.Component {
   componentWillUnmount() {
     if (this.timeout) {
@@ -43,7 +45,7 @@ export default class Login extends React.Component {
     const password = t.querySelector("#password").value;
     Meteor.loginWithPassword(username, password, err => {
       if (err) {
-        alert(err);
+        AlertToaster.show({ message: String(err) });
       }
     });
   };
@@ -59,17 +61,35 @@ export default class Login extends React.Component {
       <div className="login">
         <form onSubmit={this.handleForm}>
           <h1>Log in</h1>
-          <p>
-            <label htmlFor="username">Username</label>
-            <input type="text" name="username" id="username" />
-          </p>
-          <p>
-            <label htmlFor="password">Password</label>
-            <input type="password" name="password" id="password" />
-          </p>
-          <p>
-            <input type="submit" value="Log in" />
-          </p>
+
+          <div className="pt-control-group pt-vertical">
+            <div className="pt-input-group pt-large">
+              <span className="pt-icon pt-icon-person" />
+              <input
+                type="text"
+                className="pt-input"
+                name="username"
+                id="username"
+                placeholder="Username"
+              />
+            </div>
+            <div className="pt-input-group pt-large">
+              <span className="pt-icon pt-icon-lock" />
+              <input
+                type="password"
+                className="pt-input"
+                name="password"
+                id="password"
+                placeholder="Password"
+              />
+            </div>
+            <button
+              type="submit"
+              className="pt-button pt-large pt-intent-primary"
+            >
+              Login
+            </button>
+          </div>
         </form>
       </div>
     );

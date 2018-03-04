@@ -13,7 +13,8 @@ import { assignmentTypes, maxGamesCount } from "../../../api/batches/batches";
 import {
   createBatch,
   updateBatchStatus,
-  duplicateBatch
+  duplicateBatch,
+  setBatchInDebugMode
 } from "../../../api/batches/methods";
 import Loading from "../Loading";
 import AdminNewBatch from "./AdminNewBatch";
@@ -25,6 +26,14 @@ export default class AdminBatches extends React.Component {
 
   handleStatusChange = (_id, status, event) => {
     event.preventDefault();
+    if (
+      Meteor.isDevelopment &&
+      status === "running" &&
+      // mac: metaKey (command), window: ctrlKey (Ctrl)
+      (event.ctrlKey || event.metaKey)
+    ) {
+      setBatchInDebugMode.call({ _id });
+    }
     updateBatchStatus.call({ _id, status });
   };
 
@@ -156,6 +165,7 @@ export default class AdminBatches extends React.Component {
                     break;
                   case "finished":
                     statusIntent = "pt-intent-success pt-minimal";
+                    break;
                   case "stopped":
                   case "canceled":
                     statusIntent = "pt-intent-danger pt-minimal";

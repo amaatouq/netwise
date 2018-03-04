@@ -1,6 +1,6 @@
 import SimpleSchema from "simpl-schema";
 
-import { avatarPaths, difficulties, roundCount, taskData } from "./constants";
+import { difficulties, roundCount, taskData } from "./constants.js";
 
 export const config = {
   // treatmentAssignments is TBD, the following is a draft of how it might work.
@@ -113,9 +113,6 @@ export const config = {
   // - the `players` (Array[Player]), which is the same list of Players that was
   //   passed in but you have the opportunity to augment these Players with
   //   extra information.
-  // - any extra `data` (Object, optional) that is relevant to this game
-  //   instance. This could be any value you wish to store for you game that is
-  //   not round or player dependent or scoped.
   //
   // The Round object describes how a Round should work from Netwise standpoint
   // (number of stages, durations) and it can contain extra metadata that you
@@ -125,9 +122,6 @@ export const config = {
   // - `stages` (Array[Stage]) which is an array Stage object, each object
   //   defining one stage of the round. The Stage object is further defined
   //   bellow
-  // - `data` (Object, optional) is an open object for the game to add custom
-  //   values needed in this round, such as input/output values (e.g. path to
-  //   plot image, correct answer, etc.)
   //
   // The Stage object tells Netwise how the Stage should go down (duration)
   // and can also contain stage scoped game data:
@@ -141,24 +135,18 @@ export const config = {
   //   less than duration.
   //   If the value is 0, there is no maximum duration for
   //   this stage and the next stage only happens when all users have submitted.
-  // - `data` (Object, optional) is an open object for the game to add custom
-  //   values needed in this stage, similarly to Rounds, Games and Players.
   //
   init(treatment, players) {
-    const avatars = _.shuffle(avatarPaths);
-
     const playerIds = _.pluck(players, "_id");
     players.forEach((player, i) => {
       const alterIds = _.sample(
         _.without(playerIds, player._id),
         treatment.altersCount
       );
-      player.data = {
-        avatar: avatars[i],
-        difficulty: Random.choice(difficulties),
-        alterIds,
-        score: 0
-      };
+      player.set("avatar", `/avatars/jdenticon/${player._id}`);
+      player.set("difficulty", Random.choice(difficulties));
+      player.set("alterIds", alterIds);
+      player.set("score", 0);
     });
 
     const tasks = _.shuffle(taskData);
@@ -192,9 +180,7 @@ export const config = {
 
       rounds.push({
         stages,
-        data: {
-          task: tasks[i]
-        }
+        task: tasks[i]
       });
     });
 
@@ -226,7 +212,7 @@ export const config = {
       const score = !guess
         ? 0
         : Math.round(
-            (1 - Math.abs(round.data.task.correctAnswer - guess)) * 100
+            (1 - Math.abs(round.get("task").correctAnswer - guess)) * 100
           );
       player.round.set("score", score);
     });

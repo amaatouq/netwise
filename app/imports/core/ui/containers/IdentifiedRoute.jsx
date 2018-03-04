@@ -38,9 +38,12 @@ export const removePlayerId = () => {
 };
 
 export default withTracker(rest => {
+  const playerId = getPlayerId();
+  Meteor.subscribe("playerInfo", { playerId });
+
   return {
     ...rest,
-    playerId: getPlayerId(),
+    playerId,
     connected: Meteor.status().connected
   };
 })(IdentifiedRouteInner);

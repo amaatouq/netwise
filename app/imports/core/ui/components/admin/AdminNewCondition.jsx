@@ -1,6 +1,7 @@
 import { Dialog, NumericInput } from "@blueprintjs/core";
 import React from "react";
 
+import { AlertToaster } from "../AlertToaster.jsx";
 import { Conditions } from "../../../api/conditions/conditions.js";
 import { createCondition } from "../../../api/conditions/methods.js";
 
@@ -29,7 +30,7 @@ export default class AdminNewCondition extends React.Component {
 
     createCondition.call(params, err => {
       if (err) {
-        alert(err);
+        AlertToaster.show({ message: String(err) });
         return;
       }
       onClose();

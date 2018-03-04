@@ -1,7 +1,9 @@
 import React from "react";
 
 import { DevNote } from "./Helpers";
+import { playerReady } from "../../api/players/methods.js";
 import GameLobby from "./GameLobby";
+import Instructions from "./Instructions.jsx";
 import Loading from "./Loading";
 
 export default class Game extends React.Component {
@@ -15,7 +17,8 @@ export default class Game extends React.Component {
       now,
       remainingSeconds,
       roundOver,
-      timedOut
+      timedOut,
+      player
     } = rest;
     const time = {
       started,
@@ -30,7 +33,24 @@ export default class Game extends React.Component {
     }
 
     if (gameLobby) {
-      return <GameLobby gameLobby={gameLobby} treatment={treatment} />;
+      if (player.readyAt || gameLobby.debugMode) {
+        return (
+          <GameLobby
+            gameLobby={gameLobby}
+            treatment={treatment}
+            player={player}
+          />
+        );
+      }
+
+      return (
+        <Instructions
+          treatment={treatment}
+          onDone={() => {
+            playerReady.call({ _id: player._id });
+          }}
+        />
+      );
     }
 
     if (game.finishedAt) {

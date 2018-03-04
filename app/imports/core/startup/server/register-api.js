@@ -13,6 +13,7 @@ import "../../api/games/hooks.js";
 import "../../api/games/server/publications.js";
 import "../../api/games/sync.js";
 import "../../api/players/methods.js";
+import "../../api/players/server/publications";
 import "../../api/player-rounds/methods.js";
 import "../../api/player-stages/methods.js";
 import "../../api/player-stages/hooks.js";

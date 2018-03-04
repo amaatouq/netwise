@@ -2,7 +2,11 @@ import SimpleSchema from "simpl-schema";
 
 import { GameLobbies } from "../game-lobbies/game-lobbies";
 import { Games } from "../games/games";
-import { TimestampSchema, HasManyByRef } from "../default-schemas";
+import {
+  TimestampSchema,
+  HasManyByRef,
+  DebugModeSchema
+} from "../default-schemas";
 import { Treatments } from "../treatments/treatments";
 
 export const Batches = new Mongo.Collection("batches");
@@ -126,13 +130,9 @@ Batches.schema = new SimpleSchema({
 });
 
 if (Meteor.isDevelopment) {
-  Batches.schema.extend({
-    debugMode: {
-      type: Boolean,
-      defaultValue: false
-    }
-  });
+  Batches.schema.extend(DebugModeSchema);
 }
+
 Batches.schema.extend(Batches.statusSchema);
 Batches.schema.extend(TimestampSchema);
 Meteor.startup(function() {

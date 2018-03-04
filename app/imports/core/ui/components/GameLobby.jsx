@@ -4,10 +4,10 @@ import { CoreWrapper } from "./Helpers";
 
 export default class GameLobby extends React.Component {
   render() {
-    const { gameLobby, treatment, ...rest } = this.props;
+    const { gameLobby, treatment } = this.props;
 
     const total = treatment.condition("playerCount").value;
-    const exisiting = total - gameLobby.availableSlots;
+    const exisiting = total - gameLobby.readyCount;
     return (
       <CoreWrapper>
         <div className="game-lobby">

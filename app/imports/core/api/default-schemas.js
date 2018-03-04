@@ -9,6 +9,13 @@ export const IdSchema = new SimpleSchema({
   }
 });
 
+export const DebugModeSchema = new SimpleSchema({
+  debugMode: {
+    type: Boolean,
+    defaultValue: false
+  }
+});
+
 export const TimestampSchema = new SimpleSchema({
   createdAt: {
     type: Date,

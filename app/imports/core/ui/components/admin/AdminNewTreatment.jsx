@@ -33,7 +33,7 @@ export default class AdminNewTreatment extends React.Component {
     if (keys.length !== conditionIds.length) {
       const missing = keys.join(", ");
       const msg = `A value for each condition must be selected. (missing: ${missing})`;
-      alert(msg);
+      AlertToaster.show({ message: msg });
       return;
     }
 
