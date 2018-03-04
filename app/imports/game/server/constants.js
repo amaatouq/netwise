@@ -1,6 +1,3 @@
-export const roundCount = 10;
-export const maxOutDegree = 2;
-
 export const avatarPaths = [
   "/games/avatars/bee.png",
   "/games/avatars/bird.png",

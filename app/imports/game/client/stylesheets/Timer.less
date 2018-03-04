@@ -1,21 +1,22 @@
+//importing the Orbitron font which makes it look like a digital clock
+@import url(https://fonts.googleapis.com/css?family=Orbitron);
 .timer {
   margin-top: 2rem;
   text-align: center;
 
   .seconds {
     font-size: 3rem;
-    font-family: Helvetica, Verdana;
-    // letter-spacing: 1em;
-  }
-
-  &.lessThan5 {
-    .seconds {
-      color: red;
-    }
+    font-family: Orbitron, sans-serif;
+    color: green;
   }
   &.lessThan10 {
     .seconds {
       color: orange;
+    }
+  }
+  &.lessThan5 {
+    .seconds {
+      color: red;
     }
   }
 }
