@@ -38,6 +38,7 @@ Batches.after.insert(function(userId, batch) {
 
     const treatment = Treatments.findOne(l.treatmentId);
     l.availableSlots = treatment.condition("playerCount").value;
+    l.readyCount = l.availableSlots;
 
     return GameLobbies.insert(l);
   });

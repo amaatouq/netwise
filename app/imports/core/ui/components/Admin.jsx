@@ -1,3 +1,4 @@
+import { Tooltip, Position, Intent } from "@blueprintjs/core";
 import { NavLink, Route, Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 import React from "react";
@@ -19,6 +20,13 @@ export default class Admin extends React.Component {
 
   handleLogout = () => {
     Meteor.logout();
+  };
+
+  handleClear = () => {
+    if (Meteor.isProduction) {
+      return;
+    }
+    Meteor.call("adminResetDB", true);
   };
 
   handleReset = () => {
@@ -112,12 +120,31 @@ export default class Admin extends React.Component {
 
           {Meteor.isDevelopment ? (
             <div className="pt-navbar-group pt-align-right">
-              <button
-                className="pt-button pt-minimal pt-icon-repeat"
-                onClick={this.handleReset}
+              {/* <Tooltip2 content={<span>This button also has a popover!</span>} placement="right" inline={true}> */}
+              <Tooltip
+                content="This will remove batches/games/players and keep treatments/conditions"
+                position={Position.BOTTOM}
+                // intent={Intent.DANGER}
               >
-                Reset app
-              </button>
+                <button
+                  className="pt-button pt-minimal pt-icon-eraser"
+                  onClick={this.handleClear}
+                >
+                  Clear games
+                </button>
+              </Tooltip>
+              <Tooltip
+                content="This clears the entire database!"
+                position={Position.BOTTOM}
+                intent={Intent.DANGER}
+              >
+                <button
+                  className="pt-button pt-minimal pt-icon-trash"
+                  onClick={this.handleReset}
+                >
+                  Reset entire app
+                </button>
+              </Tooltip>
               <span className="pt-navbar-divider" />
             </div>
           ) : (

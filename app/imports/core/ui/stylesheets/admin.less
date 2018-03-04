@@ -20,6 +20,9 @@
   }
 
   .batches {
+    .pt-table {
+      width: 100%;
+    }
     .add-treatment {
       background-color: #eee;
       border-radius: 1rem;
@@ -89,4 +92,13 @@
     box-shadow: none !important;
   }
   // table.pt-table.pt-bordered tbody tr td:not(:first-child)
+}
+
+.pt-select,
+.pt-select select {
+  max-width: 100%;
+}
+
+table.pt-table td.numeric {
+  text-align: right;
 }

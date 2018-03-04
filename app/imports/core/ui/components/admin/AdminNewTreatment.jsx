@@ -33,7 +33,7 @@ export default class AdminNewTreatment extends React.Component {
     if (keys.length !== conditionIds.length) {
       const missing = keys.join(", ");
       const msg = `A value for each condition must be selected. (missing: ${missing})`;
-      alert(msg);
+      AlertToaster.show({ message: msg });
       return;
     }
 
@@ -55,7 +55,7 @@ export default class AdminNewTreatment extends React.Component {
               .join(" ");
             AlertToaster.show({ message: out });
           } catch (e) {
-            console.error(e);
+            console.error(JSON.stringify(err));
             AlertToaster.show({ message: String(err.message) });
           }
         } else {

@@ -1,25 +1,26 @@
 import React from "react";
 
+import { AlertToaster } from "./AlertToaster.jsx";
 import { DevNote } from "./Helpers";
+import { config } from "../../../game/client";
 import { createPlayer } from "../../api/players/methods";
 import { setPlayerId } from "../containers/IdentifiedRoute";
+import Centered from "./Centered.jsx";
+
+const { ConsentComponent } = config;
 
 export default class NewPlayer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: ""
-    };
-  }
+  state = { id: "", consented: false };
 
-  componentDidMount() {
-    this.timeout = setTimeout(() => {
-      this.timeout = null;
-      const field = document.querySelector("input");
-      if (field) {
-        field.focus();
-      }
-    }, 100);
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.consented && !prevState.consented) {
+      this.timeout = setTimeout(() => {
+        this.timeout = null;
+        if (this.idField) {
+          this.idField.focus();
+        }
+      }, 100);
+    }
   }
 
   componentWillUnmount() {
@@ -29,7 +30,7 @@ export default class NewPlayer extends React.Component {
   }
 
   handleIdUpdate = event => {
-    this.setState({ id: event.currentTarget.value });
+    this.setState({ id: this.idField.value });
   };
 
   handleForm = event => {
@@ -39,7 +40,7 @@ export default class NewPlayer extends React.Component {
     createPlayer.call({ id }, (err, _id) => {
       if (err) {
         console.error(err);
-        alert(err);
+        AlertToaster.show({ message: String(err) });
         return;
       }
 
@@ -48,50 +49,61 @@ export default class NewPlayer extends React.Component {
   };
 
   render() {
-    const { id } = this.state;
+    const { id, consented } = this.state;
+
+    if (!consented && ConsentComponent) {
+      return (
+        <ConsentComponent
+          onConsent={() => this.setState({ consented: true })}
+        />
+      );
+    }
 
     return (
-      <div className="new-player">
-        <form onSubmit={this.handleForm}>
-          <h1>Identification</h1>
+      <Centered>
+        <div className="new-player">
+          <form onSubmit={this.handleForm}>
+            <h1>Identification</h1>
 
-          <div className="pt-form-group">
-            <label className="pt-label" htmlFor="id">
-              Player ID
-            </label>
-            <div className="pt-form-content">
-              <input
-                className="pt-input"
-                type="text"
-                name="id"
-                id="id"
-                value={id}
-                onChange={this.handleIdUpdate}
-                placeholder="e.g. john@example.com"
-                required
-              />
+            <div className="pt-form-group">
+              <label className="pt-label" htmlFor="id">
+                Player ID
+              </label>
+              <div className="pt-form-content">
+                <input
+                  className="pt-input"
+                  type="text"
+                  name="id"
+                  id="id"
+                  value={id}
+                  onChange={this.handleIdUpdate}
+                  ref={el => (this.idField = el)}
+                  placeholder="e.g. john@example.com"
+                  required
+                />
 
-              <div className="pt-form-helper-text">
-                Enter your player identification{" "}
-                <span className="pt-text-muted">
-                  (email, provided ID, etc.)
-                </span>
+                <div className="pt-form-helper-text">
+                  Enter your player identification{" "}
+                  <span className="pt-text-muted">
+                    (provided ID, MTurk ID, etc.)
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="pt-form-group">
-            <button className="pt-button pt-icon-key-enter" type="submit">
-              Submit
-            </button>
-          </div>
-        </form>
+            <div className="pt-form-group">
+              <button className="pt-button pt-icon-key-enter" type="submit">
+                Submit
+              </button>
+            </div>
+          </form>
 
-        <DevNote>
-          Maybe here we have a couple of options in the batch to configure this
-          form.
-        </DevNote>
-      </div>
+          <DevNote>
+            Maybe here we have a couple of options in the batch to configure
+            this form.
+          </DevNote>
+        </div>
+      </Centered>
     );
   }
 }

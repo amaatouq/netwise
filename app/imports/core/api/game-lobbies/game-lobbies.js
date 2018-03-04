@@ -2,6 +2,7 @@ import SimpleSchema from "simpl-schema";
 
 import { Batches } from "../batches/batches";
 import { BelongsTo, HasManyByRef, TimestampSchema } from "../default-schemas";
+import { DebugModeSchema } from "../default-schemas.js";
 import { Players } from "../players/players";
 import { Treatments } from "../treatments/treatments";
 
@@ -33,6 +34,13 @@ GameLobbies.schema = new SimpleSchema({
     type: SimpleSchema.Integer,
     min: 0,
     label: "Available Slots"
+  },
+
+  // readyCount tells us how many players are ready to start (finished intro)
+  readyCount: {
+    type: SimpleSchema.Integer,
+    min: 0,
+    label: "Ready Count"
   }
 
   // ======================================================================
@@ -88,6 +96,10 @@ GameLobbies.schema = new SimpleSchema({
   //   optional: true
   // }
 });
+
+if (Meteor.isDevelopment) {
+  GameLobbies.schema.extend(DebugModeSchema);
+}
 
 GameLobbies.schema.extend(TimestampSchema);
 Meteor.startup(() => {

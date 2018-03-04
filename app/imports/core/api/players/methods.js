@@ -1,6 +1,9 @@
+import { ValidatedMethod } from "meteor/mdg:validated-method";
 import SimpleSchema from "simpl-schema";
-import { Players } from "./players";
+
 import { GameLobbies } from "../game-lobbies/game-lobbies";
+import { IdSchema } from "../default-schemas.js";
+import { Players } from "./players";
 
 export const createPlayer = new ValidatedMethod({
   name: "Players.methods.create",
@@ -74,6 +77,45 @@ export const createPlayer = new ValidatedMethod({
     }
 
     return player._id;
+  }
+});
+
+export const playerReady = new ValidatedMethod({
+  name: "Players.methods.ready",
+
+  validate: IdSchema.validator(),
+
+  run({ _id }) {
+    // TODO: MAYBE, add verification that the user is not current connected
+    // elsewhere and this is not a flagrant impersonation. Note that is
+    // extremely difficult to guaranty. Could also add verification of user's
+    // id with email verication for example. For now the assumption is that
+    // there is no immediate reason or long-term motiviation for people to hack
+    // each other's player account.
+
+    const player = Players.findOne(_id);
+
+    if (!player) {
+      throw new Error("unknown player");
+    }
+    const { readyAt, gameLobbyId } = player;
+
+    if (readyAt) {
+      // Already ready
+      return;
+    }
+
+    const lobby = GameLobbies.findOne(gameLobbyId);
+    if (!lobby) {
+      throw new Error("unknown lobby");
+    }
+
+    GameLobbies.update(gameLobbyId, {
+      $inc: { readyCount: -1 }
+    });
+    Players.update(_id, {
+      $set: { readyAt: new Date() }
+    });
   }
 });
 

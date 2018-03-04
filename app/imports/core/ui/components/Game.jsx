@@ -1,7 +1,9 @@
 import React from "react";
 
 import { DevNote } from "./Helpers";
+import { playerReady } from "../../api/players/methods.js";
 import GameLobby from "./GameLobby";
+import Instructions from "./Instructions.jsx";
 import Loading from "./Loading";
 
 export default class Game extends React.Component {
@@ -15,7 +17,8 @@ export default class Game extends React.Component {
       now,
       remainingSeconds,
       roundOver,
-      timedOut
+      timedOut,
+      player
     } = rest;
     const time = {
       started,
@@ -30,27 +33,52 @@ export default class Game extends React.Component {
     }
 
     if (gameLobby) {
-      return <GameLobby gameLobby={gameLobby} treatment={treatment} />;
+      if (player.readyAt || gameLobby.debugMode) {
+        return (
+          <GameLobby
+            gameLobby={gameLobby}
+            treatment={treatment}
+            player={player}
+          />
+        );
+      }
+
+      return (
+        <Instructions
+          treatment={treatment}
+          onDone={() => {
+            playerReady.call({ _id: player._id });
+          }}
+        />
+      );
     }
 
     if (game.finishedAt) {
       return (
-        <div className="pt-non-ideal-state">
-          <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-            <span className="pt-icon pt-icon-tick" />
-          </div>
-          <h4 className="pt-non-ideal-state-title">Finished!</h4>
-          <div className="pt-non-ideal-state-description">
-            Thank you for participating.
-            <DevNote block>
-              There should be some outro steps here, including payment.
-            </DevNote>
+        <div className="game finished">
+          <div className="pt-non-ideal-state">
+            <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
+              <span className="pt-icon pt-icon-tick" />
+            </div>
+            <h4 className="pt-non-ideal-state-title">Finished!</h4>
+            <div className="pt-non-ideal-state-description">
+              Thank you for participating.
+              <DevNote block>
+                There should be some outro steps here, including payment.
+              </DevNote>
+            </div>
           </div>
         </div>
       );
     }
 
     if (timedOut || !started) {
+      // If there's only one player, don't say waiting on other players,
+      // just show the loading screen.
+      if (treatment.condition("playerCount").value === 1) {
+        return <Loading />;
+      }
+
       return (
         <div className="game waiting">
           <div className="pt-non-ideal-state">

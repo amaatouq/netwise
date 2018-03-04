@@ -13,7 +13,7 @@ export default class Task extends React.Component {
     return (
       <div className="task">
         <TaskStimulus taskParam={taskPath} />
-        <TaskResponse round={round} stage={stage} />
+        <TaskResponse round={round} stage={stage} player={player} />
       </div>
     );
   }

@@ -30,7 +30,7 @@ export const augmentPlayerStageRound = (player, stage, round) => {
   stage.submit = () => {
     submitPlayerStage.call({ playerStageId });
   };
-  stage.finished = Boolean(playerStage.submittedAt);
+  stage.submitted = Boolean(playerStage.submittedAt);
 
   round.get = key => {
     return playerRound.data[key];
@@ -41,5 +41,24 @@ export const augmentPlayerStageRound = (player, stage, round) => {
       key,
       value: JSON.stringify(value)
     });
+  };
+};
+
+export const augmentStageRound = (stage, round) => {
+  stage.get = key => {
+    return state.data[key];
+  };
+  stage.set = (key, value) => {
+    throw "You cannot update stage data at the moment";
+  };
+  stage.submit = () => {
+    throw "You cannot submit the entire stage at the moment";
+  };
+
+  round.get = key => {
+    return round.data[key];
+  };
+  round.set = (key, value) => {
+    throw "You cannot update round data at the moment";
   };
 };

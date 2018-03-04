@@ -14,6 +14,12 @@ Players.schema = new SimpleSchema({
   // number (saved as string), etc...
   id: {
     type: String
+  },
+  // Time at witch the player became ready (done with intro)
+  readyAt: {
+    label: "Ready At",
+    type: Date,
+    optional: true
   }
 });
 

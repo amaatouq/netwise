@@ -3,11 +3,13 @@
 
 import { bootstrap } from "../../startup/server/bootstrap.js";
 
-const keep = ["meteor_accounts_loginServiceConfiguration", "users"];
+const userColls = ["meteor_accounts_loginServiceConfiguration", "users"];
+const keep = [].concat(userColls);
+const keepPartial = ["treatments", "conditions"];
 
 if (Meteor.isDevelopment) {
   Meteor.methods({
-    adminResetDB() {
+    adminResetDB(partial) {
       if (!this.userId) {
         throw new Error("unauthorized");
       }
@@ -26,10 +28,14 @@ if (Meteor.isDevelopment) {
             return;
           }
           colls.forEach(collection => {
-            if (!keep.includes(collection.name)) {
-              const coll = driver.open(collection.name);
-              coll.rawCollection().drop();
+            if (keep.includes(collection.name)) {
+              return;
             }
+            if (partial && keepPartial.includes(collection.name)) {
+              return;
+            }
+            const coll = driver.open(collection.name);
+            coll.rawCollection().drop();
           });
 
           db.listCollections().toArray(
@@ -38,10 +44,13 @@ if (Meteor.isDevelopment) {
                 console.error(err);
                 return;
               }
+              console.info("Keeping:");
               colls.forEach(collection => {
-                if (!keep.includes(collection.name)) {
-                  console.error("collection still present: " + collection.name);
+                let extra = "";
+                if (userColls.includes(collection.name)) {
+                  extra = "(used by admin login system)";
                 }
+                console.info(" - " + collection.name, extra);
               });
 
               console.info("Cleared DB");

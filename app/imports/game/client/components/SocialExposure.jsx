@@ -11,7 +11,7 @@ export default class SocialExposure extends React.Component {
     } else {
       const interactive = stage.name === "interactive";
       const alterIds = player.get("alterIds");
-      if (_.isEmpty(alterIds)) {
+      if (_.isEmpty(alterIds) || !interactive) {
         content = " ";
       } else {
         content = alterIds.map(alterId => {
