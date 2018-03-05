@@ -4,3 +4,4 @@ node_modules/
 !/.gitignore
 dev.json
 settings.json
+**/.idea/workspace.xml **/.idea/tasks.xml
