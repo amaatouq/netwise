@@ -5,7 +5,7 @@ import Timer from "./Timer.jsx";
 
 export default class PlayerProfile extends React.Component {
   render() {
-    const { player, remainingSeconds } = this.props;
+    const { player, stage } = this.props;
 
     return (
       <aside className="pt-card player-profile">
@@ -20,7 +20,7 @@ export default class PlayerProfile extends React.Component {
           <span>{player.get("score") || 0}</span>
         </div>
 
-        <Timer remainingSeconds={remainingSeconds} />
+        <Timer stage={stage} />
       </aside>
     );
   }

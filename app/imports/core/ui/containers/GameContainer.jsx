@@ -2,20 +2,15 @@ import { TimeSync } from "meteor/mizzao:timesync";
 import { withTracker } from "meteor/react-meteor-data";
 import moment from "moment";
 
-import { GameLobbies } from "../../api/game-lobbies/game-lobbies";
-import { Games } from "../../api/games/games";
 import { PlayerRounds } from "../../api/player-rounds/player-rounds";
 import { PlayerStages } from "../../api/player-stages/player-stages";
 import { Players } from "../../api/players/players";
 import { Rounds } from "../../api/rounds/rounds";
 import { Stages } from "../../api/stages/stages";
-import { Treatments } from "../../api/treatments/treatments";
 import {
   augmentPlayerStageRound,
   augmentStageRound
 } from "../../api/player-stages/augment";
-import { config } from "../../../game/client";
-import { removePlayerId } from "./IdentifiedRoute";
 import Game from "../components/Game";
 
 // This will be part of the Game object eventually
@@ -31,7 +26,6 @@ const withTimer = withTracker(({ stage, player, ...rest }) => {
   const ended = stage && now.isSameOrAfter(endTimeAt);
   const timedOut = stage && !player.stage.submitted && ended;
   const roundOver = (stage && player.stage.submitted) || timedOut;
-  const remainingSeconds = stage && endTimeAt.diff(now, "seconds");
   return {
     timedOut,
     roundOver,
@@ -40,98 +34,77 @@ const withTimer = withTracker(({ stage, player, ...rest }) => {
     started,
     ended,
     endTimeAt,
-    now,
-    remainingSeconds,
     ...rest
   };
 })(Game);
 
+const loadingObj = { loading: true };
+
 // Loads top level Players, Game, Round and Stage data
-export default withTracker(({ playerId, ...rest }) => {
-  const loadingGameLobby = !Meteor.subscribe("gameLobby", { playerId }).ready();
-  const loadingGame = !Meteor.subscribe("game", { playerId }).ready();
-  const loading = loadingGameLobby || loadingGame;
-
-  if (loading) {
-    return {
-      loading
-    };
-  }
-
-  const player = Players.findOne(playerId);
-  if (!player) {
-    console.error(`no player!! (${playerId})`);
-    removePlayerId(playerId);
-    return { loading: true };
-  }
-
-  // There should always only be one game returned by the subscription
-  const game = Games.findOne();
-  if (!game) {
-    const gameLobby = GameLobbies.findOne();
-    if (!gameLobby) {
-      throw new Error("game not found");
+export default withTracker(
+  ({ player, gameLobby, treatment, game, ...rest }) => {
+    if (!game) {
+      if (!gameLobby) {
+        throw new Error("game not found");
+      }
+      return {
+        gameLobby,
+        player,
+        treatment
+      };
     }
-    return {
-      gameLobby,
-      player,
-      treatment: Treatments.findOne(gameLobby.treatmentId)
+
+    const gameId = game._id;
+    game.treatment = treatment.conditionsObject();
+    game.players = Players.find({ gameId }).fetch();
+    game.rounds = Rounds.find({ gameId }).fetch();
+    game.rounds.forEach(round => {
+      round.stages = Stages.find({ roundId: round._id }).fetch();
+    });
+
+    const stage = Stages.findOne(game.currentStageId);
+    const round = game.rounds.find(r => r._id === stage.roundId);
+
+    // We're having streaming updates from the backend that put us in an
+    // uncertain state until everything is loaded correctly.
+    const playerIds = game.players.map(p => p._id);
+    const playerStagesCount = PlayerStages.find({
+      stageId: stage._id,
+      playerId: { $in: playerIds }
+    }).count();
+    const playerRoundsCount = PlayerRounds.find({
+      roundId: round._id,
+      playerId: { $in: playerIds }
+    }).count();
+
+    if (
+      playerIds.length !== playerStagesCount ||
+      playerIds.length !== playerRoundsCount
+    ) {
+      console.error("here1");
+      return loadingObj;
+    }
+
+    augmentStageRound(stage, round);
+    const applyAugment = player => {
+      player.stage = { _id: stage._id };
+      player.round = { _id: round._id };
+      augmentPlayerStageRound(player, player.stage, player.round);
     };
+    applyAugment(player);
+    game.players.forEach(applyAugment);
+
+    const params = {
+      game,
+      round,
+      stage,
+      player,
+      treatment,
+      playerStagesCount,
+      playerRoundsCount,
+      ...rest
+    };
+
+    return params;
   }
-
-  const gameId = game._id;
-  game.players = Players.find({ gameId }).fetch();
-  game.rounds = Rounds.find({ gameId }).fetch();
-  game.rounds.forEach(round => {
-    round.stages = Stages.find({ roundId: round._id }).fetch();
-  });
-
-  const Round = config.RoundComponent;
-
-  const stage = Stages.findOne(game.currentStageId);
-  const round = game.rounds.find(r => r._id === stage.roundId);
-  const treatment = Treatments.findOne(game.treatmentId);
-
-  // We're having streaming updates from the backend that put us in an
-  // uncertain state until everything is loaded correctly.
-  const playerIds = game.players.map(p => p._id);
-  const playerStagesCount = PlayerStages.find({
-    stageId: stage._id,
-    playerId: { $in: playerIds }
-  }).count();
-  const playerRoundsCount = PlayerRounds.find({
-    roundId: round._id,
-    playerId: { $in: playerIds }
-  }).count();
-
-  if (
-    playerIds.length !== playerStagesCount ||
-    playerIds.length !== playerRoundsCount
-  ) {
-    return { loading: true };
-  }
-
-  augmentStageRound(stage, round);
-  const applyAugment = player => {
-    player.stage = { _id: stage._id };
-    player.round = { _id: round._id };
-    augmentPlayerStageRound(player, player.stage, player.round);
-  };
-  applyAugment(player);
-  game.players.forEach(applyAugment);
-
-  const params = {
-    loading,
-    Round,
-    game,
-    round,
-    stage,
-    player,
-    treatment,
-    playerStagesCount,
-    playerRoundsCount,
-    ...rest
-  };
-
-  return params;
-})(withTimer);
+)(withTimer);

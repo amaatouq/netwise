@@ -14,126 +14,17 @@ Meteor.publish("admin-batches", function() {
   return [Batches.find()];
 });
 
-Meteor.publish("public", function({ playerId }) {
-  let player = Players.findOne(playerId);
+const idFieldOnly = { fields: { _id: 1 } };
 
-  const cursorRunningFinished = Batches.find({
-    status: { $in: ["running", "finished"] }
-  });
-  const cursorRunning = Batches.find({ status: "running" });
+Meteor.publish("runningBatches", function({ playerId }) {
+  // Only return _id field of running batches
+  return Batches.find({ status: "running" }, idFieldOnly);
+});
 
-  const batchAvail = () => {
-    // If there are not Batches running or finished at all, bail early
-    if (cursorRunningFinished.count() === 0) {
-      return false;
-    }
-
-    // If we have no player and no "running" batches, bail
-    if (!player) {
-      if (cursorRunning.count() === 0) {
-        return;
-      }
-
-      // We still have running batches, verify a game lobby still has room
-      const batches = Batches.find(
-        { status: "running" },
-        { fields: { _id: 1 } }
-      ).fetch();
-      const batchIds = _.pluck(batches, "_id");
-      // Aggregating lobbies' available slots withing a batch
-      const results = aggregateGameLobbies([
-        { $match: { batchId: { $in: batchIds } } },
-        { $project: { availableSlots: { $sum: "$availableSlots" } } }
-      ]);
-      return Boolean(results.find(r => r.availableSlots > 0));
-    }
-
-    // See if the user is already assigned a game or a lobby
-    const game = Games.findOne(player.gameId);
-    const gameLobby = !game && GameLobbies.findOne(player.gameLobbyId);
-
-    // console.log(playerId, player.gameId, game);
-    // if (!player.gameId) {
-    //   console.log("NO GAME ID");
-    //   console.log(JSON.stringify(player));
-    // }
-
-    return (
-      // If there is a game lobby running
-      (gameLobby && gameLobby.status === "running") ||
-      // Or a game that is running/finished
-      (game &&
-        (game.status === "running" ||
-          game.status === "finished" ||
-          game.finishedAt))
-    );
-  };
-
-  let initializing = true;
-  let batchAvailable = batchAvail();
-
-  // Anytime a batch changes state, run the batchAvail function
-  const update = () => {
-    if (initializing) {
-      return;
-    }
-    const baNew = batchAvail();
-    if (baNew !== batchAvailable) {
-      batchAvailable = baNew;
-      this.changed("batchAvailable", "batchAvailable", { batchAvailable });
-    }
-  };
-
-  const batchHandle = cursorRunningFinished.observeChanges({
-    added: update,
-    removed: update,
-    changed: update
-  });
-
-  let gameHandle;
-  const followGame = () => {
-    if (gameHandle || !player || !player.gameId) {
-      return;
-    }
-    gameHandle = Games.find(player.gameId).observeChanges({
-      added: update,
-      removed: update,
-      changed: update
-    });
-  };
-  let gameLobbyHandle;
-  const followGameLobby = () => {
-    if (gameLobbyHandle || !player || !player.gameLobbyId) {
-      return;
-    }
-    gameLobbyHandle = GameLobbies.find(player.gameLobbyId).observeChanges({
-      added: update,
-      removed: update,
-      changed: update
-    });
-  };
-
-  followGame();
-  followGameLobby();
-
-  const updatePlayer = () => {
-    player = Players.findOne(playerId);
-    followGame();
-    followGameLobby();
-  };
-  playerHandle = Players.find(playerId).observeChanges({
-    added: updatePlayer,
-    removed: updatePlayer,
-    changed: updatePlayer
-  });
-
-  initializing = false;
-  this.added("batchAvailable", "batchAvailable", { batchAvailable });
-  this.ready();
-  this.onStop(() => {
-    batchHandle.stop();
-    playerHandle && playerHandle.stop();
-    gameHandle && gameHandle.stop();
-    gameLobbyHandle && gameLobbyHandle.stop();
-  });
+Meteor.publish("availableLobbies", function({ batchIds }) {
+  // Only return _id field of lobbies in given batches with available slots
+  return GameLobbies.find(
+    { batchId: { $in: batchIds }, availableSlots: { $gt: 0 } },
+    idFieldOnly
+  );
 });

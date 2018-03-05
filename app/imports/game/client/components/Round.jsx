@@ -8,13 +8,13 @@ import Task from "../components/Task";
 
 export default class Round extends React.Component {
   render() {
-    const { round, stage, player, game, remainingSeconds } = this.props;
+    const { round, stage, player, game, treatment } = this.props;
 
     return (
       <div className="round">
         <RoundNav round={round} stage={stage} />
         <div className="content">
-          <PlayerProfile player={player} remainingSeconds={remainingSeconds} />
+          <PlayerProfile player={player} stage={stage} />
           <Task round={round} stage={stage} player={player} />
           <SocialExposure stage={stage} player={player} game={game} />
           <SocialInteraction stage={stage} player={player} game={game} />

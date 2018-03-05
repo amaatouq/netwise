@@ -21,9 +21,7 @@ export default class Instructions extends React.Component {
     let { onDone } = this.props;
     let { steps, current } = this.state;
     current = current + 1;
-    console.log(current, steps.length);
     if (current >= steps.length) {
-      console.log("done!");
       onDone();
       return;
     }
@@ -35,6 +33,7 @@ export default class Instructions extends React.Component {
   };
 
   render() {
+    const { treatment } = this.props;
     const { steps, current } = this.state;
     const Step = steps[current];
     const hasNext = steps.length - 1 > current;
@@ -45,6 +44,7 @@ export default class Instructions extends React.Component {
         hasNext={hasNext}
         onPrev={this.onPrev}
         onNext={this.onNext}
+        treatment={treatment.conditionsObject()}
       />
     );
   }

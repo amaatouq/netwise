@@ -4,7 +4,7 @@ import Centered from "../../../core/ui/components/Centered.jsx";
 
 export default class InstructionStepOne extends React.Component {
   render() {
-    const { hasPrev, hasNext, onNext, onPrev } = this.props;
+    const { hasPrev, hasNext, onNext, onPrev, treatment } = this.props;
     return (
       <Centered>
         <div className="instructions">

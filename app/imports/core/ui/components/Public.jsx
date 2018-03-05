@@ -21,25 +21,25 @@ export default class Public extends React.Component {
   };
 
   render() {
-    const { playerId, loading, batchAvailable } = this.props;
+    const { player, loading, renderPublic, ...rest } = this.props;
 
     if (loading) {
       return <Loading />;
     }
 
-    if (!batchAvailable) {
+    if (!renderPublic) {
       return <NoBatch />;
     }
 
     let content;
-    if (!playerId) {
+    if (!player) {
       content = (
         <CoreWrapper>
           <NewPlayer />
         </CoreWrapper>
       );
     } else {
-      content = <GameContainer playerId={playerId} />;
+      content = <GameContainer player={player} {...rest} />;
     }
 
     return (

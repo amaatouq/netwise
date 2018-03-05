@@ -1,38 +1,24 @@
 import React from "react";
 
 import { DevNote } from "./Helpers";
+import { config } from "../../../game/client";
 import { playerReady } from "../../api/players/methods.js";
 import GameLobby from "./GameLobby";
 import Instructions from "./Instructions.jsx";
 import Loading from "./Loading";
 
+const Round = config.RoundComponent;
+
 export default class Game extends React.Component {
   render() {
-    const { gameLobby, Round, loading, ...rest } = this.props;
-    const { game, treatment } = rest;
-    const {
-      started,
-      ended,
-      endTime,
-      now,
-      remainingSeconds,
-      roundOver,
-      timedOut,
-      player
-    } = rest;
-    const time = {
-      started,
-      ended,
-      endTime,
-      now,
-      remainingSeconds
-    };
+    const { loading, gameLobby, treatment, ...rest } = this.props;
+    const { started, timedOut, game, player } = rest;
 
     if (loading) {
       return <Loading />;
     }
 
-    if (gameLobby) {
+    if (!game) {
       if (player.readyAt || gameLobby.debugMode) {
         return (
           <GameLobby

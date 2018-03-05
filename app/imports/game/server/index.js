@@ -157,7 +157,7 @@ export const config = {
         {
           name: "response",
           displayName: "Response",
-          durationInSeconds: 15
+          durationInSeconds: 1500
         }
       ];
 
@@ -165,7 +165,7 @@ export const config = {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",
-          durationInSeconds: 20
+          durationInSeconds: 2000
         });
       }
 
@@ -174,7 +174,7 @@ export const config = {
         stages.push({
           name: "outcome",
           displayName: "Round Outcome",
-          durationInSeconds: 15
+          durationInSeconds: 1500
         });
       }
 

@@ -1,8 +1,8 @@
 import { Route } from "react-router-dom";
+import { withTracker } from "meteor/react-meteor-data";
 import React from "react";
 
-import { Meteor } from "meteor/meteor";
-import { withTracker } from "meteor/react-meteor-data";
+import { Players } from "../../api/players/players.js";
 
 class IdentifiedRouteInner extends React.Component {
   render() {
@@ -39,11 +39,20 @@ export const removePlayerId = () => {
 
 export default withTracker(rest => {
   const playerId = getPlayerId();
-  Meteor.subscribe("playerInfo", { playerId });
+  const loading = !Meteor.subscribe("playerInfo", { playerId }).ready();
+  const player = Players.findOne();
+
+  // If we finished loading and the player was not found, clear saved playerId
+  if (!loading && playerId && !player) {
+    console.error(`clearing player: (${playerId})`);
+    removePlayerId();
+  }
 
   return {
     ...rest,
+    loading,
     playerId,
+    player,
     connected: Meteor.status().connected
   };
 })(IdentifiedRouteInner);

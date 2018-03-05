@@ -27,6 +27,7 @@ if (Meteor.isDevelopment) {
             console.error(err);
             return;
           }
+          colls = _.sortBy(colls, c => (c.name === "players" ? 0 : 1));
           colls.forEach(collection => {
             if (keep.includes(collection.name)) {
               return;

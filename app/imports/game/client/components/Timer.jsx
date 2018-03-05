@@ -1,7 +1,9 @@
-import PropTypes from "prop-types";
 import React from "react";
 
-export default class Timer extends React.Component {
+import StageTimeWrapper from "../../../core/ui/components/StageTimeWrapper.jsx";
+import Timer from "./Timer.jsx";
+
+class timer extends React.Component {
   render() {
     const { remainingSeconds } = this.props;
 
@@ -20,3 +22,5 @@ export default class Timer extends React.Component {
     );
   }
 }
+
+export default (Timer = StageTimeWrapper(timer));
