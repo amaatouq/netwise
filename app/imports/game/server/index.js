@@ -61,6 +61,11 @@ export const config = {
       type: Boolean,
       optional: true
     },
+    feedback: {
+      description: "Whether players see performance feedback",
+      type: Boolean,
+      optional: true
+    },
     environment: {
       description: "This is an example of multiple choice selector",
       type: String,
@@ -71,7 +76,6 @@ export const config = {
     nRounds: {
       description: "This is the number of rounds for the game",
       type: SimpleSchema.Integer,
-      
       min: 1,
       max: taskData.length //can't have more rounds than tasks for this game
     }
@@ -154,7 +158,7 @@ export const config = {
         {
           name: "response",
           displayName: "Response",
-          durationInSeconds: 120
+          durationInSeconds: 200
         }
       ];
 
@@ -162,19 +166,25 @@ export const config = {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",
-          durationInSeconds: 120
+          durationInSeconds: 200
         });
       }
 
-      // Dont't include an outcome stage on the last round.
-      if (i !== roundCount - 1) {
+      // adding "outcome" might look complicated but basically what we are checking is this:
+      // when interactive with others, show the round outcome if there is feedback or rewiring
+      // when no interactions with others only show the outcome stage when feedback is given
+      if (
+        (treatment.altersCount > 0 &&
+          (treatment.feedback || treatment.rewiring)) ||
+        (treatment.altersCount <= 0 && treatment.feedback)
+      ) {
         stages.push({
           name: "outcome",
           displayName: "Round Outcome",
-          durationInSeconds: 120
+          durationInSeconds: 200
         });
       }
-
+      
       rounds.push({
         stages,
         task: tasks[i]
