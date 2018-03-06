@@ -31,6 +31,7 @@ export default class SocialInteraction extends React.Component {
     const playerIds = _.pluck(game.players, "_id");
 
     const { altersCount, rewiring } = game.treatment;
+    //only showing this componenet if it is dynamic & more than one follower etc
     if (!rewiring || altersCount < 1 || stage.name !== "outcome") {
       return null;
     }

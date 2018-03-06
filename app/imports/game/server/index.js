@@ -146,7 +146,7 @@ export const config = {
       player.set("avatar", `/avatars/jdenticon/${player._id}`);
       player.set("difficulty", Random.choice(difficulties));
       player.set("alterIds", alterIds);
-      player.set("score", 0);
+      player.set("cumulativeScore", 0);
     });
 
     const tasks = _.shuffle(taskData);
@@ -157,15 +157,15 @@ export const config = {
         {
           name: "response",
           displayName: "Response",
-          durationInSeconds: 1500
+          durationInSeconds: 60
         }
       ];
 
-      if (treatment.playerCount > 1) {
+      if (treatment.altersCount > 0) {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",
-          durationInSeconds: 2000
+          durationInSeconds: 60
         });
       }
 
@@ -174,7 +174,7 @@ export const config = {
         stages.push({
           name: "outcome",
           displayName: "Round Outcome",
-          durationInSeconds: 1500
+          durationInSeconds: 60
         });
       }
 
@@ -237,9 +237,9 @@ export const config = {
   // - `players` is the array of all players at this stage
   onRoundEnd(game, round, players) {
     players.forEach(player => {
-      const currentScore = player.get("score");
+      const currentScore = player.get("cumulativeScore");
       const roundScore = player.round.get("score");
-      player.set("score", Math.round(currentScore + roundScore));
+      player.set("cumulativeScore", Math.round(currentScore + roundScore));
     });
   }
 };

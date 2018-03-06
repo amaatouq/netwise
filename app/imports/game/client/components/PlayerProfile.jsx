@@ -17,7 +17,7 @@ export default class PlayerProfile extends React.Component {
 
         <div className="profile-score">
           <h4>Total score</h4>
-          <span>{player.get("score") || 0}</span>
+          <span>{player.get("cumulativeScore") || 0}</span>
         </div>
 
         <Timer stage={stage} />
