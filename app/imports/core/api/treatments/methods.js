@@ -8,7 +8,6 @@ export const createTreatment = new ValidatedMethod({
     name: {
       type: String,
       max: 256,
-      regEx: /^[a-zA-Z0-9_]+$/,
       optional: true
     },
     conditionIds: {
