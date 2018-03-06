@@ -15,8 +15,8 @@ export default class SocialInteraction extends React.Component {
     const { player, game } = this.props;
     const { altersCount } = game.treatment;
     const alterIds = player.get("alterIds");
-    if (altersCount <= alterIds) {
-      AlertToaster.show({ message: "Alters count already reached!" });
+    if (altersCount === alterIds.length) {
+      AlertToaster.show({ message: "You are already following the maximum number of people" });
       return;
     }
     // TODO Verify if max alter ids count reached first!

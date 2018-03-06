@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class RoundNav extends React.Component {
+export default class Breadcrumb extends React.Component {
   render() {
     const { round, stage } = this.props;
 

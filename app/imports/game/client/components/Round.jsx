@@ -1,18 +1,18 @@
 import React from "react";
 
 import PlayerProfile from "../components/PlayerProfile";
-import RoundNav from "./RoundNav";
+import Breadcrumb from "./Breadcrumb";
 import SocialExposure from "./SocialExposure";
 import SocialInteraction from "./SocialInteraction.jsx";
 import Task from "../components/Task";
 
 export default class Round extends React.Component {
   render() {
-    const { round, stage, player, game, treatment } = this.props;
+    const { round, stage, player, game } = this.props;
 
     return (
       <div className="round">
-        <RoundNav round={round} stage={stage} />
+        <Breadcrumb round={round} stage={stage} />
         <div className="content">
           <PlayerProfile player={player} stage={stage} />
           <Task round={round} stage={stage} player={player} />

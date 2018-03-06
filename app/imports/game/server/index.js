@@ -61,22 +61,19 @@ export const config = {
       type: Boolean,
       optional: true
     },
-    uselessConditionHere: {
-      // description: "",
-      type: String,
-      regEx: /[a-zA-Z]+/,
-      optional: true
-    },
-    mode: {
+    environment: {
       description: "This is an example of multiple choice selector",
       type: String,
+      regEx: /[a-zA-Z]+/,
       allowedValues: ["stationary", "nonStationary", "semiStationary"],
       optional: true
     },
     nRounds: {
       description: "This is the number of rounds for the game",
       type: SimpleSchema.Integer,
-      min: 1
+      
+      min: 1,
+      max: taskData.length //can't have more rounds than tasks for this game
     }
   },
 
@@ -157,7 +154,7 @@ export const config = {
         {
           name: "response",
           displayName: "Response",
-          durationInSeconds: 60
+          durationInSeconds: 120
         }
       ];
 
@@ -165,7 +162,7 @@ export const config = {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",
-          durationInSeconds: 60
+          durationInSeconds: 120
         });
       }
 
@@ -174,7 +171,7 @@ export const config = {
         stages.push({
           name: "outcome",
           displayName: "Round Outcome",
-          durationInSeconds: 60
+          durationInSeconds: 120
         });
       }
 
