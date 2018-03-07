@@ -7,12 +7,7 @@ import SocialInteraction from "./SocialInteraction.jsx";
 import Task from "../components/Task";
 
 export default class Round extends React.Component {
-  renderSocialExposure(stage, player, game) {
-    return <SocialExposure stage={stage} player={player} game={game} />;
-  }
-  renderSocialInteraction(stage, player, game) {
-    return <SocialInteraction stage={stage} player={player} game={game} />;
-  }
+
 
   render() {
     const { round, stage, player, game } = this.props;
@@ -25,11 +20,11 @@ export default class Round extends React.Component {
           <PlayerProfile player={player} stage={stage} game={game} />
           <Task round={round} stage={stage} player={player} game={game} />
           {social && stage.name === "interactive"
-            ? this.renderSocialExposure(stage, player, game)
-            : null}
+            ? <SocialExposure stage={stage} player={player} game={game} />:
+            null}
           {social && stage.name === "outcome"
-            ? this.renderSocialInteraction(stage, player, game)
-            : null}
+            ? <SocialInteraction stage={stage} player={player} game={game} />:
+            null}
         </div>
       </div>
     );

@@ -1,5 +1,7 @@
 import React from "react";
 
+//TODO: when I remove the pt-icon-dollar sign when giving no feedback, the images are not centered
+
 import { AlertToaster } from "../../../core/ui/components/AlertToaster.jsx";
 
 export default class SocialInteraction extends React.Component {
@@ -21,7 +23,7 @@ export default class SocialInteraction extends React.Component {
       });
       return;
     }
-    // TODO Verify if max alter ids count reached first!
+
     alterIds.push(alterId);
     player.set("alterIds", alterIds);
   };
@@ -50,8 +52,8 @@ export default class SocialInteraction extends React.Component {
           <img src={otherPlayer.get("avatar")} className="profile-avatar" />
           {/*only show the scores of the alters if feedback is allowed*/}
           {game.treatment.feedback ? displayScore : null}
-          <span className="pt-icon-standard pt-icon-dollar" />
-        </div>
+          {game.treatment.feedback ? <span className="pt-icon-standard pt-icon-dollar" />: null}
+          </div>
         {game.treatment.rewiring ? this.renderUnfollow(alterId) : null}
       </div>
     );
@@ -108,7 +110,8 @@ export default class SocialInteraction extends React.Component {
         />
         <img src={otherPlayer.get("avatar")} className="profile-avatar" />
         {game.treatment.feedback ? displayScore : null}
-        <span className="pt-icon-standard pt-icon-dollar" />
+        {game.treatment.feedback ? <span className="pt-icon-standard pt-icon-dollar" />: null}
+        
       </div>
     );
   }

@@ -54,17 +54,17 @@ export const config = {
       type: SimpleSchema.Integer,
       min: 0,
       max: 12,
-      optional: true
+      optional: false
     },
     rewiring: {
       description: "Can the player change their alters on each round",
       type: Boolean,
-      optional: true
+      optional: false
     },
     feedback: {
       description: "Whether players see performance feedback",
       type: Boolean,
-      optional: true
+      optional: false
     },
     environment: {
       description: "This is an example of multiple choice selector",
@@ -77,7 +77,8 @@ export const config = {
       description: "This is the number of rounds for the game",
       type: SimpleSchema.Integer,
       min: 1,
-      max: taskData.length //can't have more rounds than tasks for this game
+      max: taskData.length, //can't have more rounds than tasks for this game
+      optional: false
     }
   },
 
