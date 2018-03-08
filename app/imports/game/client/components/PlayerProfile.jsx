@@ -21,6 +21,7 @@ export default class PlayerProfile extends React.Component {
     return (
       <div className="profile-score">
         <h4>Total score</h4>
+        <span className="pt-icon-standard pt-icon-dollar" />
         <span>{player.get("cumulativeScore") || 0}</span>
       </div>
     );

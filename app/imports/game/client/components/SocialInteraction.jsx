@@ -44,16 +44,22 @@ export default class SocialInteraction extends React.Component {
     const otherPlayer = game.players.find(p => p._id === alterId);
     const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
-    const displayScore =
-      cumulativeScore.toString() + " (+" + roundScore.toString() + ")";
+    console.log("roundScore", roundScore);
     return (
       <div className="alter pt-card pt-elevation-2" key={alterId}>
         <div className="info">
           <img src={otherPlayer.get("avatar")} className="profile-avatar" />
           {/*only show the scores of the alters if feedback is allowed*/}
-          {game.treatment.feedback ? displayScore : null}
-          {game.treatment.feedback ? <span className="pt-icon-standard pt-icon-dollar" />: null}
-          </div>
+          {game.treatment.feedback ? (
+            <span className="pt-icon-standard pt-icon-dollar" />
+          ) : null}
+          {game.treatment.feedback ? <span>{cumulativeScore}</span> : null}
+          {game.treatment.feedback ? (
+            <span style={{ color: otherPlayer.round.get("scoreColor") }}>
+              <strong> (+{roundScore})</strong>
+            </span>
+          ) : null}
+        </div>
         {game.treatment.rewiring ? this.renderUnfollow(alterId) : null}
       </div>
     );
@@ -63,28 +69,29 @@ export default class SocialInteraction extends React.Component {
     return alterIds.map(alterId => this.renderAlter(alterId));
   }
 
-  renderPlayerScore(displayScore) {
-    return (
-      <div>
-        <p>
-          <strong>Score:</strong> total (+increment)
-        </p>
-        <p>
-          {displayScore} <span className="pt-icon-standard pt-icon-dollar" />
-        </p>
-      </div>
-    );
-  }
-
   renderLeftColumn(player, alterIds, game) {
     const cumulativeScore = player.get("cumulativeScore") || 0;
     const roundScore = player.round.get("score") || 0;
-    const displayScore =
-      cumulativeScore.toString() + " (+" + roundScore.toString() + ")";
 
     return (
       <div className="right" key="left">
-        {game.treatment.feedback ? this.renderPlayerScore(displayScore) : null}
+        {game.treatment.feedback ? (
+          <p>
+            <strong>Score:</strong> Total (+increment)
+          </p>
+        ) : null}
+
+        <p style={ {"text-indent": "1em"} }>
+          {game.treatment.feedback ? (
+            <span className="pt-icon-standard pt-icon-dollar" />
+          ) : null}
+          {game.treatment.feedback ? <span>{cumulativeScore}</span> : null}
+          {game.treatment.feedback ? (
+            <span style={{ color: player.round.get("scoreColor") }}>
+              <strong> (+{roundScore})</strong>
+            </span>
+          ) : null}
+        </p>
         <p>
           <strong>You are following:</strong>
         </p>
@@ -98,8 +105,6 @@ export default class SocialInteraction extends React.Component {
     const otherPlayer = game.players.find(p => p._id === nonAlterId);
     const cumulativeScore = otherPlayer.get("score") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
-    const displayScore =
-      cumulativeScore.toString() + " (+" + roundScore.toString() + ")";
 
     return (
       <div className="non-alter" key={nonAlterId}>
@@ -109,9 +114,15 @@ export default class SocialInteraction extends React.Component {
           //disabled={altersCountReached}
         />
         <img src={otherPlayer.get("avatar")} className="profile-avatar" />
-        {game.treatment.feedback ? displayScore : null}
-        {game.treatment.feedback ? <span className="pt-icon-standard pt-icon-dollar" />: null}
-        
+        {game.treatment.feedback ? (
+          <span className="pt-icon-standard pt-icon-dollar" />
+        ) : null}
+        {game.treatment.feedback ? <span>{cumulativeScore} </span> : null}
+        {game.treatment.feedback ? (
+          <span style={{ color: otherPlayer.round.get("scoreColor") }}>
+            <strong> (+{roundScore})</strong>
+          </span>
+        ) : null}
       </div>
     );
   }

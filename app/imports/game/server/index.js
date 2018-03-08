@@ -1,6 +1,6 @@
 import SimpleSchema from "simpl-schema";
 
-import { difficulties, roundCount, taskData } from "./constants.js";
+import { difficulties, taskData } from "./constants.js";
 
 export const config = {
   // treatmentAssignments is TBD, the following is a draft of how it might work.
@@ -159,7 +159,7 @@ export const config = {
         {
           name: "response",
           displayName: "Response",
-          durationInSeconds: 200
+          durationInSeconds: 2000
         }
       ];
 
@@ -167,7 +167,7 @@ export const config = {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",
-          durationInSeconds: 200
+          durationInSeconds: 2000
         });
       }
 
@@ -182,10 +182,10 @@ export const config = {
         stages.push({
           name: "outcome",
           displayName: "Round Outcome",
-          durationInSeconds: 200
+          durationInSeconds: 2000
         });
       }
-      
+
       rounds.push({
         stages,
         task: tasks[i]
@@ -215,24 +215,20 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
-    //TODO: why the 'game' object doesn't have the treatment object (only a reference)?
-    //for example, I want to compute the score if it is the end of the interactive stage
-    //or if it is the end of the response stage if the treatment.playerCount == 1 (i.e., solo)
-
     if (stage.name === "outcome") {
       return;
     }
 
-    players.forEach(player => {
-      const guess = player.round.get("guess");
-      // If no guess given, score is 0
-      const score = !guess
-        ? 0
-        : Math.round(
-            (1 - Math.abs(round.get("task").correctAnswer - guess)) * 100
-          );
-      player.round.set("score", score);
-    });
+    //TODO: computeScore(.) should happen before colorScores(.) but it is not the case.
+    //this is leading to displayed error color when the ranking of the scores changes from the
+    //in the interactive stage from the response stage.
+
+    //update score after the response and interactive stages
+    computeScore(players, round);
+    //color the score (for the front end display) based on ranking of the score
+    if (stage.name === "interactive") {
+      colorScores(players);
+    }
   },
 
   // onRoundEnd is called each time a round ends. It is a good time to
@@ -251,3 +247,52 @@ export const config = {
     });
   }
 };
+
+
+//compute score
+function computeScore(players, round) {
+  for (const player of players) {
+    const guess = player.round.get("guess");
+    // If no guess given, score is 0
+    const score = !guess
+      ? 0
+      : Math.round(
+          (1 - Math.abs(round.get("task").correctAnswer - guess)) * 100
+        );
+    player.round.set("score", score);
+  }
+}
+
+//we sort the players based on their score in this round in order to color code how we display their scores
+//the highest 1/3 players are green, the lowest 1/3 are red, and the rest are orange
+function colorScores(players) {
+  {
+    const sortedPlayers = players.sort(compareScores);
+    const top3rd = parseInt(players.length / 3);
+    const bottom3rd = parseInt(players.length - players.length / 3);
+
+    sortedPlayers.forEach((player, i) => {
+      if (i < top3rd) {
+        player.round.set("scoreColor", "green");
+      } else if (i >= bottom3rd) {
+        player.round.set("scoreColor", "red");
+      } else {
+        player.round.set("scoreColor", "orange");
+      }
+    });
+  }
+  
+  //helper function to sort players based on their score in this round
+  function compareScores(firstPlayer, secondPlayer) {
+    const scoreA = firstPlayer.round.get("score");
+    const scoreB = secondPlayer.round.get("score");
+    
+    let comparison = 0;
+    if (scoreA > scoreB) {
+      comparison = -1;
+    } else if (scoreA < scoreB) {
+      comparison = 1;
+    }
+    return comparison;
+  }
+}

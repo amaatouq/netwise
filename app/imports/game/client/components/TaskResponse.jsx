@@ -70,11 +70,15 @@ export default class TaskResponse extends React.Component {
             <th>Score increment</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody >
           <tr>
-            <td>{player.round.get("guess") || "No guess given"}</td>
+            <td align="center">{player.round.get("guess") || "No guess given"}</td>
             <td>{round.get("task").correctAnswer}</td>
-            <td>{player.round.get("score")}</td>
+            <td>
+              <strong style={{ color: player.round.get("scoreColor") }}>
+                +{player.round.get("score")}
+              </strong>
+            </td>
           </tr>
         </tbody>
       </table>
