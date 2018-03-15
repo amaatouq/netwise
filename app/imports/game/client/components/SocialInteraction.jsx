@@ -39,14 +39,13 @@ export default class SocialInteraction extends React.Component {
     );
   }
 
-  renderAlter(alterId) {
+  renderAlter(otherPlayer) {
     const { game } = this.props;
-    const otherPlayer = game.players.find(p => p._id === alterId);
     const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
     console.log("roundScore", roundScore);
     return (
-      <div className="alter pt-card pt-elevation-2" key={alterId}>
+      <div className="alter pt-card pt-elevation-2" key={otherPlayer._id}>
         <div className="info">
           <img src={otherPlayer.get("avatar")} className="profile-avatar" />
           {/*only show the scores of the alters if feedback is allowed*/}
@@ -60,7 +59,7 @@ export default class SocialInteraction extends React.Component {
             </span>
           ) : null}
         </div>
-        {game.treatment.rewiring ? this.renderUnfollow(alterId) : null}
+        {game.treatment.rewiring ? this.renderUnfollow(otherPlayer._id) : null}
       </div>
     );
   }
@@ -81,7 +80,7 @@ export default class SocialInteraction extends React.Component {
           </p>
         ) : null}
 
-        <p style={ {"text-indent": "1em"} }>
+        <p style={ {"textIndent": "1em"} }>
           {game.treatment.feedback ? (
             <span className="pt-icon-standard pt-icon-dollar" />
           ) : null}
@@ -100,17 +99,16 @@ export default class SocialInteraction extends React.Component {
     );
   }
 
-  renderNonAlter(nonAlterId) {
+  renderNonAlter(otherPlayer) {
     const { game } = this.props;
-    const otherPlayer = game.players.find(p => p._id === nonAlterId);
-    const cumulativeScore = otherPlayer.get("score") || 0;
+    const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
 
     return (
-      <div className="non-alter" key={nonAlterId}>
+      <div className="non-alter" key={otherPlayer._id}>
         <button
           className="pt-button pt-intent-primary pt-icon-add pt-minimal"
-          onClick={this.handleFollow.bind(this, nonAlterId)}
+          onClick={this.handleFollow.bind(this, otherPlayer._id)}
           //disabled={altersCountReached}
         />
         <img src={otherPlayer.get("avatar")} className="profile-avatar" />
@@ -145,22 +143,30 @@ export default class SocialInteraction extends React.Component {
     const { game, player } = this.props;
 
     const rewiring = game.treatment.rewiring;
-
-    const playerIds = _.pluck(game.players, "_id");
+  
+    //get the ids of the followers and the people that they could follow
+    const allPlayersIds = _.pluck(game.players, "_id");
     const alterIds = player.get("alterIds");
     const nonAlterIds = _.without(
-      _.difference(playerIds, player.get("alterIds")),
+      _.difference(allPlayersIds, alterIds),
       player._id
     );
+  
+    //actual Player objects and not only Ids for alters and nonAlters
+    
+    //all players sorted by performance in descending order
+    const allPlayers = _.sortBy(game.players, p => p.get("cumulativeScore")).reverse();
+    const alters = allPlayers.filter(p => alterIds.includes(p._id));
+    const nonAlters = allPlayers.filter(p => nonAlterIds.includes(p._id));
 
     return (
       <div className="social-interaction">
         {rewiring
           ? [
-              this.renderLeftColumn(player, alterIds, game),
-              this.renderRightColumn(nonAlterIds)
+              this.renderLeftColumn(player, alters, game),
+              this.renderRightColumn(nonAlters)
             ]
-          : this.renderLeftColumn(player, alterIds, game)}
+          : this.renderLeftColumn(player, alters, game)}
       </div>
     );
   }
