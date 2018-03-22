@@ -3,7 +3,7 @@ baseURL = "/"
 languageCode = "en-us"
 title = "Empirica"
 theme = "kube"
-description = "Empirica is an open-source JavaScript framework for running multiplayer interactive experimental games on the web. It was created to make it easy to develop and iterate on sophisticated experimental games in a statistically sound manner and offers a unique combination of power, flexibility, and speed."
+description = "Open-source JavaScript framework for running multiplayer interactive experimental games on the web. It was created to make it easy to develop and iterate on sophisticated experimental designs in a statistically sound manner and offers a unique combination of power, flexibility, and speed."
 Paginate = 4
 [Params]
   RSSLink = "/index.xml"
