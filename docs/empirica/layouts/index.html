@@ -1,0 +1,191 @@
+{{ define "title"}} {{ .Site.Title}} {{end}} {{ define "header"}} {{ partial "header" .}} {{end}} {{ define "main"}}
+
+
+<div id="main">
+  <div id="hero">
+    <h1>{{.Title}}</h1>
+    <p>{{.Description}}</p>
+  </div>
+  <!-- <div id="action-buttons">
+    <a class="button primary big" href="https://github.com/jeblister/kube/releases" onclick="_gaq.push(['_trackEvent', 'kube', 'download']);">Download</a>
+    <a class="button outline big" href="https://github.com/jeblister/kube" onclick="_gaq.push(['_trackEvent', 'kube', 'github']);">View on Github</a>
+    <p>Zap-archive, includes all the source and site example files</p>
+  </div> -->
+  <div class="message focus" data-component="message">
+    <mark>Beta release in April!</mark>
+    The beta release of Empirica and accompanying example experiments are due in April.
+
+    <a class="button inverted small" href="#newsletter">Sign Up to Get Updates</a>
+  </div>
+  <div id="kube-features">
+    <div class="row gutters">
+      <div class="col col-4 item">
+        <figure>
+          <img alt="Be Productive" height="48" src="/img/icons/wrench.svg" width="48">
+        </figure>
+        <h3>Be Productive</h3>
+        <p>
+          Empirical will handle all the tedious logistics of running experiments from crossing your independent variables to form treatments,
+          randomization, synchronization, waiting rooms, storing data, and managing players. You get straight to what is
+          really unique about your research and what interests you, whatever that may be.
+        </p>
+      </div>
+      <div class="col col-4 item">
+        <figure>
+          <img alt="Be Expansive & Realistic" height="48" src="/img/icons/calendar-alt.svg" width="48">
+        </figure>
+        <h3>Be Expansive & Realistic</h3>
+        <p>
+          Empirical allows you to study complex tasks and setup interactions that happen over any period, from seconds to months, or
+          among any number of people, from a single player to groups of any size. Don’t be constrained by standard behavioral
+          experiments.
+        </p>
+      </div>
+      <div class="col col-4 item">
+        <figure>
+          <img alt="Simple or Complex" height="48" src="/img/icons/circle.svg" width="48">
+        </figure>
+        <h3>Simple or Complex</h3>
+        <p>
+          It is easy to implement simple A/B tests with independent players in Empirica. But it's as easy to implement group experiments
+          with real-time synchronous or asynchronous interactions in a factorial or within-subjects designs, or more complex
+          designs involving multiple types of units (e.g., users, content, roles), and conditional logic.
+        </p>
+      </div>
+    </div>
+    <div class="row gutters">
+      <div class="col col-4 item">
+        <figure>
+          <!-- <img alt="Real or Artificial" height="48" src="/img/icons/cogs.svg" width="48"> -->
+          <img alt="Real or Artificial" height="48" src="/img/icons/code.svg" width="48">
+        </figure>
+        <h4>Real or Artificial</h4>
+        <p>
+          Empirica provides you with easily configurable artificial players that can be included in the experimental game. This allows
+          for studying Human + AI social systems. This hybrid system could be the future of our society!
+        </p>
+      </div>
+      <div class="col col-4 item">
+        <figure>
+          <img alt="Real or Artificial" height="48" src="/img/icons/js.svg" width="48">
+        </figure>
+        <h4>Flexible Standards</h4>
+        <p>
+          Empirica is based on the widely-used web technology standards: Javascript and React.js. This means you can create your own
+          experimental games with only little prior programming knowledge.
+        </p>
+      </div>
+      <div class="col col-4 item">
+        <figure>
+          <img alt="Real or Artificial" height="48" src="/img/icons/chart-line.svg" width="48">
+        </figure>
+        <h4>Don’t miss the action</h4>
+        <p>
+          Deploy your experiment from a live web interface and watch the progress in real-time with the ability to create one-way mirrors
+          to observe the behavior of players in your virtual lab.
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="team">
+    <h2>Team</h2>
+    <div class="row gutters">
+      <div class="col col-3 person">
+        <figure>
+          <img alt="Abdullah Almaatouq" src="/img/almaatouq.jpg">
+        </figure>
+        <h5>Abdullah Almaatouq</h5>
+
+        <a href="http://www.amaatouq.com/">
+          <img alt="Abdullah Almaatouq Website" src="/img/icons/link.svg"> Website
+        </a>
+      </div>
+      <div class="col col-3 person">
+        <figure>
+          <img alt="Nicolas Paton" src="/img/paton.jpg">
+        </figure>
+        <h5>Nicolas Paton</h5>
+        <a href="https://www.linkedin.com/in/nicolaspaton/">
+          <img alt="Abdullah Almaatouq Website" src="/img/icons/linkedin-in.svg"> LinkedIn
+        </a>
+      </div>
+
+      <div class="col col-1">
+        </div>
+  
+      <div class="col col-5">
+        We are also advised and supported by a strong team of academics and science enthusiasts including
+        <a href="https://rahwan.me/">Iyad Rahwan</a>,
+        <a href="https://www.media.mit.edu/people/sandy/overview/">Alex ‘Sandy’ Pentland</a>,
+        <a href="https://www.linkedin.com/in/alejandro-noriega-campero-40305637/">Alejandro Campero</a>,
+        <a href="https://www.linkedin.com/in/niccolo-pescetelli-1bb74541/">Niccolo Pescetelli</a>, and
+        <a href="https://d-lab.mit.edu/staff/joost_bonsen">Joost P Bonsen</a>.
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="communication">
+    <div class="row gutters">
+
+      <div class="col col-6">
+        <h4>Contact</h4>
+        <p>
+          Reach out to us if you are interested in using the framework, contributing to the development of the project, financially
+          supporting the project, or just to say hi.
+        </p>
+
+        <form method="post" action="https://formspree.io/amaatouq@gmail.com" class="form">
+          <input type="hidden" name="type" value="contact">
+
+          <div class="form-item">
+            <label>Email</label>
+            <input required type="email" name="email" class="w60">
+          </div>
+
+          <div class="form-item">
+            <label>Message</label>
+            <textarea required name="message" class="w80" rows="4"></textarea>
+          </div>
+
+          <div class="form-item">
+            <button type="submit">Send</button>
+          </div>
+        </form>
+
+      </div>
+
+      <div class="col col-1">
+      </div>
+      <div class="col col-5">
+
+        <div id="newsletter">
+          <h4>
+            Newsletter
+          </h4>
+          <p>
+            We guarantee infrequent postings!
+          </p>
+          <form method="post" action="https://formspree.io/amaatouq@gmail.com" class="form">
+            <input type="hidden" name="type" value="newsletter-signup">
+
+            <div class="form-item">
+              <label>Email</label>
+              <input required type="email" name="email" class="w60">
+            </div>
+
+            <div class="form-item">
+              <button type="submit">Sign Up to Get Updates</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+{{ end }} {{ define "footer"}} {{ partial "footer" .}} {{end}}

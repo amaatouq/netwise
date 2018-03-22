@@ -1,0 +1,56 @@
+.item img {
+  height: 48px;
+  width: 48px;
+}
+
+.team {
+  margin-top: 104px;
+}
+
+.team h2 {
+  margin-bottom: 40px;
+}
+
+.team figure img {
+  height: 120px;
+  width: 120px;
+  border-radius: 360px;
+}
+
+.team a {
+  text-decoration: none;
+  color: rgb(34, 34, 34, 0.7);
+  font-style: italic;
+}
+
+.team .person {
+  text-align: center;
+}
+
+.team .person a {
+  text-decoration: none;
+  color: rgb(34, 34, 34);
+}
+
+.team a:hover,
+.team .person a:hover {
+  color: #f03c69;
+}
+
+.team a img {
+  height: 1em;
+  width: 1em;
+  position: relative;
+  top: 1px;
+  margin-right: 5px;
+}
+
+.communication {
+  margin-top: 64px;
+  padding-top: 40px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.15);
+}
+
+#footer {
+  margin-bottom: 20px;
+}
