@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  docs:
+  build:
     branches:
       only:
         - master
