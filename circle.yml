@@ -19,7 +19,7 @@ jobs:
           command: |
             apt-get install -y build-essential
             # Unsafe: https://github.com/nodejs/node-gyp/issues/1236
-            npm install --unsafe -g firebase-tools
+            sudo npm install --unsafe -g firebase-tools
       - run:
           name: Build and Deploy Docs
           command: |
