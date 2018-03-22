@@ -1,6 +1,7 @@
 version: 2
 jobs:
   build:
+    working_directory: ~/project
     branches:
       only:
         - master
@@ -9,21 +10,21 @@ jobs:
     steps:
       - checkout:
       - run:
-          name: Git Submodule init
-          command: |
-            git submodule sync
-            git submodule update --init
+        name: Git Submodule init
+        command: |
+          git submodule sync
+          git submodule update --init
       - run:
-          name: Install Node and Firebase
-          command: |
-            apt-get install -y build-essential
-            # Unsafe: https://github.com/nodejs/node-gyp/issues/1236
-            npm install --unsafe -g firebase-tools
+        name: Install Node and Firebase
+        command: |
+          apt-get install -y build-essential
+          # Unsafe: https://github.com/nodejs/node-gyp/issues/1236
+          npm install --unsafe -g firebase-tools
       - run:
-          name: Build and Deploy Docs
-          command: |
-            cd docs/empirica
-            # Build with hugo
-            hugo
-            # Deploy with firebase
-            firebase deploy --token $FIREBASE_DEPLOY_TOKEN
+        name: Build and Deploy Docs
+        command: |
+          cd docs/empirica
+          # Build with hugo
+          hugo
+          # Deploy with firebase
+          firebase deploy --token $FIREBASE_DEPLOY_TOKEN
