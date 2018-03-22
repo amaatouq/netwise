@@ -15,9 +15,11 @@ jobs:
             git submodule sync
             git submodule update --init
       - run:
-          name: Install Node and Firebase
+          name: Install Hugo and Firebase
           command: |
-            sudo apt-get install -y build-essential hugo
+            sudo apt-get install -y build-essential
+            wget https://github.com/gohugoio/hugo/releases/download/v0.37.1/hugo_0.37.1_Linux-64bit.deb
+            sudo dpkg -i hugo*.deb
             # Unsafe: https://github.com/nodejs/node-gyp/issues/1236
             sudo npm install --unsafe -g firebase-tools
       - run:
