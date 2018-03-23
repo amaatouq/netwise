@@ -5,69 +5,36 @@ import { submitPlayerStage, updatePlayerStageData } from "./methods";
 import { updatePlayerData } from "../players/methods";
 import { updatePlayerRoundData } from "../player-rounds/methods";
 
-let playerSet;
-let stageSubmit;
-let stageSet;
-let roundSet;
-
-if (Meteor.isClient) {
-  playerSet = playerId => (key, value) => {
-    updatePlayerData.call({ playerId, key, value: JSON.stringify(value) });
-  };
-  stageSet = playerStageId => (key, value) => {
-    updatePlayerStageData.call({
-      playerStageId,
-      key,
-      value: JSON.stringify(value)
-    });
-  };
-  stageSubmit = playerStageId => () => {
-    submitPlayerStage.call({ playerStageId }, err => {
-      if (!err) {
-        stage.submitted = true;
-      }
-    });
-  };
-  roundSet = playerRoundId => (key, value) => {
-    updatePlayerRoundData.call({
-      playerRoundId,
-      key,
-      value: JSON.stringify(value)
-    });
-  };
-} else {
-  playerSet = playerId => (key, value) => {
-    const $set = {
-      [`data.${key}`]: value
-    };
-    Players.update(playerId, { $set }, { autoConvert: false });
-  };
-  stageSet = playerId => (key, value) => {
-    const $set = {
-      [`data.${key}`]: value
-    };
-    PlayerStages.update(playerStageId, { $set }, { autoConvert: false });
-  };
-  stageSubmit = playerStageId => () => {
-    const playerStage = PlayerStages.findOne(playerStageId);
-    if (!playerStage) {
-      throw new Error("playerStage not found");
+const playerSet = playerId => (key, value) => {
+  updatePlayerData.call({ playerId, key, value: JSON.stringify(value) });
+};
+const stageSet = playerStageId => (key, value) => {
+  updatePlayerStageData.call({
+    playerStageId,
+    key,
+    value: JSON.stringify(value)
+  });
+};
+const stageSubmit = playerStageId => () => {
+  submitPlayerStage.call({ playerStageId }, err => {
+    if (!err) {
+      stage.submitted = true;
     }
+  });
+};
+const roundSet = playerRoundId => (key, value) => {
+  updatePlayerRoundData.call({
+    playerRoundId,
+    key,
+    value: JSON.stringify(value)
+  });
+};
 
-    if (playerStage.submittedAt) {
-      throw new Error("not permitted");
-    }
-
-    PlayerStages.update(playerStageId, { $set: { submittedAt: new Date() } });
-  };
-  roundSet = playerRoundId => (key, value) => {
-    const $set = {
-      [`data.${key}`]: value
-    };
-
-    PlayerRounds.update(playerRoundId, { $set }, { autoConvert: false });
-  };
-}
+// Once the operation has succeeded (no throw), set the value
+const set = (obj, func) => (k, v) => {
+  func(k, v);
+  obj[k] = v;
+};
 
 export const augmentPlayerStageRound = (player, stage, round) => {
   const { _id: playerId } = player;
@@ -75,15 +42,15 @@ export const augmentPlayerStageRound = (player, stage, round) => {
   const playerRound = PlayerRounds.findOne({ roundId: round._id, playerId });
 
   player.get = key => player.data[key];
-  player.set = playerSet(playerId);
+  player.set = set(player.data, playerSet(playerId));
 
   stage.get = key => playerStage.data[key];
-  stage.set = stageSet(playerStage._id);
+  stage.set = set(playerStage.data, stageSet(playerStage._id));
   stage.submit = stageSubmit(playerStage._id);
   stage.submitted = Boolean(playerStage.submittedAt);
 
   round.get = key => playerRound.data[key];
-  round.set = roundSet(playerRound._id);
+  round.set = set(playerRound.data, roundSet(playerRound._id));
 };
 
 export const augmentStageRound = (stage, round) => {
