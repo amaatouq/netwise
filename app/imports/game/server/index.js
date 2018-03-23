@@ -248,7 +248,6 @@ export const config = {
   }
 };
 
-
 //compute score
 function computeScore(players, round) {
   for (const player of players) {
@@ -259,6 +258,7 @@ function computeScore(players, round) {
       : Math.round(
           (1 - Math.abs(round.get("task").correctAnswer - guess)) * 100
         );
+
     player.round.set("score", score);
   }
 }
@@ -281,12 +281,12 @@ function colorScores(players) {
       }
     });
   }
-  
+
   //helper function to sort players based on their score in this round
   function compareScores(firstPlayer, secondPlayer) {
     const scoreA = firstPlayer.round.get("score");
     const scoreB = secondPlayer.round.get("score");
-    
+
     let comparison = 0;
     if (scoreA > scoreB) {
       comparison = -1;
