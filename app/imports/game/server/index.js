@@ -223,11 +223,12 @@ export const config = {
     //TODO: computeScore(.) should happen before colorScores(.) but it is not the case.
     //this is leading to displayed error color when the ranking of the scores changes from the
     //in the interactive stage from the response stage.
-
+    computeScore(players, round);
+  
+  
     //color the score (for the front end display) based on ranking of the score
     if (stage.name === "interactive") {
       //update score after the interactive stage only
-      computeScore(players, round);
       colorScores(players);
     }
 
