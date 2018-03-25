@@ -215,7 +215,6 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
-    console.log("stage ", stage.name);
     if (stage.name === "outcome") {
       return;
     }
@@ -224,15 +223,12 @@ export const config = {
     //this is leading to displayed error color when the ranking of the scores changes from the
     //in the interactive stage from the response stage.
     computeScore(players, round);
-  
-  
+
     //color the score (for the front end display) based on ranking of the score
     if (stage.name === "interactive") {
       //update score after the interactive stage only
       colorScores(players);
     }
-
-    console.log("-------");
   },
 
   // onRoundEnd is called each time a round ends. It is a good time to
@@ -255,28 +251,15 @@ export const config = {
 //compute score
 function computeScore(players, round) {
   const correctAnswer = round.get("task").correctAnswer;
-  console.log("correct answer is ", correctAnswer);
-  
+
   players.forEach(player => {
     const guess = player.round.get("guess");
     // If no guess given, score is 0
     const score = !guess
       ? 0
-      : Math.round(
-          (1 - Math.abs(correctAnswer - guess)) * 100
-        );
+      : Math.round((1 - Math.abs(correctAnswer - guess)) * 100);
 
-    console.log("will set the score of ", score,  ' now ');
     player.round.set("score", score);
-    console.log("finished setting the score");
-    console.log(
-      "computed the score for ",
-      player._id,
-      "with guess",
-      player.round.get("guess"),
-      "with score ",
-      player.round.get("score")
-    );
   });
 }
 
@@ -289,12 +272,6 @@ function colorScores(players) {
     const bottom3rd = parseInt(players.length - players.length / 3);
 
     sortedPlayers.forEach((player, i) => {
-      console.log(
-        "computing color for ",
-        player._id,
-        "with score ",
-        player.round.get("score")
-      );
       if (i < top3rd) {
         player.round.set("scoreColor", "green");
       } else if (i >= bottom3rd) {
