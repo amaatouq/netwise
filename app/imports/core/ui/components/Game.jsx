@@ -7,11 +7,16 @@ import {
   markPlayerExitStepDone,
   playerReady
 } from "../../api/players/methods.js";
-import { name } from "../../../../package-lock.json";
+import Breadcrumb from "./Breadcrumb.jsx";
+import DelayedDisplay from "./DelayedDisplay.jsx";
 import ExitSteps from "./ExitSteps.jsx";
 import GameLobby from "./GameLobby";
 import Instructions from "./Instructions.jsx";
 import Loading from "./Loading";
+import WaitingForServer from "./WaitingForServer.jsx";
+
+const DelayedWaitingForServer = DelayedDisplay(WaitingForServer, 1000);
+const DelayedGameLobby = DelayedDisplay(GameLobby, 1000);
 
 const Round = config.RoundComponent;
 
@@ -23,7 +28,7 @@ const errExitStepDups = dups =>
 export default class Game extends React.Component {
   render() {
     const { loading, gameLobby, treatment, ...rest } = this.props;
-    const { started, timedOut, game, player } = rest;
+    const { started, timedOut, game, player, round, stage } = rest;
 
     if (loading) {
       return <Loading />;
@@ -32,7 +37,7 @@ export default class Game extends React.Component {
     if (!game) {
       if (player.readyAt || gameLobby.debugMode) {
         return (
-          <GameLobby
+          <DelayedGameLobby
             gameLobby={gameLobby}
             treatment={treatment}
             player={player}
@@ -110,34 +115,23 @@ export default class Game extends React.Component {
       }
     }
 
+    let content;
     if (timedOut || !started) {
       // If there's only one player, don't say waiting on other players,
       // just show the loading screen.
       if (treatment.condition("playerCount").value === 1) {
-        return <Loading />;
+        content = <Loading />;
       }
 
-      return (
-        <div className="game waiting">
-          <div className="pt-non-ideal-state">
-            <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-              <span className="pt-icon pt-icon-automatic-updates" />
-            </div>
-            <h4 className="pt-non-ideal-state-title">
-              {/*a more neutral message in case it was a single player*/}
-              Waiting for server response...
-            </h4>
-            <div className="pt-non-ideal-state-description">
-              Please wait until all players are ready.
-            </div>
-          </div>
-        </div>
-      );
+      content = <DelayedWaitingForServer />;
+    } else {
+      content = <Round {...rest} />;
     }
 
     return (
       <div className="game">
-        <Round {...rest} />
+        <Breadcrumb round={round} stage={stage} />
+        {content}
       </div>
     );
   }
