@@ -17,7 +17,10 @@ import Game from "../components/Game";
 export const gameName = "task";
 
 // Handles all the timing stuff
-const withTimer = withTracker(({ stage, player, ...rest }) => {
+const withTimer = withTracker(({ game, stage, player, ...rest }) => {
+  if (game.finishedAt) {
+    return { game, stage, player };
+  }
   const now = moment(TimeSync.serverTime());
   const startTimeAt = stage && moment(stage.startTimeAt);
   const started = stage && now.isSameOrAfter(startTimeAt);
@@ -27,10 +30,11 @@ const withTimer = withTracker(({ stage, player, ...rest }) => {
   const timedOut = stage && !player.stage.submitted && ended;
   const roundOver = (stage && player.stage.submitted) || timedOut;
   return {
-    timedOut,
-    roundOver,
+    game,
     stage,
     player,
+    timedOut,
+    roundOver,
     started,
     ended,
     endTimeAt,

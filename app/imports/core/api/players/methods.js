@@ -150,3 +150,27 @@ export const updatePlayerData = new ValidatedMethod({
     Players.update(playerId, { $set }, { autoConvert: false });
   }
 });
+
+export const markPlayerExitStepDone = new ValidatedMethod({
+  name: "Players.methods.markExitStepDone",
+
+  validate: new SimpleSchema({
+    playerId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    },
+    stepName: {
+      type: String
+    }
+  }).validator(),
+
+  run({ playerId, stepName }) {
+    const player = Players.findOne(playerId);
+    if (!player) {
+      throw new Error("player not found");
+    }
+    // TODO check can update this record player
+
+    Players.update(playerId, { $addToSet: { exitStepsDone: stepName } });
+  }
+});

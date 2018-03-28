@@ -20,6 +20,13 @@ Players.schema = new SimpleSchema({
     label: "Ready At",
     type: Date,
     optional: true
+  },
+  exitStepsDone: {
+    type: Array,
+    defaultValue: []
+  },
+  "exitStepsDone.$": {
+    type: String
   }
 });
 
