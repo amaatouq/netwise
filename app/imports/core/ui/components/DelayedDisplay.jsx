@@ -1,0 +1,27 @@
+import React from "react";
+
+const DelayedDisplay = (Component, delay = 500) =>
+  class extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { visible: false };
+      // Don't immediatelly show, short loading times don't need a spinner
+      this.timeout = setTimeout(() => this.setState({ visible: true }), delay);
+    }
+
+    componentWillUnmount() {
+      clearTimeout(this.timeout);
+    }
+
+    render() {
+      const { children } = this.props;
+      const { visible } = this.state;
+      return (
+        <div className={`delayed ${visible ? "visible" : ""}`}>
+          <Component />
+        </div>
+      );
+    }
+  };
+
+export default DelayedDisplay;

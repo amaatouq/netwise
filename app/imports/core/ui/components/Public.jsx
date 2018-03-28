@@ -4,10 +4,13 @@ import React from "react";
 
 import { CoreWrapper } from "./Helpers";
 import { removePlayerId } from "../containers/IdentifiedRoute";
+import DelayedDisplay from "./DelayedDisplay.jsx";
 import GameContainer from "../containers/GameContainer";
 import Loading from "./Loading";
 import NewPlayer from "./NewPlayer";
 import NoBatch from "./NoBatch";
+
+const DelayedNoBatch = DelayedDisplay(NoBatch, 1000);
 
 export default class Public extends React.Component {
   state = { isOpen: false };
@@ -28,7 +31,7 @@ export default class Public extends React.Component {
     }
 
     if (!renderPublic) {
-      return <NoBatch />;
+      return <DelayedNoBatch />;
     }
 
     let content;

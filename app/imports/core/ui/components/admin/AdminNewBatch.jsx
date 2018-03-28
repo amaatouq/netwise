@@ -13,8 +13,8 @@ export default class AdminNewBatch extends React.Component {
     assignment: "simple",
     simpleTreatments: [],
     completeTreatments: [],
-    simpleGamesCount: 0,
-    gamesCount: 0
+    simpleGamesCount: 1,
+    gamesCount: 1
   };
 
   gamesCountCalc(assignment, completeTreatments, simpleGamesCount) {

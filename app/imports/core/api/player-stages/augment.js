@@ -15,13 +15,8 @@ const stageSet = playerStageId => (key, value) => {
     value: JSON.stringify(value)
   });
 };
-const stageSubmit = playerStageId => () => {
-  submitPlayerStage.call({ playerStageId }, err => {
-    if (!err) {
-      // this will be fixed upstream, probably
-      PlayerStages.update(playerStageId, { $set: { submitted: true } });
-    }
-  });
+const stageSubmit = playerStageId => cb => {
+  submitPlayerStage.call({ playerStageId }, cb);
 };
 const roundSet = playerRoundId => (key, value) => {
   updatePlayerRoundData.call({
@@ -47,7 +42,11 @@ export const augmentPlayerStageRound = (player, stage, round) => {
 
   stage.get = key => playerStage.data[key];
   stage.set = set(playerStage.data, stageSet(playerStage._id));
-  stage.submit = stageSubmit(playerStage._id);
+  stage.submit = stageSubmit(playerStage._id, err => {
+    if (!err) {
+      stage.submitted = true;
+    }
+  });
   stage.submitted = Boolean(playerStage.submittedAt);
 
   round.get = key => playerRound.data[key];
