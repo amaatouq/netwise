@@ -301,7 +301,7 @@ function colorScores(players) {
     });
   }
 
-  //helper function to sort players based on their score in this round
+  //helper function to sort players based on their score in the round
   function compareScores(firstPlayer, secondPlayer) {
     const scoreA = firstPlayer.round.get("score");
     const scoreB = secondPlayer.round.get("score");

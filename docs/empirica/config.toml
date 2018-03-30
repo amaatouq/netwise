@@ -10,8 +10,8 @@ googleAnalytics = "UA-116301903-1"
   RSSLink = "/index.xml"
   author = "empirica"
   github = "empiricaly" # add your github profile name
-  twitter = "empiricaly" # add your twitter profile
-  email = "amaatouq@gmail.com"
+  twitter = "empirica_ly" # add your twitter profile
+  email = "hello@empirica.ly"
 
 # [[menu.main]]
 #     name = "Docs"
