@@ -248,6 +248,8 @@ export const config = {
   }
 };
 
+
+// These are just some helper functions for the Guess the Correlation Game
 //compute score
 function computeScore(players, round) {
   const correctAnswer = round.get("task").correctAnswer;
@@ -282,7 +284,7 @@ function colorScores(players) {
     });
   }
 
-  //helper function to sort players based on their score in this round
+  //helper function to sort players based on their score in the round
   function compareScores(firstPlayer, secondPlayer) {
     const scoreA = firstPlayer.round.get("score");
     const scoreB = secondPlayer.round.get("score");
