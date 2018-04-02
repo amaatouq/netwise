@@ -29,10 +29,14 @@ export default class SocialInteraction extends React.Component {
   };
 
   renderUnfollow(alterId) {
+    const { player } = this.props;
+
     return (
+      //if they did not submit, they can unfollow, otherwise, the button is inactive
       <button
         className="pt-button pt-fill pt-intent-primary"
         onClick={this.handleUnfollow.bind(this, alterId)}
+        disabled={player.stage.submitted}
       >
         Unfollow
       </button>
@@ -80,7 +84,7 @@ export default class SocialInteraction extends React.Component {
           </p>
         ) : null}
 
-        <p style={ {"textIndent": "1em"} }>
+        <p style={{ textIndent: "1em" }}>
           {game.treatment.feedback ? (
             <span className="pt-icon-standard pt-icon-dollar" />
           ) : null}
@@ -100,7 +104,7 @@ export default class SocialInteraction extends React.Component {
   }
 
   renderNonAlter(otherPlayer) {
-    const { game } = this.props;
+    const { game, player } = this.props;
     const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
 
@@ -109,7 +113,7 @@ export default class SocialInteraction extends React.Component {
         <button
           className="pt-button pt-intent-primary pt-icon-add pt-minimal"
           onClick={this.handleFollow.bind(this, otherPlayer._id)}
-          //disabled={altersCountReached}
+          disabled={player.stage.submitted}
         />
         <img src={otherPlayer.get("avatar")} className="profile-avatar" />
         {game.treatment.feedback ? (
@@ -143,7 +147,7 @@ export default class SocialInteraction extends React.Component {
     const { game, player } = this.props;
 
     const rewiring = game.treatment.rewiring;
-  
+
     //get the ids of the followers and the people that they could follow
     const allPlayersIds = _.pluck(game.players, "_id");
     const alterIds = player.get("alterIds");
@@ -151,11 +155,13 @@ export default class SocialInteraction extends React.Component {
       _.difference(allPlayersIds, alterIds),
       player._id
     );
-  
+
     //actual Player objects and not only Ids for alters and nonAlters
-    
+
     //all players sorted by performance in descending order
-    const allPlayers = _.sortBy(game.players, p => p.get("cumulativeScore")).reverse();
+    const allPlayers = _.sortBy(game.players, p =>
+      p.get("cumulativeScore")
+    ).reverse();
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
     const nonAlters = allPlayers.filter(p => nonAlterIds.includes(p._id));
 

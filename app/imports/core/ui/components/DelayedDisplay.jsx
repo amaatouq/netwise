@@ -1,6 +1,6 @@
 import React from "react";
 
-const DelayedDisplay = (Component, delay = 500) =>
+const DelayedDisplay = (Component, delay = 100) =>
   class extends React.Component {
     constructor(props) {
       super(props);

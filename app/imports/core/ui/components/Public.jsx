@@ -10,7 +10,7 @@ import Loading from "./Loading";
 import NewPlayer from "./NewPlayer";
 import NoBatch from "./NoBatch";
 
-const DelayedNoBatch = DelayedDisplay(NoBatch, 1000);
+const DelayedNoBatch = DelayedDisplay(NoBatch, 100);
 
 export default class Public extends React.Component {
   state = { isOpen: false };
