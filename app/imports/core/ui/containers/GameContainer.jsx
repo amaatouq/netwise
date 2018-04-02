@@ -18,7 +18,7 @@ export const gameName = "task";
 
 // Handles all the timing stuff
 const withTimer = withTracker(({ game, stage, player, ...rest }) => {
-  if (game.finishedAt) {
+  if (game && game.finishedAt) {
     return { game, stage, player };
   }
   const now = moment(TimeSync.serverTime());
@@ -50,6 +50,9 @@ export default withTracker(
     if (!game) {
       if (!gameLobby) {
         throw new Error("game not found");
+      }
+      if (!treatment) {
+        return loadingObj;
       }
       return {
         gameLobby,
