@@ -14,11 +14,11 @@ const DelayedDisplay = (Component, delay = 500) =>
     }
 
     render() {
-      const { children } = this.props;
       const { visible } = this.state;
+
       return (
         <div className={`delayed ${visible ? "visible" : ""}`}>
-          <Component />
+          <Component {...this.props} />
         </div>
       );
     }

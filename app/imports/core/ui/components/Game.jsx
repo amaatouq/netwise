@@ -26,6 +26,10 @@ const errExitStepDups = dups =>
   `All 'Exit Steps' must be unique (have a unique name/displayName). Duplicated: ${dups}.`;
 
 export default class Game extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return !_.isEqual(this.props, nextProps);
+  }
+
   render() {
     const { loading, gameLobby, treatment, ...rest } = this.props;
     const { started, timedOut, game, player, round, stage } = rest;
