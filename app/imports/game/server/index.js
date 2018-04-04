@@ -159,7 +159,7 @@ export const config = {
         {
           name: "response",
           displayName: "Response",
-          durationInSeconds: 2000
+          durationInSeconds: 120,
         }
       ];
 
@@ -167,7 +167,7 @@ export const config = {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",
-          durationInSeconds: 2000
+          durationInSeconds: 120
         });
       }
 
@@ -182,7 +182,7 @@ export const config = {
         stages.push({
           name: "outcome",
           displayName: "Round Outcome",
-          durationInSeconds: 2000
+          durationInSeconds: 120
         });
       }
 
@@ -230,6 +230,9 @@ export const config = {
     if (stage.name === "interactive") {
       //update score after the interactive stage only
       colorScores(players);
+    } else {
+      //when stage is 'outcome' then there is nothing we need to do
+      return;
     }
   },
 
