@@ -159,7 +159,7 @@ export const config = {
         {
           name: "response",
           displayName: "Response",
-          durationInSeconds: 2000
+          durationInSeconds: 120,
         }
       ];
 
@@ -167,7 +167,7 @@ export const config = {
         stages.push({
           name: "interactive",
           displayName: "Interactive Response",
-          durationInSeconds: 2000
+          durationInSeconds: 120
         });
       }
 
@@ -182,7 +182,7 @@ export const config = {
         stages.push({
           name: "outcome",
           displayName: "Round Outcome",
-          durationInSeconds: 2000
+          durationInSeconds: 120
         });
       }
 
@@ -215,19 +215,15 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
-    if (stage.name === "outcome") {
-      return;
-    }
-
-    //TODO: computeScore(.) should happen before colorScores(.) but it is not the case.
-    //this is leading to displayed error color when the ranking of the scores changes from the
-    //in the interactive stage from the response stage.
-    computeScore(players, round);
-
-    //color the score (for the front end display) based on ranking of the score
-    if (stage.name === "interactive") {
-      //update score after the interactive stage only
+    if (stage.name === "response") {
+      computeScore(players, round);
+    } else if (stage.name === "interactive") {
+      //after the 'interactive' stage, we compute the score and color it
+      computeScore(players, round);
       colorScores(players);
+    } else {
+      //when stage is 'outcome' then there is nothing we need to do
+      return;
     }
   },
 
@@ -247,7 +243,6 @@ export const config = {
     });
   }
 };
-
 
 // These are just some helper functions for the Guess the Correlation Game
 //compute score
