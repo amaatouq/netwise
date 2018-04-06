@@ -81,7 +81,6 @@ export default withTracker(
       playerIds.length !== playerStagesCount ||
       playerIds.length !== playerRoundsCount
     ) {
-      console.error("here1");
       return loadingObj;
     }
 

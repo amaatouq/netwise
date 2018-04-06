@@ -222,7 +222,9 @@ export const config = {
     //TODO: computeScore(.) should happen before colorScores(.) but it is not the case.
     //this is leading to displayed error color when the ranking of the scores changes from the
     //in the interactive stage from the response stage.
-    computeScore(players, round);
+    computeScore(players, round, {
+      isInitialGuess: stage.name === 'response'
+    });
 
     //color the score (for the front end display) based on ranking of the score
     if (stage.name === "interactive") {
@@ -248,16 +250,33 @@ export const config = {
   }
 };
 
+function normalizeAngle(angle) {
+  const mod = 2 * Math.PI;
+  return angle - mod * Math.floor(angle / mod);
+}
+
 //compute score
-function computeScore(players, round) {
+function computeScore(players, round, {isInitialGuess = false} = {}) {
   const correctAnswer = round.get("task").correctAnswer;
 
   players.forEach(player => {
     const guess = player.round.get("guess");
+    // store the initialGuess, if it was the initial guess
+    if (isInitialGuess) {
+      player.round.set("initialGuess", guess);
+    }
+
+    // TODO: define the score function better
+    // Current score fn:
+    // 1) take difference between guess and answer
+    // 2) if more than PI, get 0
+    // 3) if less than PI, get (PI - diff) * 100 / PI
+    // Perfect score: 100
+
     // If no guess given, score is 0
     const score = !guess
       ? 0
-      : Math.round((1 - Math.abs(correctAnswer - guess)) * 100);
+      : Math.max(0, (Math.PI - normalizeAngle(Math.abs(correctAnswer - guess)))) / Math.PI * 100;
 
     player.round.set("score", score);
   });

@@ -18,7 +18,8 @@ const stageSet = playerStageId => (key, value) => {
 const stageSubmit = playerStageId => () => {
   submitPlayerStage.call({ playerStageId }, err => {
     if (!err) {
-      stage.submitted = true;
+      // this will be fixed upstream, probably
+      PlayerStages.update(playerStageId, { $set: { submitted: true } });
     }
   });
 };

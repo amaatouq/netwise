@@ -9,15 +9,6 @@ import { Slider } from "@blueprintjs/core";
 // null. Eventually we can create our own slider that can handle nil and report
 // and error if someone submits null.
 export default class TaskResponse extends React.Component {
-  handleChange = num => {
-    const { stage, player } = this.props;
-    if (stage.name !== "outcome") {
-      const value = Math.round(num * 100) / 100;
-      player.stage.set("guess", value);
-      player.round.set("guess", value);
-    }
-  };
-
   handleSubmit = event => {
     event.preventDefault();
     this.props.player.stage.submit();
@@ -35,29 +26,9 @@ export default class TaskResponse extends React.Component {
   }
 
   renderCurrentGuess(player) {
-    return (
-      <label className="pt-label">
-        Your current guess of the correlation is: {player.round.get("guess")}
-      </label>
-    );
-  }
-
-  renderSlider(player, isOutcome) {
-    //TODO: once we change the slider, if it is outcome, we want to color the slider handler
-    return (
-      <div className="pt-form-content">
-        <Slider
-          min={0}
-          max={1}
-          stepSize={0.01}
-          labelStepSize={0.25}
-          onChange={this.handleChange}
-          value={player.round.get("guess")}
-          showTrackFill={false}
-          disabled={isOutcome}
-        />
-      </div>
-    );
+    // The current guess is just the direction of the arrow in the stimulus
+    // No need to render it here!
+    return null;
   }
 
   renderFeedback(player, round) {
@@ -66,13 +37,13 @@ export default class TaskResponse extends React.Component {
         <thead>
           <tr>
             <th>Your guess</th>
-            <th>Actual correlation</th>
+            <th>Actual answer</th>
             <th>Score increment</th>
           </tr>
         </thead>
         <tbody >
           <tr>
-            <td align="center">{player.round.get("guess") || "No guess given"}</td>
+            <td align="center">{player.round.get("guess")}</td>
             <td>{round.get("task").correctAnswer}</td>
             <td>
               <strong style={{ color: player.round.get("scoreColor") }}>
@@ -101,7 +72,6 @@ export default class TaskResponse extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <div className="pt-form-group">
             {!isOutcome ? this.renderCurrentGuess(player) : null}
-            {this.renderSlider(player, isOutcome)}
           </div>
 
           {isOutcome && showFeedback
