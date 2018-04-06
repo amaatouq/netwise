@@ -252,6 +252,16 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    if (stage.name === "response") {
+      computeScore(players, round);
+    } else if (stage.name === "interactive") {
+      //after the 'interactive' stage, we compute the score and color it
+      computeScore(players, round);
+=======
+>>>>>>> Multiplayer
     if (stage.name === "outcome") {
       return;
     }
@@ -266,6 +276,10 @@ export const config = {
     //color the score (for the front end display) based on ranking of the score
     if (stage.name === "interactive") {
       //update score after the interactive stage only
+<<<<<<< HEAD
+=======
+>>>>>>> Multiplayer
+>>>>>>> Multiplayer
       colorScores(players);
     } else {
       //nothing to do when it is 'outcome' stage
@@ -320,9 +334,8 @@ export const config = {
   }
 };
 
-// These are just some helper functions for the Guess the Correlation Game
-// compute score.
-function computeScore(players, round) {
+// Helper function for game to compute game score
+function computeScore(players, round, {isInitialGuess = false} = {}) {
   const correctAnswer = round.get("task").correctAnswer;
   
   players.forEach(player => {
@@ -343,12 +356,17 @@ function computeScore(players, round) {
     const score = !guess
       ? 0
 <<<<<<< HEAD
+<<<<<<< HEAD
       : Math.max(0, (Math.PI - normalizeAngle(Math.abs(correctAnswer - guess)))) / Math.PI * 100;
 
 =======
       : Math.round((1 - Math.abs(correctAnswer - guess)) * 100);
     
 >>>>>>> Fixing #24 and few things on the UI (no default value slider etc)
+=======
+      : Math.max(0, (Math.PI - normalizeAngle(Math.abs(correctAnswer - guess)))) / Math.PI * 100;
+
+>>>>>>> Multiplayer
     player.round.set("score", score);
   });
 }
