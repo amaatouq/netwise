@@ -4,13 +4,10 @@ import React from "react";
 
 import { CoreWrapper } from "./Helpers";
 import { removePlayerId } from "../containers/IdentifiedRoute";
-import DelayedDisplay from "./DelayedDisplay.jsx";
 import GameContainer from "../containers/GameContainer";
 import Loading from "./Loading";
 import NewPlayer from "./NewPlayer";
 import NoBatch from "./NoBatch";
-
-const DelayedNoBatch = DelayedDisplay(NoBatch, 0);
 
 export default class Public extends React.Component {
   state = { isOpen: false };
@@ -40,7 +37,7 @@ export default class Public extends React.Component {
     }
 
     if (!renderPublic) {
-      return <DelayedNoBatch />;
+      return <NoBatch />;
     }
 
     let content;
@@ -69,7 +66,7 @@ export default class Public extends React.Component {
           </div>
           <div className="pt-navbar-group pt-align-right">
             {Meteor.isDevelopment ? (
-              <>
+              <React.Fragment>
                 <button
                   type="button"
                   className="pt-button pt-minimal pt-icon-new-person"
@@ -85,7 +82,7 @@ export default class Public extends React.Component {
                 >
                   Reset current session
                 </button>
-              </>
+              </React.Fragment>
             ) : (
               ""
             )}

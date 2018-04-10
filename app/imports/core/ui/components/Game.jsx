@@ -16,7 +16,7 @@ import Loading from "./Loading";
 import WaitingForServer from "./WaitingForServer.jsx";
 
 const DelayedWaitingForServer = DelayedDisplay(WaitingForServer, 100);
-const DelayedGameLobby = DelayedDisplay(GameLobby, 0);
+const DelayedGameLobby = DelayedDisplay(GameLobby, 100);
 
 const Round = config.RoundComponent;
 
