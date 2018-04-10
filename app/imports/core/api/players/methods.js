@@ -1,6 +1,7 @@
 import { ValidatedMethod } from "meteor/mdg:validated-method";
 import SimpleSchema from "simpl-schema";
 
+import { Batches } from "../batches/batches.js";
 import { GameLobbies } from "../game-lobbies/game-lobbies";
 import { IdSchema } from "../default-schemas.js";
 import { Players } from "./players";
@@ -24,56 +25,83 @@ export const createPlayer = new ValidatedMethod({
 
     const existing = Players.findOne(player);
 
-    // For now we make the assumption that the player already has batch
-    // assigned to them and it's sitll valid. This might not be the case if the
-    // player disconnected for a long time and we removed them from their
-    // assigned game lobby.
-    // TODO fix the existing player without a game/gameLobby case
-    if (existing) {
+    // If the player already has a game lobby assigned, no need to
+    // re-initialize them
+    if (existing && existing.gameLobbyId) {
       return existing._id;
     }
 
-    player._id = Players.insert(player);
+    if (existing) {
+      player = existing;
+    } else {
+      player._id = Players.insert(player);
+    }
 
-    // Adding player to a lobby
-    while (true) {
-      // Looking for an running lobby that still has room
-      const lobby = GameLobbies.findOne(
-        { status: "running", availableSlots: { $gt: 0 } },
-        { sort: { createdAt: 1 } }
-      );
+    // Find the first running batch (in order of running started time)
+    const batch = Batches.findOne(
+      { status: "running", full: false },
+      { sort: { runningAt: 1 } }
+    );
 
-      if (!lobby) {
-        // The UI should update and realize there is no batch available
-        // This should be a rare case of a few seconds of desynchornisation or
-        // that the last available batch just finished.
-        return;
+    if (!batch) {
+      // The UI should update and realize there is no batch available
+      // This should be a rare case where a fraction of a second of
+      // desynchornisation when the last available batch just finished.
+      // If this is the case, since the user exist in the DB at this point
+      // but has no lobby assigned, and the UI will soon determine there
+      // is no available game, the UI will switch to "No experiments
+      // available", nothing else to do.
+      return;
+    }
+
+    // Looking for all lobbies for batch (for which that game has not started yet)
+    const lobbies = GameLobbies.find({
+      batchId: batch._id,
+      status: "running",
+      startedAt: { $exists: false }
+    }).fetch();
+
+    if (lobbies.length === 0) {
+      // This is the same case as when there are no batches available.
+      return;
+    }
+
+    // Let's first try to find lobbies for which their queue isn't full yet
+    let lobbyPool = lobbies.filter(l => l.availableCount > l.queuedCount);
+    // If no lobbies still have "availability", just fill any lobby
+    if (lobbyPool.length === 0) {
+      lobbyPool = lobbies;
+    }
+
+    // Choose a random lobby in the available pool
+    const lobby = _.shuffle(lobbyPool)[0];
+
+    // Adding the player to specified lobby queue
+    GameLobbies.update(lobby._id, {
+      $addToSet: {
+        queuedPlayerIds: player._id
       }
+    });
 
-      // Trying to insert the player into the lobby.
-      // Specifying the availableSlots we previously found ensures we are
-      // only inserting if the availableSlots is still a valid number (> 0)
-      // and we keep the status in there just to make sure it wasn't *just*
-      // stopped.
-      const { _id, availableSlots } = lobby;
-      GameLobbies.update(
-        { _id, availableSlots, status: "running" },
-        {
-          $set: {
-            availableSlots: availableSlots - 1
-          },
-          $addToSet: {
-            playerIds: player._id
-          }
-        }
-      );
+    const gameLobbyId = lobby._id;
+    const $set = { gameLobbyId };
 
-      // We then verify the insert worked. If it didn't we can try again,
-      // there might be another lobby availble.
-      if (GameLobbies.find({ _id, playerIds: player._id })) {
-        Players.update(player._id, { $set: { gameLobbyId: _id } });
-        break;
-      }
+    // Check if there will be instructions
+    let skipInstructions = lobby.debugMode;
+
+    // If there are no instruction, mark the player as ready immediately
+    if (skipInstructions) {
+      $set.readyAt = new Date();
+    }
+
+    Players.update(player._id, { $set });
+
+    // If there are no instruction, player is ready, notify the lobby
+    if (skipInstructions) {
+      GameLobbies.update(gameLobbyId, {
+        $inc: { readyCount: 1 },
+        $addToSet: { playerIds: player._id }
+      });
     }
 
     return player._id;
@@ -96,7 +124,7 @@ export const playerReady = new ValidatedMethod({
     const player = Players.findOne(_id);
 
     if (!player) {
-      throw new Error("unknown player");
+      throw `unknown ready player: ${_id}`;
     }
     const { readyAt, gameLobbyId } = player;
 
@@ -105,17 +133,58 @@ export const playerReady = new ValidatedMethod({
       return;
     }
 
-    const lobby = GameLobbies.findOne(gameLobbyId);
-    if (!lobby) {
-      throw new Error("unknown lobby");
-    }
+    // Loop while trying to book a spot on lobby
+    // We need to make sure the booking of slots on the game are not above
+    // the number of available slots, so we try to add the user with a known
+    // readyCount. If the update does not happen, the readyCount was changed
+    // by another thread (another process...) and we should try again until
+    // there are no slots left.
+    // If no slots are left, we marked the player's attempt to participate as
+    // failed, with a reason why. They will be led to the outro.
+    while (true) {
+      const lobby = GameLobbies.findOne(gameLobbyId);
+      if (!lobby) {
+        throw `unknown lobby for ready player: ${_id}`;
+      }
 
-    GameLobbies.update(gameLobbyId, {
-      $inc: { readyCount: -1 }
-    });
-    Players.update(_id, {
-      $set: { readyAt: new Date() }
-    });
+      // Game is Full, bail the player
+      if (lobby.readyCount === lobby.availableCount) {
+        // User already ready, something happened out of order
+        if (lobby.playerIds.includes(_id)) {
+          return;
+        }
+
+        // Mark the player's participation attemp as failed
+        Players.update(_id, {
+          $set: {
+            failedAt: new Date(),
+            failedReason: "gameFull"
+          }
+        });
+        return;
+      }
+
+      // Try to upda the GameLobby with the readyCount we just queried.
+      GameLobbies.update(
+        { _id: gameLobbyId, readyCount: lobby.readyCount },
+        {
+          $inc: { readyCount: 1 },
+          $addToSet: { playerIds: _id }
+        }
+      );
+
+      // If it failed (playerId not added to playerIds), the readyCount has
+      // changed since it was queried and the lobby might not have any available
+      // slots left, loop and retry.
+      const lobbyUpdated = GameLobbies.findOne(gameLobbyId);
+      if (lobbyUpdated.playerIds.includes(_id)) {
+        // If it did work, mark player as ready
+        Players.update(_id, {
+          $set: { readyAt: new Date() }
+        });
+        return;
+      }
+    }
   }
 });
 

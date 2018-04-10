@@ -10,8 +10,15 @@ class IdentifiedRouteInner extends React.Component {
     return <Route path={path} render={props => <Component {...rest} />} />;
   }
 }
+const defaultPlayerIdKey = "d4900a09cf1f41a494d4fc32a626dfef";
 
-const playerIdKey = "d4900a09cf1f41a494d4fc32a626dfef";
+const urlParams = new URLSearchParams(window.location.search);
+let playerIdKeyOverride = urlParams.get("playerIdKey");
+if (playerIdKeyOverride) {
+  playerIdKeyOverride += "-" + defaultPlayerIdKey;
+}
+
+const playerIdKey = playerIdKeyOverride || defaultPlayerIdKey;
 const playerIdDep = new Tracker.Dependency();
 
 export const getPlayerId = () => {

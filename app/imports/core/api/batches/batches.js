@@ -49,7 +49,7 @@ Batches.statusSchema = new SimpleSchema({
     type: String,
     allowedValues: [
       "init", // Batch created, not running yet
-      "running", // Batch is running and available
+      "running", // Batch is running
 
       // NOTE(np): paused: for now, we don't support paused because we need to do something about timers
       // "paused", // Batch has been pause, ongoing games keep on going but no more new players are accepted. Can be restarted.
@@ -66,7 +66,20 @@ Batches.statusSchema = new SimpleSchema({
 Batches.schema = new SimpleSchema({
   assignment: {
     type: String,
+    // "custom" not yet supported
     allowedValues: ["simple", "complete", "custom"]
+  },
+
+  full: {
+    label: "Batch is full, all games are running",
+    type: Boolean,
+    defaultValue: false
+  },
+
+  runningAt: {
+    label: "Time when batch started running",
+    type: Date,
+    optional: true
   },
 
   // Simple configuration at init

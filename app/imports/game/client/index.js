@@ -5,6 +5,7 @@ import InstructionStepTwo from "./instructions/InstructionStepTwo.jsx";
 import Quiz from "./instructions/Quiz.jsx";
 import Round from "./components/Round";
 import Score from "./exit/Score.jsx";
+import Sorry from "./exit/Sorry.jsx";
 import Thanks from "./exit/Thanks.jsx";
 
 // config contains the client side configuration for this game. It is used by
@@ -39,6 +40,9 @@ export const config = {
   // https://reactjs.org/docs/higher-order-components.html#convention-wrap-the-display-name-for-easy-debugging
   // for details).
   ExitSteps(game, player) {
+    if (player.failedReason === "gameFull") {
+      return [Sorry, Thanks];
+    }
     return [Score, ExitSurvey, Thanks];
   }
 };
