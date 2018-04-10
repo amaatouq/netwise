@@ -8,7 +8,9 @@ import { Treatments } from "../../treatments/treatments";
 publishComposite("gameLobby", function({ playerId }) {
   return {
     find() {
-      return GameLobbies.find({ playerIds: playerId });
+      return GameLobbies.find({
+        $or: [{ playerIds: playerId }, { queuedPlayerIds: playerId }]
+      });
     },
     children: [
       {

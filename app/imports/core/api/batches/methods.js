@@ -9,7 +9,7 @@ export const createBatch = new ValidatedMethod({
   name: "Batches.methods.create",
 
   validate: Batches.schema
-    .omit("status", "createdAt", "updatedAt", "debugMode")
+    .omit("status", "createdAt", "updatedAt", "debugMode", "full")
     .validator(),
 
   run(batch) {
@@ -58,7 +58,13 @@ export const updateBatchStatus = new ValidatedMethod({
       throw new Error("invalid");
     }
 
-    Batches.update(_id, { $set: { status } });
+    const $set = { status };
+
+    if (status === "running") {
+      $set.runningAt = new Date();
+    }
+
+    Batches.update(_id, { $set });
   }
 });
 

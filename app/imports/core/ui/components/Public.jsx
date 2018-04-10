@@ -15,16 +15,25 @@ const DelayedNoBatch = DelayedDisplay(NoBatch, 100);
 export default class Public extends React.Component {
   state = { isOpen: false };
 
-  toggleDialog = () => this.setState({ isOpen: !this.state.isOpen });
+  handleToggleDialog = () => this.setState({ isOpen: !this.state.isOpen });
 
-  reset = event => {
+  handleReset = event => {
     event.preventDefault();
     removePlayerId();
     this.setState({ isOpen: false });
   };
 
+  handleOpenAltPlayer = event => {
+    event.preventDefault();
+    const randId = Math.random()
+      .toString(36)
+      .substring(2, 15);
+    window.open(`/?playerIdKey=${randId}`, "_blank");
+  };
+
   render() {
-    const { player, loading, renderPublic, ...rest } = this.props;
+    const { loading, renderPublic, ...rest } = this.props;
+    const { player } = rest;
 
     if (loading) {
       return <Loading />;
@@ -42,7 +51,7 @@ export default class Public extends React.Component {
         </CoreWrapper>
       );
     } else {
-      content = <GameContainer player={player} {...rest} />;
+      content = <GameContainer {...rest} />;
     }
 
     return (
@@ -59,13 +68,32 @@ export default class Public extends React.Component {
             </div>
           </div>
           <div className="pt-navbar-group pt-align-right">
-            {/* <Link className="pt-button pt-minimal pt-icon-info-sign" to="/">
-              About
-            </Link> */}
+            {Meteor.isDevelopment ? (
+              <>
+                <button
+                  type="button"
+                  className="pt-button pt-minimal pt-icon-new-person"
+                  onClick={this.handleOpenAltPlayer}
+                >
+                  New Player
+                </button>
+
+                <button
+                  type="button"
+                  className="pt-button pt-minimal pt-icon-repeat"
+                  onClick={this.handleReset}
+                >
+                  Reset current session
+                </button>
+              </>
+            ) : (
+              ""
+            )}
+
             <button
               type="button"
               className="pt-button pt-minimal pt-icon-info-sign"
-              onClick={this.toggleDialog}
+              onClick={this.handleToggleDialog}
             >
               About
             </button>
@@ -73,42 +101,18 @@ export default class Public extends React.Component {
             <Dialog
               iconName="inbox"
               isOpen={this.state.isOpen}
-              onClose={this.toggleDialog}
+              onClose={this.handleToggleDialog}
               title="About"
             >
               <div className="pt-dialog-body">
                 Here be the presentation of the experiement(ers).
-                {Meteor.isDevelopment ? (
-                  <div>
-                    <br />
-                    <br />
-                    <hr />
-                    <h4>Debugging</h4>
-                    <p>
-                      This section is not visible once the app is
-                      build/deployed.
-                    </p>
-                    <button
-                      type="button"
-                      className="pt-button pt-icon-repeat"
-                      onClick={this.reset}
-                    >
-                      Reset current session
-                    </button>
-                    <hr />
-                    <br />
-                    <br />
-                  </div>
-                ) : (
-                  ""
-                )}
               </div>
               <div className="pt-dialog-footer">
                 <div className="pt-dialog-footer-actions">
                   <button
                     type="button"
                     className="pt-button pt-intent-primary"
-                    onClick={this.toggleDialog}
+                    onClick={this.handleToggleDialog}
                   >
                     Close
                   </button>

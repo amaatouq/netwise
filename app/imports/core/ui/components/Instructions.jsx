@@ -1,20 +1,23 @@
 import React from "react";
 
 import { config } from "../../../game/client";
+import Loading from "./Loading.jsx";
 
 export default class Instructions extends React.Component {
   state = { current: 0 };
   componentWillMount() {
     const { treatment, onDone } = this.props;
     const stepsFunc = config.InstructionSteps;
-    if (!stepsFunc) {
+
+    const steps = stepsFunc && stepsFunc(treatment.conditionsObject());
+
+    const noInstruction = !stepsFunc || !steps || steps.length === 0;
+
+    if (noInstruction) {
       onDone();
-      return;
     }
 
-    const steps = stepsFunc(treatment.conditionsObject());
-
-    this.setState({ steps });
+    this.setState({ steps, noInstruction });
   }
 
   onNext = () => {
@@ -34,7 +37,12 @@ export default class Instructions extends React.Component {
 
   render() {
     const { treatment } = this.props;
-    const { steps, current } = this.state;
+    const { steps, current, noInstruction } = this.state;
+
+    if (noInstruction) {
+      return <Loading />;
+    }
+
     const Step = steps[current];
     const hasNext = steps.length - 1 > current;
     const hasPrev = current > 0;

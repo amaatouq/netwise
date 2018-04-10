@@ -21,12 +21,26 @@ Players.schema = new SimpleSchema({
     type: Date,
     optional: true
   },
+
   exitStepsDone: {
     type: Array,
     defaultValue: []
   },
   "exitStepsDone.$": {
     type: String
+  },
+
+  // Failed fields are filled when the player's participation in a game failed
+  failedAt: {
+    label: "Failed At",
+    type: Date,
+    optional: true
+  },
+  failedReason: {
+    label: "Failed Reason",
+    type: String,
+    optional: true,
+    allowedValues: ["gameFull"]
   }
 });
 

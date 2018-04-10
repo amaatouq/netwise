@@ -7,7 +7,7 @@ export default class GameLobby extends React.Component {
     const { gameLobby, treatment } = this.props;
 
     const total = treatment.condition("playerCount").value;
-    const exisiting = total - gameLobby.readyCount;
+    const exisiting = gameLobby.readyCount;
     return (
       <CoreWrapper>
         <div className="game-lobby">

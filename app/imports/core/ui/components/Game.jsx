@@ -20,11 +20,6 @@ const DelayedGameLobby = DelayedDisplay(GameLobby, 100);
 
 const Round = config.RoundComponent;
 
-const errExitStepMissingName =
-  "At least one 'Exit Step' is missing a name or a displayName. All 'Exist Steps' Components must have a name or displayName or all hell will break loose. See https://reactjs.org/docs/higher-order-components.html#convention-wrap-the-display-name-for-easy-debugging to add a displayName.";
-const errExitStepDups = dups =>
-  `All 'Exit Steps' must be unique (have a unique name/displayName). Duplicated: ${dups}.`;
-
 export default class Game extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !_.isEqual(this.props, nextProps);
@@ -38,8 +33,27 @@ export default class Game extends React.Component {
       return <Loading />;
     }
 
+    if ((game && game.finishedAt) || player.failedAt) {
+      const exitSteps = config.ExitSteps && config.ExitSteps(game, player);
+
+      return (
+        <ExitSteps
+          steps={exitSteps}
+          game={game}
+          player={player}
+          onSubmit={(stepName, data) => {
+            const playerId = player._id;
+            markPlayerExitStepDone.call({ playerId, stepName });
+            if (data) {
+              addPlayerInput.call({ playerId, data: JSON.stringify(data) });
+            }
+          }}
+        />
+      );
+    }
+
     if (!game) {
-      if (player.readyAt || gameLobby.debugMode) {
+      if (player.readyAt) {
         return (
           <DelayedGameLobby
             gameLobby={gameLobby}
@@ -57,66 +71,6 @@ export default class Game extends React.Component {
           }}
         />
       );
-    }
-
-    if (game.finishedAt) {
-      const exitSteps = config.ExitSteps && config.ExitSteps(game, player);
-      if (!_.isEmpty(exitSteps)) {
-        // Checks steps have a name
-        stepNames = exitSteps.map(s => (s.displayName || s.name || "").trim());
-        for (let index = 0; index < stepNames.length; index++) {
-          const sname = stepNames[index];
-          if (_.isEmpty(sname)) {
-            alert(errExitStepMissingName);
-            console.error(errExitStepMissingName);
-            return null;
-          }
-        }
-
-        // Checks steps are unique
-        if (stepNames.length !== _.uniq(stepNames).length) {
-          const counts = {};
-          stepNames.forEach(n => (counts[n] = (counts[n] || 0) + 1));
-          const dups = _.compact(
-            _.map(counts, (v, k) => (v > 1 ? k : null))
-          ).join(", ");
-          const err = errExitStepDups(dups);
-          alert(err);
-          console.error(err);
-          return null;
-        }
-
-        return (
-          <ExitSteps
-            game={game}
-            player={player}
-            onSubmit={(stepName, data) => {
-              const playerId = player._id;
-              markPlayerExitStepDone.call({ playerId, stepName });
-              if (data) {
-                addPlayerInput.call({ playerId, data: JSON.stringify(data) });
-              }
-            }}
-          />
-        );
-      } else {
-        return (
-          <div className="game finished">
-            <div className="pt-non-ideal-state">
-              <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-                <span className="pt-icon pt-icon-tick" />
-              </div>
-              <h4 className="pt-non-ideal-state-title">Finished!</h4>
-              <div className="pt-non-ideal-state-description">
-                Thank you for participating.
-                <DevNote block>
-                  There should be some outro steps here, including payment.
-                </DevNote>
-              </div>
-            </div>
-          </div>
-        );
-      }
     }
 
     let content;

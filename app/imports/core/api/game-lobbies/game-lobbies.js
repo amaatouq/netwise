@@ -6,7 +6,7 @@ import { DebugModeSchema } from "../default-schemas.js";
 import { Players } from "../players/players";
 import { Treatments } from "../treatments/treatments";
 
-export const GameLobbies = new Mongo.Collection("gameLobbies");
+export const GameLobbies = new Mongo.Collection("game_lobbies");
 
 GameLobbies.helpers({
   players() {
@@ -29,18 +29,53 @@ GameLobbies.schema = new SimpleSchema({
     label: "Position"
   },
 
-  // availableSlots tells us how many slots are left in this lobby
-  availableSlots: {
+  // availableCount tells us how many slots are available in this lobby (== treatment.playerCount)
+  availableCount: {
     type: SimpleSchema.Integer,
     min: 0,
-    label: "Available Slots"
+    label: "Available Slots Count"
+  },
+
+  // queuedCount tells us how many players are queued to start, but haven't
+  // finished the intro steps yet. It might be higher than availableCount as we
+  // allow overbooking to make games start faster.
+  queuedCount: {
+    type: SimpleSchema.Integer,
+    min: 0,
+    defaultValue: 0,
+    label: "Queued Players Count"
   },
 
   // readyCount tells us how many players are ready to start (finished intro)
+  // Once availableCount == readyCount, the game starts. Player that are queued
+  // but haven't made it past the intro in time will be led to the outro
+  // directly.
   readyCount: {
     type: SimpleSchema.Integer,
     min: 0,
-    label: "Ready Count"
+    defaultValue: 0,
+    label: "Ready Players Count"
+  },
+
+  startedAt: {
+    label: "Time when the corresponding game started",
+    type: Date,
+    optional: true
+  },
+
+  // Queued players are players that have been associated with the lobby
+  // but are not confirmed for the game yet. playerIds is used for confirmed
+  // players
+  queuedPlayerIds: {
+    type: Array,
+    defaultValue: [],
+    label: `Queued Players`,
+    index: true
+  },
+  "queuedPlayerIds.$": {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    label: `Queued Player`
   }
 
   // ======================================================================
