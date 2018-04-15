@@ -28,6 +28,65 @@ local webserver by running `meteor`. The app boot on http://localhost:3000/
 by default. You can access the admin at http://localhost:3000/admin, the login
 credentials can be found in `/import/core/startup/server/bootstrap.js`.
 
+## Settings
+
+**IMPORTANT** **IMPORTANT** **IMPORTANT** **IMPORTANT**  
+Settings files MUST NOT be saved into the repo. They should not be transmitted
+over an insecure transport such as Email. Ideally, they are shared in person by
+USB key, otherwise, encrypt the files with something like
+[VeraCrypt](https://www.veracrypt.fr) before sharing over an insecure transport.  
+**IMPORTANT** **IMPORTANT** **IMPORTANT** **IMPORTANT**
+
+Settings are set on the app by passing the `--setting JSON_SETTINGS_FILE_NAME`
+flag to the `meteor` command. Learn about Meteor Settings in the
+[official documentation](https://docs.meteor.com/api/core.html#Meteor-settings).
+
+By convention, we recomment you call your settings files as follows:
+
+* local.json: For local development (on your own computer).
+* dev.json: For a development development.
+* staging.json: For a staging development.
+* production.json: For a production development.
+
+You might not have as many environment but we if you do, we might as well all
+follow a convention.
+
+Note that keys under the `"public"` key will be available on both server and
+client, all other keys will only be available on the server.
+
+Example configuration:
+
+```json
+{
+  "public": {
+    "debug_newPlayer": true,
+    "debug_resetSession": true,
+    "debug_resetDatabase": true,
+    "debug_gameDebugMode": true
+  }
+}
+```
+
+Custom settings for Empirica:
+
+* **public.debug_newPlayer** `Boolean` (default: true in development, false in
+  production) **This MUST NOT be true in production!** If true, a button in the
+  header allows to create a new player without while staying the same browser.
+* **public.debug_resetSession**: `Boolean` (default: true in development, false in
+  production) **This MUST NOT be true in production!** If true, a button in the
+  header allows the player to reset their session (aka player logout).
+* **public.debug_resetDatabase**: `Boolean` (default: true in development, false in
+  production) **This MUST NOT be true in production!** If true, this will activate
+  2 buttons in the Admin that allow to partially or fully clear the DB. CAREFUL!!
+* **public.debug_gameDebugMode**: `Boolean` (default: true in development, false in
+  production) **This MUST NOT be true in production!** If true, this activates a
+  "Game Debug mode". This mode is very useful to develop, test and debug an
+  experiment. In this mode, if you click on the `▶️ Start` button of a batch
+  while holding `⌘` (mac) or `ctrl` (pc), all the games in the batch will
+  be in debug mode, which does 2 things:
+  * it skips the instruction steps
+  * it sets the timer to a very long time
+
 ## Deployment
 
 There are many ways the app can be deployed. Netwise has no special dependencies
@@ -74,7 +133,7 @@ add you Mongo URL config as follows:
 DO NOT COMMIT this file, it contains secrets that should not go into your git
 repo.
 
-\*.meteorapp.com domains are free to use with Galaxy, so you can simply choose
+`*.meteorapp.com` domains are free to use with Galaxy, so you can simply choose
 an available subdomain such as `my-netwise-app` (don't use this one), which will
 give us the `my-netwise-app.meteorapp.com` domain name. Meteor will let you know
 when you try to deploy if the domain is available. Finally just run the

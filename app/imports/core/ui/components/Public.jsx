@@ -65,24 +65,26 @@ export default class Public extends React.Component {
             </div>
           </div>
           <div className="pt-navbar-group pt-align-right">
-            {Meteor.isDevelopment ? (
-              <React.Fragment>
-                <button
-                  type="button"
-                  className="pt-button pt-minimal pt-icon-new-person"
-                  onClick={this.handleOpenAltPlayer}
-                >
-                  New Player
-                </button>
-
-                <button
-                  type="button"
-                  className="pt-button pt-minimal pt-icon-repeat"
-                  onClick={this.handleReset}
-                >
-                  Reset current session
-                </button>
-              </React.Fragment>
+            {Meteor.isDevelopment || Meteor.settings.public.debug_newPlayer ? (
+              <button
+                type="button"
+                className="pt-button pt-minimal pt-icon-new-person"
+                onClick={this.handleOpenAltPlayer}
+              >
+                New Player
+              </button>
+            ) : (
+              ""
+            )}
+            {Meteor.isDevelopment ||
+            Meteor.settings.public.debug_resetSession ? (
+              <button
+                type="button"
+                className="pt-button pt-minimal pt-icon-repeat"
+                onClick={this.handleReset}
+              >
+                Reset current session
+              </button>
             ) : (
               ""
             )}

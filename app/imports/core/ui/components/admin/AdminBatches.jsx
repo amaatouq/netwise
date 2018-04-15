@@ -27,7 +27,7 @@ export default class AdminBatches extends React.Component {
   handleStatusChange = (_id, status, event) => {
     event.preventDefault();
     if (
-      Meteor.isDevelopment &&
+      (Meteor.isDevelopment || Meteor.settings.public.debug_gameDebugMode) &&
       status === "running" &&
       // mac: metaKey (command), window: ctrlKey (Ctrl)
       (event.ctrlKey || event.metaKey)

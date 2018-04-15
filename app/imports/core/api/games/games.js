@@ -24,7 +24,7 @@ Games.schema = new SimpleSchema({
   }
 });
 
-if (Meteor.isDevelopment) {
+if (Meteor.isDevelopment || Meteor.settings.public.debug_gameDebugMode) {
   Games.schema.extend(DebugModeSchema);
 }
 

@@ -132,7 +132,7 @@ GameLobbies.schema = new SimpleSchema({
   // }
 });
 
-if (Meteor.isDevelopment) {
+if (Meteor.isDevelopment || Meteor.settings.public.debug_gameDebugMode) {
   GameLobbies.schema.extend(DebugModeSchema);
 }
 
