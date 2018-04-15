@@ -127,7 +127,8 @@ export default class Admin extends React.Component {
             </button>
           </div>
 
-          {Meteor.isDevelopment ? (
+          {Meteor.isDevelopment ||
+          Meteor.settings.public.debug_resetDatabase ? (
             <div className="pt-navbar-group pt-align-right">
               {/* <Tooltip2 content={<span>This button also has a popover!</span>} placement="right" inline={true}> */}
               <Tooltip

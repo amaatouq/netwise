@@ -142,7 +142,7 @@ Batches.schema = new SimpleSchema({
   }
 });
 
-if (Meteor.isDevelopment) {
+if (Meteor.isDevelopment || Meteor.settings.public.debug_gameDebugMode) {
   Batches.schema.extend(DebugModeSchema);
 }
 

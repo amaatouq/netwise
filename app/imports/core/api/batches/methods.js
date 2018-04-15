@@ -68,7 +68,7 @@ export const updateBatchStatus = new ValidatedMethod({
   }
 });
 
-if (Meteor.isDevelopment) {
+if (Meteor.isDevelopment || Meteor.settings.public.debug_gameDebugMode) {
   export const setBatchInDebugMode = new ValidatedMethod({
     name: "Batches.methods.debugMode",
 

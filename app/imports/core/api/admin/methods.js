@@ -7,7 +7,7 @@ const userColls = ["meteor_accounts_loginServiceConfiguration", "users"];
 const keep = [].concat(userColls);
 const keepPartial = ["treatments", "conditions"];
 
-if (Meteor.isDevelopment) {
+if (Meteor.isDevelopment || Meteor.settings.public.debug_resetDatabase) {
   Meteor.methods({
     adminResetDB(partial) {
       if (!this.userId) {
