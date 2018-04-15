@@ -1,11 +1,12 @@
-import { Tooltip, Position, Intent } from "@blueprintjs/core";
 import { NavLink, Route, Switch } from "react-router-dom";
+import { Tooltip, Position, Intent } from "@blueprintjs/core";
 import PropTypes from "prop-types";
 import React from "react";
 
 import AdminBatchesContainer from "../containers/admin/AdminBatchesContainer";
 import AdminConditionsContainer from "../containers/admin/AdminConditionsContainer.jsx";
 import AdminGames from "./admin/AdminGames.jsx";
+import AdminLobbyConfigsContainer from "../containers/admin/AdminLobbyConfigsContainer.jsx";
 import AdminPlayers from "./admin/AdminPlayers.jsx";
 import AdminTreatmentsContainer from "../containers/admin/AdminTreatmentsContainer";
 
@@ -93,6 +94,14 @@ export default class Admin extends React.Component {
             </NavLink>
             <NavLink
               exact
+              to="/admin/lobby-configurations"
+              activeClassName="pt-active"
+              className="pt-button pt-minimal"
+            >
+              Lobby Configurations
+            </NavLink>
+            <NavLink
+              exact
               to="/admin/treatments"
               activeClassName="pt-active"
               className="pt-button pt-minimal"
@@ -160,6 +169,10 @@ export default class Admin extends React.Component {
             <Route
               path="/admin/treatments"
               component={AdminTreatmentsContainer}
+            />
+            <Route
+              path="/admin/lobby-configurations"
+              component={AdminLobbyConfigsContainer}
             />
             <Route
               path="/admin/conditions"
