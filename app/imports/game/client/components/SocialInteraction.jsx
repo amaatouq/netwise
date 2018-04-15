@@ -44,7 +44,7 @@ export default class SocialInteraction extends React.Component {
   }
 
   renderAlter(otherPlayer) {
-    const { game } = this.props;
+    const { feedbackTime, game } = this.props;
     const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
     console.log("roundScore", roundScore);
@@ -53,11 +53,11 @@ export default class SocialInteraction extends React.Component {
         <div className="info">
           <img src={otherPlayer.get("avatar")} className="profile-avatar" />
           {/*only show the scores of the alters if feedback is allowed*/}
-          {game.treatment.feedback ? (
+          {feedbackTime ? (
             <span className="pt-icon-standard pt-icon-dollar" />
           ) : null}
-          {game.treatment.feedback ? <span>{cumulativeScore}</span> : null}
-          {game.treatment.feedback ? (
+          {feedbackTime ? <span>{cumulativeScore}</span> : null}
+          {feedbackTime ? (
             <span style={{ color: otherPlayer.round.get("scoreColor") }}>
               <strong> (+{roundScore})</strong>
             </span>
@@ -72,29 +72,28 @@ export default class SocialInteraction extends React.Component {
     return alterIds.map(alterId => this.renderAlter(alterId));
   }
 
-  renderLeftColumn(player, alterIds, game) {
+  renderLeftColumn(player, alterIds, feedbackTime) {
     const cumulativeScore = player.get("cumulativeScore") || 0;
     const roundScore = player.round.get("score") || 0;
 
     return (
       <div className="right" key="left">
-        {game.treatment.feedback ? (
+        {feedbackTime ? (
           <p>
             <strong>Score:</strong> Total (+increment)
           </p>
         ) : null}
 
-        <p style={{ textIndent: "1em" }}>
-          {game.treatment.feedback ? (
+        {feedbackTime ? (
+          <p style={{ textIndent: "1em" }}>
             <span className="pt-icon-standard pt-icon-dollar" />
-          ) : null}
-          {game.treatment.feedback ? <span>{cumulativeScore}</span> : null}
-          {game.treatment.feedback ? (
+            <span>{cumulativeScore}</span>
             <span style={{ color: player.round.get("scoreColor") }}>
               <strong> (+{roundScore})</strong>
             </span>
-          ) : null}
-        </p>
+          </p>
+        ) : null}
+
         <p>
           <strong>You are following:</strong>
         </p>
@@ -104,7 +103,7 @@ export default class SocialInteraction extends React.Component {
   }
 
   renderNonAlter(otherPlayer) {
-    const { game, player } = this.props;
+    const { feedbackTime, player } = this.props;
     const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
 
@@ -116,11 +115,11 @@ export default class SocialInteraction extends React.Component {
           disabled={player.stage.submitted}
         />
         <img src={otherPlayer.get("avatar")} className="profile-avatar" />
-        {game.treatment.feedback ? (
+        {feedbackTime ? (
           <span className="pt-icon-standard pt-icon-dollar" />
         ) : null}
-        {game.treatment.feedback ? <span>{cumulativeScore} </span> : null}
-        {game.treatment.feedback ? (
+        {feedbackTime ? <span>{cumulativeScore} </span> : null}
+        {feedbackTime ? (
           <span style={{ color: otherPlayer.round.get("scoreColor") }}>
             <strong> (+{roundScore})</strong>
           </span>
@@ -144,7 +143,7 @@ export default class SocialInteraction extends React.Component {
   }
 
   render() {
-    const { game, player } = this.props;
+    const { game, player, feedbackTime } = this.props;
 
     const rewiring = game.treatment.rewiring;
 
@@ -169,10 +168,10 @@ export default class SocialInteraction extends React.Component {
       <div className="social-interaction">
         {rewiring
           ? [
-              this.renderLeftColumn(player, alters, game),
+              this.renderLeftColumn(player, alters, feedbackTime),
               this.renderRightColumn(nonAlters)
             ]
-          : this.renderLeftColumn(player, alters, game)}
+          : this.renderLeftColumn(player, alters, feedbackTime)}
       </div>
     );
   }

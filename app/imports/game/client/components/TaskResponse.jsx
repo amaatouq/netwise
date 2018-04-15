@@ -70,9 +70,11 @@ export default class TaskResponse extends React.Component {
             <th>Score increment</th>
           </tr>
         </thead>
-        <tbody >
+        <tbody>
           <tr>
-            <td align="center">{player.round.get("guess") || "No guess given"}</td>
+            <td align="center">
+              {player.round.get("guess") || "No guess given"}
+            </td>
             <td>{round.get("task").correctAnswer}</td>
             <td>
               <strong style={{ color: player.round.get("scoreColor") }}>
@@ -86,7 +88,7 @@ export default class TaskResponse extends React.Component {
   }
 
   render() {
-    const { stage, round, player, game } = this.props;
+    const { stage, round, player, feedbackTime } = this.props;
 
     //if the player already submitted, don't show the slider or submit button
     if (player.stage.submitted) {
@@ -94,7 +96,6 @@ export default class TaskResponse extends React.Component {
     }
 
     const isOutcome = stage.name === "outcome";
-    const showFeedback = game.treatment.feedback;
 
     return (
       <div className="task-response">
@@ -104,7 +105,7 @@ export default class TaskResponse extends React.Component {
             {this.renderSlider(player, isOutcome)}
           </div>
 
-          {isOutcome && showFeedback
+          {isOutcome && feedbackTime
             ? this.renderFeedback(player, round)
             : null}
 

@@ -64,9 +64,11 @@ export const config = {
       type: Boolean,
       optional: false
     },
-    feedback: {
-      description: "Whether players see performance feedback",
-      type: Boolean,
+    feedbackRate: {
+      description: "how frequent the feedback is (1 = every round; 0 = never)",
+      type: Number,
+      min: 0,
+      max: 1,
       optional: false
     },
     feedbackNoise: {
@@ -78,13 +80,6 @@ export const config = {
     },
     shockRate: {
       description: "The rate at which we change difficulties for the players",
-      type: Number,
-      min: 0,
-      max: 1,
-      optional: false
-    },
-    feedbackRate: {
-      description: "how frequent the feedback is (1 = every round; 0 = never)",
       type: Number,
       min: 0,
       max: 1,
@@ -175,7 +170,7 @@ export const config = {
         treatment.altersCount
       );
       player.set("avatar", `/avatars/jdenticon/${player._id}`);
-      player.set("difficulty", Random.choice(difficulties));
+      player.set("difficulty", difficulties[i % 3]); //equal number of difficulties
       player.set("alterIds", alterIds);
       player.set("cumulativeScore", 0);
     });
@@ -206,8 +201,8 @@ export const config = {
       // when no interactions with others only show the outcome stage when feedback is given
       if (
         (treatment.altersCount > 0 &&
-          (treatment.feedback || treatment.rewiring)) ||
-        (treatment.altersCount === 0 && treatment.feedback)
+          (treatment.feedbackRate > 0 || treatment.rewiring)) ||
+        (treatment.altersCount === 0 && treatment.feedbackRate > 0)
       ) {
         stages.push({
           name: "outcome",
@@ -245,13 +240,6 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
-    //checking whether the game contains shock and whether it is time for it!
-    const shockTime =
-      game.treatment.shockRate > 0 &&
-      round.index %
-        Math.round(game.treatment.shockRate * game.treatment.nRounds) ===
-        0;
-
     if (stage.name === "response") {
       computeScore(players, round);
     } else if (stage.name === "interactive") {
@@ -259,9 +247,8 @@ export const config = {
       computeScore(players, round);
       colorScores(players);
     } else {
-      //when stage is 'outcome' and it is time for a shock to arrive, then shock the players
-      //i.e., change the difficulty of the task for them.
-      shockTime ? shock(players) : null;
+      //nothing to do when it is 'outcome' stage
+      return;
     }
   },
 
@@ -274,11 +261,30 @@ export const config = {
   // - `round`, the current Round object (same as created in init).
   // - `players` is the array of all players at this stage
   onRoundEnd(game, round, players) {
+    //update the cumulative Score for everyone after the round
     players.forEach(player => {
       const currentScore = player.get("cumulativeScore");
       const roundScore = player.round.get("score");
       player.set("cumulativeScore", Math.round(currentScore + roundScore));
     });
+    
+    console.log(round.index)
+
+    // //TODO: bug here, game.treatment is not defined, unlike on the client side
+    // //checking whether the game contains shock and whether it is time for it!
+    // //currentRoundNumber % nRounds/shockRate * nRounds => whether it is time!
+    // console.log(game);
+    // const shockTime =
+    //   game.treatment.shockRate > 0 &&
+    //   round.index +1 %
+    //     Math.round(
+    //       game.treatment.nRounds /
+    //         (game.treatment.shockRate * game.treatment.nRounds)
+    //     ) ===
+    //     0;
+    // //if it is time for a shock to arrive, then shock the players
+    // // i.e., change the difficulty of the task for them.
+    // shockTime ? shock(players) : null;
   }
 };
 
@@ -345,12 +351,12 @@ function shock(players) {
   });
 }
 
-
 //sampling from a normal distribution for the noisy feedback
 // Standard Normal variate using Box-Muller transform.
 function normal_random() {
-  var u = 0, v = 0;
-  while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
-  while(v === 0) v = Math.random();
-  return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+  let u = 0;
+  let v = 0;
+  while (u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
 }

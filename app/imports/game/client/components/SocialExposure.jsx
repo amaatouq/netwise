@@ -31,11 +31,12 @@ export default class SocialExposure extends React.Component {
     const { game, player } = this.props;
 
     const alterIds = player.get("alterIds");
-  
-    const allPlayers = _.sortBy(game.players, p => p.get("cumulativeScore")).reverse();
+
+    const allPlayers = _.sortBy(game.players, p =>
+      p.get("cumulativeScore")
+    ).reverse();
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
-  
-  
+
     return (
       <div className="social-exposure">
         <p>
