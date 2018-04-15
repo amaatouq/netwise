@@ -49,6 +49,9 @@ export const config = {
       min: 1,
       max: 100
     },
+    // JS doesn't have Integer and Float as distinctive types, just Number.
+    //So when we really don't want people to give a float (like playerCount)
+    // simple schema gives you that custom type
     altersCount: {
       description: "The Number of connections for each player",
       type: SimpleSchema.Integer,
@@ -66,13 +69,39 @@ export const config = {
       type: Boolean,
       optional: false
     },
-    environment: {
-      description: "This is an example of multiple choice selector",
-      type: String,
-      regEx: /[a-zA-Z]+/,
-      allowedValues: ["stationary", "nonStationary", "semiStationary"],
-      optional: true
+    feedbackNoise: {
+      description: "The level of noise added to performance of the alters",
+      type: Number,
+      min: 0,
+      max: 1,
+      optional: false
     },
+    shockRate: {
+      description: "The rate at which we change difficulties for the players",
+      type: Number,
+      min: 0,
+      max: 1,
+      optional: false
+    },
+    feedbackRate: {
+      description: "how frequent the feedback is (1 = every round; 0 = never)",
+      type: Number,
+      min: 0,
+      max: 1,
+      optional: false
+    },
+    randomizeTask: {
+      description: "Whether to randomize the sequence of the task or not",
+      type: Boolean,
+      optional: false
+    },
+    // environment: {
+    //   description: "This is an example of multiple choice selector",
+    //   type: String,
+    //   regEx: /[a-zA-Z]+/,
+    //   allowedValues: ["stationary", "nonStationary"],
+    //   optional: false
+    // },
     nRounds: {
       description: "This is the number of rounds for the game",
       type: SimpleSchema.Integer,
@@ -151,7 +180,8 @@ export const config = {
       player.set("cumulativeScore", 0);
     });
 
-    const tasks = _.shuffle(taskData);
+    //only randomize the task if specified in the conditions
+    const tasks = treatment.randomizeTask ? _.shuffle(taskData) : taskData;
 
     const rounds = [];
     _.times(treatment.nRounds, i => {
@@ -159,7 +189,7 @@ export const config = {
         {
           name: "response",
           displayName: "Response",
-          durationInSeconds: 120,
+          durationInSeconds: 120
         }
       ];
 
@@ -177,7 +207,7 @@ export const config = {
       if (
         (treatment.altersCount > 0 &&
           (treatment.feedback || treatment.rewiring)) ||
-        (treatment.altersCount <= 0 && treatment.feedback)
+        (treatment.altersCount === 0 && treatment.feedback)
       ) {
         stages.push({
           name: "outcome",
@@ -215,6 +245,13 @@ export const config = {
   //   and write stage scoped player data.
   // - `players` is the array of all players at this stage
   onStageEnd(game, round, stage, players) {
+    //checking whether the game contains shock and whether it is time for it!
+    const shockTime =
+      game.treatment.shockRate > 0 &&
+      round.index %
+        Math.round(game.treatment.shockRate * game.treatment.nRounds) ===
+        0;
+
     if (stage.name === "response") {
       computeScore(players, round);
     } else if (stage.name === "interactive") {
@@ -222,8 +259,9 @@ export const config = {
       computeScore(players, round);
       colorScores(players);
     } else {
-      //when stage is 'outcome' then there is nothing we need to do
-      return;
+      //when stage is 'outcome' and it is time for a shock to arrive, then shock the players
+      //i.e., change the difficulty of the task for them.
+      shockTime ? shock(players) : null;
     }
   },
 
@@ -263,33 +301,56 @@ function computeScore(players, round) {
 //we sort the players based on their score in this round in order to color code how we display their scores
 //the highest 1/3 players are green, the lowest 1/3 are red, and the rest are orange
 function colorScores(players) {
-  {
-    const sortedPlayers = players.sort(compareScores);
-    const top3rd = parseInt(players.length / 3);
-    const bottom3rd = parseInt(players.length - players.length / 3);
+  const sortedPlayers = players.sort(compareScores);
+  const top3rd = Math.floor(players.length / 3);
+  const bottom3rd = Math.floor(players.length - players.length / 3);
 
-    sortedPlayers.forEach((player, i) => {
-      if (i < top3rd) {
-        player.round.set("scoreColor", "green");
-      } else if (i >= bottom3rd) {
-        player.round.set("scoreColor", "red");
-      } else {
-        player.round.set("scoreColor", "orange");
-      }
-    });
-  }
-
-  //helper function to sort players based on their score in the round
-  function compareScores(firstPlayer, secondPlayer) {
-    const scoreA = firstPlayer.round.get("score");
-    const scoreB = secondPlayer.round.get("score");
-
-    let comparison = 0;
-    if (scoreA > scoreB) {
-      comparison = -1;
-    } else if (scoreA < scoreB) {
-      comparison = 1;
+  sortedPlayers.forEach((player, i) => {
+    if (i < top3rd) {
+      player.round.set("scoreColor", "green");
+    } else if (i >= bottom3rd) {
+      player.round.set("scoreColor", "red");
+    } else {
+      player.round.set("scoreColor", "orange");
     }
-    return comparison;
+  });
+}
+
+//helper function to sort players objects based on their score in the current round
+function compareScores(firstPlayer, secondPlayer) {
+  const scoreA = firstPlayer.round.get("score");
+  const scoreB = secondPlayer.round.get("score");
+
+  let comparison = 0;
+  if (scoreA > scoreB) {
+    comparison = -1;
+  } else if (scoreA < scoreB) {
+    comparison = 1;
   }
+  return comparison;
+}
+
+//Shocking the players by changing the difficulty of the problem that they see
+//-1 permutation: easy => hard; medium => easy; hard => medium
+function shock(players) {
+  players.forEach(player => {
+    const currentDifficulty = player.get("difficulty");
+    if (currentDifficulty === "easy") {
+      player.set("difficulty", "hard");
+    } else if (currentDifficulty === "medium") {
+      player.set("difficulty", "easy");
+    } else {
+      player.set("difficulty", "medium");
+    }
+  });
+}
+
+
+//sampling from a normal distribution for the noisy feedback
+// Standard Normal variate using Box-Muller transform.
+function normal_random() {
+  var u = 0, v = 0;
+  while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+  while(v === 0) v = Math.random();
+  return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
 }
