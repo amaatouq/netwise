@@ -58,7 +58,7 @@ Conditions.schema = new SimpleSchema({
       }
     },
     max: 256,
-    regEx: /^[a-zA-Z0-9_]+$/
+    regEx: /^[a-zA-Z0-9_\.]+$/
   },
 
   value: {
@@ -70,6 +70,11 @@ Conditions.schema = new SimpleSchema({
       },
       {
         type: SimpleSchema.Integer,
+        custom: valueValidation,
+        scopedUnique: "type"
+      },
+      {
+        type: Number,
         custom: valueValidation,
         scopedUnique: "type"
       },

@@ -6,7 +6,7 @@ import { Conditions } from "../../../api/conditions/conditions.js";
 import { createCondition } from "../../../api/conditions/methods.js";
 
 export default class AdminNewCondition extends React.Component {
-  state = {};
+  state = { value: "" };
 
   handleIntUpdate = value => {
     this.setState({ value });
@@ -21,12 +21,19 @@ export default class AdminNewCondition extends React.Component {
   handleNewCondition = event => {
     event.preventDefault();
     let { name, value } = this.state;
-    const { type: { _id: type }, onClose } = this.props;
+    const {
+      type: { _id: type, stringType },
+      onClose
+    } = this.props;
 
     const params = Conditions.schema.clean(
       { type, name, value },
       { autoConvert: false }
     );
+
+    if (stringType === "Number") {
+      params.value = parseFloat(params.value);
+    }
 
     createCondition.call(params, err => {
       if (err) {
@@ -42,8 +49,25 @@ export default class AdminNewCondition extends React.Component {
     const { isOpen, onClose, type } = this.props;
     const { name, value } = this.state;
 
-    let input;
+    let input,
+      isFloat = false;
     switch (type.stringType) {
+      case "Number":
+        input = (
+          <input
+            className="pt-input"
+            type="number"
+            name="value"
+            id="value"
+            step="any"
+            min={type.min || -1000000000000}
+            max={type.max || 1000000000000}
+            value={value}
+            onChange={this.handleUpdate}
+            required
+          />
+        );
+        break;
       case "Integer":
         input = (
           <NumericInput
@@ -66,7 +90,6 @@ export default class AdminNewCondition extends React.Component {
             id="value"
             value={value}
             onChange={this.handleUpdate}
-            placeholder="e.g. john@example.com"
             pattern={type.regEx && type.regEx.source}
             required
           />
@@ -108,7 +131,6 @@ export default class AdminNewCondition extends React.Component {
                   name="name"
                   id="name"
                   value={name}
-                  ref={e => (this.nameField = e)}
                   pattern={/^[a-zA-Z0-9_]+$/.source}
                   onChange={this.handleUpdate}
                   // required
