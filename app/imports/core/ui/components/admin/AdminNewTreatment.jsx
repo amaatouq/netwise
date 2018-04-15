@@ -84,7 +84,7 @@ export default class AdminNewTreatment extends React.Component {
       >
         <form className="new-treatment" onSubmit={this.handleNewTreatment}>
           <div className="pt-dialog-body">
-            <div className="pt-form-group required">
+            <div className="pt-form-group">
               <label className="pt-label" htmlFor="name">
                 Name (optional)
               </label>

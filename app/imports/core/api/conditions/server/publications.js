@@ -27,6 +27,9 @@ Meteor.publish("admin-condition-types", function() {
       case SimpleSchema.Integer:
         value.stringType = "Integer";
         break;
+      case Number:
+        value.stringType = "Number";
+        break;
       default:
         console.error("unknown condition type: " + value.type);
         break;

@@ -1,12 +1,13 @@
 import { EditableText } from "@blueprintjs/core";
-
 import React from "react";
+import { AlertToaster } from "../AlertToaster.jsx";
 
 import { updateCondition } from "../../../api/conditions/methods.js";
 
 export default class AdminCondition extends React.Component {
   constructor(props) {
     super(props);
+    this.initialName = props.condition.name;
     this.state = {
       name: props.condition.name
     };
@@ -14,6 +15,7 @@ export default class AdminCondition extends React.Component {
 
   componentWillUpdate(props) {
     if (props.name !== this.props.name) {
+      this.initialName = props.condition.name;
       this.setState({ name: props.condition.name });
     }
   }
@@ -29,7 +31,14 @@ export default class AdminCondition extends React.Component {
       this.setState({ name: this.props.condition.name });
       return;
     }
-    updateCondition.call({ _id, name });
+    updateCondition.call({ _id, name }, err => {
+      if (err) {
+        AlertToaster.show({ message: String(err) });
+        this.handleNameChange(this.initialName);
+        return;
+      }
+      this.initialName = name;
+    });
   };
 
   render() {
