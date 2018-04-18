@@ -5,6 +5,7 @@ import Centered from "../../../core/ui/components/Centered.jsx";
 export default class Score extends React.Component {
   render() {
     const { player, onSubmit } = this.props;
+
     return (
       <Centered>
         <div className="score">

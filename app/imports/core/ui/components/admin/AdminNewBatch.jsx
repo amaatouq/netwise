@@ -151,8 +151,8 @@ export default class AdminNewBatch extends React.Component {
       this.setState({
         simpleTreatments: [],
         completeTreatments: [],
-        simpleGamesCount: 0,
-        gamesCount: 0
+        simpleGamesCount: 1,
+        gamesCount: 1
       });
       this.props.onClose();
     });

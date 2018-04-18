@@ -12,6 +12,7 @@ import {
   augmentPlayerStageRound,
   augmentStageRound
 } from "../../api/player-stages/augment";
+import { stubPlayerStageRound } from "../../api/player-stages/augment.js";
 import Game from "../components/Game";
 
 // This will be part of the Game object eventually
@@ -64,6 +65,9 @@ export default withTracker(({ player, gameLobby, game, ...rest }) => {
     if (!treatment) {
       return loadingObj;
     }
+
+    stubPlayerStageRound(player);
+
     return {
       gameLobby,
       player,
