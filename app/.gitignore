@@ -3,6 +3,10 @@ node_modules/
 .DS_Store
 !/.gitignore
 dev.json
+local.json
+development.json
+staging.json
+production.json
 settings.json
 **/.idea/workspace.xml **/.idea/tasks.xml
 builder

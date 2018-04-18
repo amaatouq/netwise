@@ -59,10 +59,12 @@ Example configuration:
 ```json
 {
   "public": {
-    "debug_newPlayer": true,
-    "debug_resetSession": true,
-    "debug_resetDatabase": true,
-    "debug_gameDebugMode": true
+    "playerIdParam": "workerId",
+    "playerIdParamExclusive": true,
+    "debug_newPlayer": false,
+    "debug_resetSession": false,
+    "debug_resetDatabase": false,
+    "debug_gameDebugMode": false
   }
 }
 ```
@@ -86,6 +88,18 @@ Custom settings for Empirica:
   be in debug mode, which does 2 things:
   * it skips the instruction steps
   * it sets the timer to a very long time
+* **public.playerIdParam**: `String` (default: ""). If provided, Empirica will
+  try to extract the Player's ID from the URL parameter of the given key. This
+  helps with integration with external tools such as Mechanical Turk. For
+  example, if the `playerIdParam` is set to "workerId" and the URL is:
+  `https://tictactoe.amazon.com/?workerId=AZ3456EXAMPLE`, the player's ID will
+  be `AZ3456EXAMPLE` and they will not be shown the "Enter Player ID" screen.
+  If you are working with MTurk, see the [URL docs](https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_ExternalQuestionArticle.html#ApiReference_ExternalQuestionArticle-the-external-form) for more
+  info about which fields they provide.
+* **public.playerIdParamExclusive**: `Boolean` (default: false"). If provided,
+  the "Enter Player ID" will not be show, users are expected to sign up only
+  through a URL param, see `public.playerIdParam` above. If
+  `public.playerIdParam` is missing, `public.playerIdParamExclusive` is ignored.
 
 ## Deployment
 
