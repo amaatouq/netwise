@@ -157,8 +157,8 @@ export const playerReady = new ValidatedMethod({
         // Mark the player's participation attemp as failed
         Players.update(_id, {
           $set: {
-            failedAt: new Date(),
-            failedReason: "gameFull"
+            exitAt: new Date(),
+            exitStatus: "gameFull"
           }
         });
         return;
