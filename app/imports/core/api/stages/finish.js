@@ -4,6 +4,7 @@ import { Games } from "../games/games.js";
 import { Players } from "../players/players.js";
 import { Rounds } from "../rounds/rounds.js";
 import { Stages } from "./stages.js";
+import { Treatments } from "../treatments/treatments.js";
 import {
   augmentPlayerStageRound,
   augmentStageRound
@@ -16,12 +17,22 @@ export const endOfStage = stageId => {
   const game = Games.findOne(gameId);
   const round = Rounds.findOne(roundId);
   const players = Players.find({ gameId }).fetch();
+  const treatment = Treatments.findOne(game.treatmentId);
+
+  game.treatment = treatment.conditionsObject();
+  game.players = players;
+  game.rounds = Rounds.find({ gameId }).fetch();
+  game.rounds.forEach(round => {
+    round.stages = Stages.find({ roundId: round._id }).fetch();
+  });
+
   augmentStageRound(stage, round);
   players.forEach(player => {
     player.stage = _.extend({}, stage);
     player.round = _.extend({}, round);
     augmentPlayerStageRound(player, player.stage, player.round);
   });
+
   const onStageEnd = config.onStageEnd;
   if (onStageEnd) {
     onStageEnd(game, round, stage, players);

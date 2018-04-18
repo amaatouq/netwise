@@ -379,13 +379,8 @@ function shock(players) {
 //sampling from a normal distribution for the noisy feedback
 // Standard Normal variate using Box-Muller transform.
 function normal_random() {
-<<<<<<< HEAD
   var u = 0,
     v = 0;
-=======
-  let u = 0;
-  let v = 0;
->>>>>>> In guesss the correlation game, adding feedbackRate and shockRate as parameters
   while (u === 0) u = Math.random(); //Converting [0,1) to (0,1)
   while (v === 0) v = Math.random();
   return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
