@@ -56,8 +56,8 @@ Batches.statusSchema = new SimpleSchema({
 
       "finished", // Batch has finished and cannot be restarted
 
-      // NOTE(np): canceled might break a game if it's running at the moment, gotta be careful
-      "canceled" // Batch was canceled and cannot be restarted
+      // NOTE(np): cancelled might break a game if it's running at the moment, gotta be careful
+      "cancelled" // Batch was cancelled and cannot be restarted
     ],
     defaultValue: "init"
   }

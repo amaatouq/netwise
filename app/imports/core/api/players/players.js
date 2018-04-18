@@ -40,7 +40,7 @@ Players.schema = new SimpleSchema({
     label: "Failed Reason",
     type: String,
     optional: true,
-    allowedValues: ["gameFull"]
+    allowedValues: ["gameFull", "gameCancelled"]
   }
 });
 

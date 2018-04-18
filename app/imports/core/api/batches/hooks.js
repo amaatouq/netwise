@@ -1,6 +1,7 @@
 import { Batches } from "./batches";
 import { GameLobbies } from "../game-lobbies/game-lobbies";
 import { Games } from "../games/games";
+import { Players } from "../players/players.js";
 import { Treatments } from "../treatments/treatments";
 
 // Create GameLobbies
@@ -53,6 +54,29 @@ Batches.after.update(
     [Games, GameLobbies].forEach(coll => {
       coll.update({ batchId }, { $set: { status } }, { multi: true });
     });
+  },
+  { fetchPrevious: false }
+);
+
+// If batch cancelled, add exit info to players
+Batches.after.update(
+  function(userId, { _id: batchId, status }, fieldNames, modifier, options) {
+    if (!fieldNames.includes("status")) {
+      return;
+    }
+
+    if (status === "cancelled") {
+      const games = Games.find({ batchId }).fetch();
+      const gameLobbies = GameLobbies.find({ batchId }).fetch();
+      const gplayerIds = _.flatten(_.pluck(games, "playerIds"));
+      const glplayerIds = _.flatten(_.pluck(gameLobbies, "playerIds"));
+      const playerIds = _.union(gplayerIds, glplayerIds);
+      Players.update(
+        { _id: { $in: playerIds } },
+        { $set: { exitStatus: "gameCancelled", exitAt: new Date() } },
+        { multi: true }
+      );
+    }
   },
   { fetchPrevious: false }
 );

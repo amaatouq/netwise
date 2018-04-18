@@ -32,6 +32,10 @@ const set = (obj, func) => (k, v) => {
   obj[k] = v;
 };
 
+const nullFunc = () => {
+  throw "You called .get(...) or .set(...) but there is no data for the player yet. Did the game run for this player?";
+};
+
 export const augmentPlayerStageRound = (player, stage, round) => {
   const { _id: playerId } = player;
   const playerStage = PlayerStages.findOne({ stageId: stage._id, playerId });
@@ -53,6 +57,23 @@ export const augmentPlayerStageRound = (player, stage, round) => {
   round.set = set(playerRound.data, roundSet(playerRound._id));
 };
 
+export const stubPlayerStageRound = (player, stage, round) => {
+  player.get = nullFunc;
+  player.set = nullFunc;
+
+  if (stage) {
+    stage.get = nullFunc;
+    stage.set = nullFunc;
+    stage.submit = nullFunc;
+    stage.submitted = false;
+  }
+
+  if (round) {
+    round.get = nullFunc;
+    round.set = nullFunc;
+  }
+};
+
 export const augmentStageRound = (stage, round) => {
   stage.get = key => {
     return state.data[key];
@@ -70,4 +91,12 @@ export const augmentStageRound = (stage, round) => {
   round.set = (key, value) => {
     throw "You cannot update round data at the moment";
   };
+};
+
+export const stubStageRound = (stage, round) => {
+  stage.get = nullFunc;
+  stage.set = nullFunc;
+  stage.submit = nullFunc;
+  round.get = nullFunc;
+  round.set = nullFunc;
 };
