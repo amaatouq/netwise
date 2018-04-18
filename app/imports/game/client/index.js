@@ -40,7 +40,10 @@ export const config = {
   // https://reactjs.org/docs/higher-order-components.html#convention-wrap-the-display-name-for-easy-debugging
   // for details).
   ExitSteps(game, player) {
-    if (player.failedReason === "gameFull") {
+    if (
+      player.exitStatus === "gameFull" ||
+      player.exitStatus === "gameCancelled"
+    ) {
       return [Sorry, Thanks];
     }
     return [Score, ExitSurvey, Thanks];
