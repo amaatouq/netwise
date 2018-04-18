@@ -8,6 +8,8 @@ import { setPlayerId } from "../containers/IdentifiedRoute";
 import Centered from "./Centered.jsx";
 
 const { ConsentComponent } = config;
+import Loading from "./Loading.jsx";
+const { playerIdParam } = Meteor.settings.public;
 
 export default class NewPlayer extends React.Component {
   state = { id: "", consented: false };
@@ -48,15 +50,38 @@ export default class NewPlayer extends React.Component {
     });
   };
 
+  handleConsent = () => {
+    this.setState({ consented: true });
+
+    const { playerIdParam } = Meteor.settings.public;
+
+    if (playerIdParam) {
+      const id = new URL(document.location).searchParams.get(playerIdParam);
+      if (id) {
+        this.setState({ attemptingAutoLogin: true });
+        createPlayer.call({ id }, (err, _id) => {
+          if (err) {
+            this.setState({ attemptingAutoLogin: false });
+            console.error(err);
+            AlertToaster.show({ message: String(err) });
+            return;
+          }
+
+          setPlayerId(_id);
+        });
+      }
+    }
+  };
+
   render() {
-    const { id, consented } = this.state;
+    const { id, consented, attemptingAutoLogin } = this.state;
+
+    if (attemptingAutoLogin) {
+      return <Loading />;
+    }
 
     if (!consented && ConsentComponent) {
-      return (
-        <ConsentComponent
-          onConsent={() => this.setState({ consented: true })}
-        />
-      );
+      return <ConsentComponent onConsent={this.handleConsent} />;
     }
 
     return (

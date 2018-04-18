@@ -1,11 +1,14 @@
-import { Dialog, Intent } from "@blueprintjs/core";
+import URL from "url";
+
+import { Dialog } from "@blueprintjs/core";
 import { Link } from "react-router-dom";
 import React from "react";
 
 import { CoreWrapper } from "./Helpers";
+import { createPlayer } from "../../api/players/methods.js";
 import { removePlayerId } from "../containers/IdentifiedRoute";
 import GameContainer from "../containers/GameContainer";
-import Loading from "./Loading";
+import Loading from "./Loading.jsx";
 import NewPlayer from "./NewPlayer";
 import NoBatch from "./NoBatch";
 
