@@ -4,14 +4,17 @@ import Centered from "../../../core/ui/components/Centered.jsx";
 
 export default class Sorry extends React.Component {
   render() {
-    const { hasNext, onSubmit } = this.props;
+    const { player, hasNext, onSubmit } = this.props;
     return (
       <Centered>
         <div className="score">
           <h1>Sorry!</h1>
 
           <p>
-            Sorry, you were not able to play today! Games filled up too fast...
+            Sorry, you were not able to play today!{" "}
+            {player.exitStatus === "gameFull"
+              ? "Games filled up too fast..."
+              : "Unfortunately the Game was cancelled..."}
           </p>
 
           <p>

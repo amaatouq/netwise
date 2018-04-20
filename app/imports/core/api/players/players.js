@@ -31,16 +31,16 @@ Players.schema = new SimpleSchema({
   },
 
   // Failed fields are filled when the player's participation in a game failed
-  failedAt: {
+  exitAt: {
     label: "Failed At",
     type: Date,
     optional: true
   },
-  failedReason: {
+  exitStatus: {
     label: "Failed Reason",
     type: String,
     optional: true,
-    allowedValues: ["gameFull"]
+    allowedValues: ["gameFull", "gameCancelled"]
   }
 });
 

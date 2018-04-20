@@ -3,9 +3,7 @@ import { withTracker } from "meteor/react-meteor-data";
 import { Batches } from "../../api/batches/batches.js";
 import { GameLobbies } from "../../api/game-lobbies/game-lobbies.js";
 import { Games } from "../../api/games/games.js";
-import { PlayerRounds } from "../../api/player-rounds/player-rounds.js";
-import { PlayerStages } from "../../api/player-stages/player-stages.js";
-import { Treatments } from "../../api/treatments/treatments.js";
+import { createPlayer } from "../../api/players/methods.js";
 import Public from "../components/Public";
 
 export default withTracker(({ loading, player, playerId, ...rest }) => {
@@ -30,18 +28,21 @@ export default withTracker(({ loading, player, playerId, ...rest }) => {
   if (player && !game && !gameLobby) {
     return { loading: true };
   }
-  // const treatmentId =
-  //   (gameLobby && gameLobby.treatmentId) || (game && game.treatmentId);
-  // const treatment = Treatments.findOne(treatmentId);
-  // if (player && gameLobby && !treatment) {
-  //   loading = true;
-  // }
-  // const playerStages = PlayerStages.find().fetch();
-  // const playerRounds = PlayerRounds.find().fetch();
+
+  // Check if playerId parameter is required, make sure it's present.
+  const { playerIdParam, playerIdParamExclusive } = Meteor.settings.public;
+  const playerIdParamRequired = playerIdParam && playerIdParamExclusive;
+  const urlParams = new window.URL(document.location).searchParams;
+  const playerIdParamPresent = urlParams.get(playerIdParam);
+  const playerIdParamOk = playerIdParamRequired ? playerIdParamPresent : true;
+
+  // Only open if a batch is available and the playerIdParam configuration is
+  // fulfilled, or a game lobby, or a game assigned.
+  const renderPublic = (batchAvailable && playerIdParamOk) || gameLobby || game;
 
   return {
     batchAvailable,
-    renderPublic: batchAvailable || gameLobby || game,
+    renderPublic,
     loading,
     player,
     gameLobby,

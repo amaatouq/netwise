@@ -38,8 +38,8 @@ GameLobbies.after.update(
       { _id: { $in: playerIds } },
       {
         $set: {
-          failedAt: new Date(),
-          failedReason: "gameFull"
+          exitAt: new Date(),
+          exitStatus: "gameFull"
         }
       },
       { multi: true }

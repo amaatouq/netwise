@@ -27,7 +27,7 @@ export default class AdminBatches extends React.Component {
   handleStatusChange = (_id, status, event) => {
     event.preventDefault();
     if (
-      Meteor.isDevelopment &&
+      (Meteor.isDevelopment || Meteor.settings.public.debug_gameDebugMode) &&
       status === "running" &&
       // mac: metaKey (command), window: ctrlKey (Ctrl)
       (event.ctrlKey || event.metaKey)
@@ -101,7 +101,7 @@ export default class AdminBatches extends React.Component {
                       onClick={this.handleStatusChange.bind(
                         this,
                         batch._id,
-                        "canceled"
+                        "cancelled"
                       )}
                     >
                       Cancel
@@ -111,7 +111,7 @@ export default class AdminBatches extends React.Component {
 
                 if (
                   batch.status === "finished" ||
-                  batch.status === "canceled"
+                  batch.status === "cancelled"
                 ) {
                   actions.push(
                     <button
@@ -167,7 +167,7 @@ export default class AdminBatches extends React.Component {
                     statusIntent = "pt-intent-success pt-minimal";
                     break;
                   case "stopped":
-                  case "canceled":
+                  case "cancelled":
                     statusIntent = "pt-intent-danger pt-minimal";
                     break;
                   default:
