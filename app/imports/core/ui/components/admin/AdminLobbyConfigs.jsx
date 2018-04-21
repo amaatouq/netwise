@@ -31,8 +31,25 @@ export default class AdminLobbyConfigs extends React.Component {
             <tbody>
               {_.map(lobbyConfigs, lobby => (
                 <tr key={lobby._id}>
-                  <td>{lobby.name}</td>
-                  <td>Configuration here</td>
+                  <td>{lobby.name || "-"}</td>
+                  <td>
+                    <table className="pt-table pt-condensed inner-table">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <em>type</em>
+                          </td>
+                          <td>{lobby.timeoutType}</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <em>timeout</em>
+                          </td>
+                          <td>{lobby.timeoutInSeconds}s</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
                 </tr>
               ))}
             </tbody>

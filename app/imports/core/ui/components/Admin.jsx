@@ -130,11 +130,9 @@ export default class Admin extends React.Component {
           {Meteor.isDevelopment ||
           Meteor.settings.public.debug_resetDatabase ? (
             <div className="pt-navbar-group pt-align-right">
-              {/* <Tooltip2 content={<span>This button also has a popover!</span>} placement="right" inline={true}> */}
               <Tooltip
                 content="This will remove batches/games/players and keep treatments/conditions"
                 position={Position.BOTTOM}
-                // intent={Intent.DANGER}
               >
                 <button
                   className="pt-button pt-minimal pt-icon-eraser"

@@ -16,7 +16,7 @@ export default withTracker(({ loading, player, playerId, ...rest }) => {
   const subGame = Meteor.subscribe("game", { playerId });
   loading = !subBatches.ready() || !subLobby.ready() || !subGame.ready();
 
-  // If we have lobbies, we have available batches (should exclude player's lobby?)
+  // Are there non-full batches left
   const batchAvailable = Batches.find({ full: false }).count() > 0;
 
   // Current user's assigned game and lobby

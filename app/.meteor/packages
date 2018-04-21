@@ -36,3 +36,4 @@ random@1.1.0
 dynamic-import@0.3.0
 accounts-password@1.5.0
 mizzao:timesync
+percolate:synced-cron

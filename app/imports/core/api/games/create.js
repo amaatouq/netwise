@@ -9,6 +9,11 @@ import { Stages } from "../stages/stages";
 import { config } from "../../../game/server";
 
 export const createGameFromLobby = gameLobby => {
+  // Game already created, bail.
+  if (Games.find({ gameLobbyId: gameLobby._id }).count() > 0) {
+    return;
+  }
+
   const players = gameLobby.players();
 
   const batch = gameLobby.batch();
@@ -121,5 +126,25 @@ export const createGameFromLobby = gameLobby => {
   // Insert game. As soon as it comes online, the game will start for the
   // players so all related object (rounds, stages, players) must be created
   // and ready
-  return Games.insert(params);
+  Games.insert(params);
+
+  // Let Game Lobby know Game ID
+  GameLobbies.update(gameLobby._id, { $set: { gameId } });
+
+  const playerIds = _.difference(
+    gameLobby.queuedPlayerIds,
+    gameLobby.playerIds
+  );
+
+  // Notify players that did make the cut
+  Players.update(
+    { _id: { $in: playerIds } },
+    {
+      $set: {
+        exitAt: new Date(),
+        exitStatus: "gameFull"
+      }
+    },
+    { multi: true }
+  );
 };
