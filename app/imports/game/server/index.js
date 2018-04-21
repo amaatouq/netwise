@@ -268,23 +268,20 @@ export const config = {
       player.set("cumulativeScore", Math.round(currentScore + roundScore));
     });
     
-    console.log(round.index)
 
-    // //TODO: bug here, game.treatment is not defined, unlike on the client side
-    // //checking whether the game contains shock and whether it is time for it!
-    // //currentRoundNumber % nRounds/shockRate * nRounds => whether it is time!
-    // console.log(game);
-    // const shockTime =
-    //   game.treatment.shockRate > 0 &&
-    //   round.index +1 %
-    //     Math.round(
-    //       game.treatment.nRounds /
-    //         (game.treatment.shockRate * game.treatment.nRounds)
-    //     ) ===
-    //     0;
-    // //if it is time for a shock to arrive, then shock the players
-    // // i.e., change the difficulty of the task for them.
-    // shockTime ? shock(players) : null;
+    //checking whether the game contains shock and whether it is time for it!
+    //currentRoundNumber % nRounds/shockRate * nRounds => whether it is time!
+    const shockTime =
+      game.treatment.shockRate > 0 &&
+      (round.index +1) %
+        Math.round(
+          game.treatment.nRounds /
+            (game.treatment.shockRate * game.treatment.nRounds)
+        ) ===
+        0;
+    //if it is time for a shock to arrive, then shock the players
+    // i.e., change the difficulty of the task for them.
+    shockTime ? shock(players) : null;
   }
 };
 
@@ -339,6 +336,7 @@ function compareScores(firstPlayer, secondPlayer) {
 //Shocking the players by changing the difficulty of the problem that they see
 //-1 permutation: easy => hard; medium => easy; hard => medium
 function shock(players) {
+  console.log("time for shock");
   players.forEach(player => {
     const currentDifficulty = player.get("difficulty");
     if (currentDifficulty === "easy") {
