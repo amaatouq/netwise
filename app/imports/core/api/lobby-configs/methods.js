@@ -7,6 +7,7 @@ export const createLobbyConfig = new ValidatedMethod({
 
   validate: LobbyConfigs.schema
     .pick(
+      "name",
       "timeoutType",
       "timeoutInSeconds",
       "timeoutStrategy",

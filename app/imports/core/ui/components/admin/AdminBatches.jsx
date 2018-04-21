@@ -5,7 +5,6 @@ import {
   Dialog,
   Popover,
   Position,
-  NumericInput,
   PopoverInteractionKind
 } from "@blueprintjs/core";
 
@@ -43,7 +42,14 @@ export default class AdminBatches extends React.Component {
   };
 
   render() {
-    const { loading, batches, treatments, conditions } = this.props;
+    const {
+      loading,
+      batches,
+      treatments,
+      conditions,
+      lobbyConfigs
+    } = this.props;
+
     const { newIsOpen } = this.state;
 
     if (loading) {
@@ -128,10 +134,10 @@ export default class AdminBatches extends React.Component {
                 let config;
                 switch (batch.assignment) {
                   case "simple":
-                    config = batch.simpleConfig.treatmentIds.map(_id => {
-                      const t = treatments.find(t => t._id === _id);
+                    config = batch.simpleConfig.treatments.map(tt => {
+                      const t = treatments.find(t => t._id === tt._id);
                       return (
-                        <div key={_id}>
+                        <div key={tt._id}>
                           {t ? t.displayName() : "Unknown treatment"}
                         </div>
                       );
@@ -139,9 +145,9 @@ export default class AdminBatches extends React.Component {
                     break;
                   case "complete":
                     config = batch.completeConfig.treatments.map(tt => {
-                      const t = treatments.find(t => t._id === tt.treatmentId);
+                      const t = treatments.find(t => t._id === tt._id);
                       return (
-                        <div key={tt.treatmentId}>
+                        <div key={tt._id}>
                           {t ? t.displayName() : "Unknown treatment"}
                           {" x "}
                           {tt.count}
@@ -211,6 +217,7 @@ export default class AdminBatches extends React.Component {
         <AdminNewBatch
           treatments={treatments}
           conditions={conditions}
+          lobbyConfigs={lobbyConfigs}
           isOpen={newIsOpen}
           onClose={() => this.setState({ newIsOpen: false })}
         />

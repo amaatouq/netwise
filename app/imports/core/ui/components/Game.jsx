@@ -1,6 +1,5 @@
 import React from "react";
 
-import { DevNote } from "./Helpers";
 import { addPlayerInput } from "../../api/player-inputs/methods.js";
 import { config } from "../../../game/client";
 import {
@@ -10,13 +9,13 @@ import {
 import Breadcrumb from "./Breadcrumb.jsx";
 import DelayedDisplay from "./DelayedDisplay.jsx";
 import ExitSteps from "./ExitSteps.jsx";
-import GameLobby from "./GameLobby";
+import GameLobbyContainer from "../containers/GameLobbyContainer.jsx";
 import Instructions from "./Instructions.jsx";
 import Loading from "./Loading";
 import WaitingForServer from "./WaitingForServer.jsx";
 
 const DelayedWaitingForServer = DelayedDisplay(WaitingForServer, 100);
-const DelayedGameLobby = DelayedDisplay(GameLobby, 100);
+const DelayedGameLobby = DelayedDisplay(GameLobbyContainer, 100);
 
 const Round = config.RoundComponent;
 

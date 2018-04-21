@@ -1,4 +1,5 @@
 import SimpleSchema from "simpl-schema";
+import inflection from "inflection";
 
 import { Batches } from "../batches/batches";
 import { GameLobbies } from "../game-lobbies/game-lobbies.js";
@@ -12,17 +13,18 @@ LobbyConfigs.helpers({
       return this.name;
     }
 
-    const base = `${this.timeoutType}(${this.timeoutInSeconds}s)`;
+    const type = inflection.titleize(this.timeoutType);
+    const base = `${type}: ${this.timeoutInSeconds}s`;
     let details;
     switch (this.timeoutType) {
       case "lobby":
-        details = this.timeoutStrategy;
+        details = `→ ${inflection.titleize(this.timeoutStrategy)}`;
         if (this.timeoutStrategy === "bots") {
           details += `(${this.timeoutBots.join(",")})`;
         }
         break;
       case "individual":
-        details = `x ${extendCount}`;
+        details = `⨉ ${this.extendCount + 1}`;
         break;
       default:
         console.error(`unknown timeoutType: ${this.timeoutType}`);
@@ -33,7 +35,34 @@ LobbyConfigs.helpers({
   }
 });
 
+// There are 2 exclusive timeout types:
+// - lobby: the timeout start when the first player reaches the lobby and runs
+//   out for all the players whether they have even reached the lobby or not.
+// - individual: the timeout is started for each player as they reach the room.
+//   Some players might time out before all players are in the lobby, they might
+//   continue waiting for another timeout period. They might also leave the game
+//   and a new player can replace them. The lobby itself never times out.
 LobbyConfigs.timeoutTypes = ["lobby", "individual"];
+
+// The timeoutStrategy determines what to do in case people are waiting
+// in the lobby for longer than the timeoutInSeconds duration.
+// Only for "lobby" timeoutType.
+// Available strategies:
+// - ignore: start the game anyway
+// - fail: take the player to the exit survey
+// - bots: fill the missing players slots with bots from timeoutBots
+LobbyConfigs.timeoutStrategies = ["fail", "ignore"];
+// DEACTIVATING bots until bots implemented.
+// LobbyConfigs.timeoutStrategies = ["fail", "ignore", "bots"];
+
+// One year, that's a lot, just need to block from something too wild like 10M
+// years. We don't actually care, Inf would be fine...
+LobbyConfigs.maxTimeoutInSeconds = 365 * 24 * 60 * 60;
+
+// defaultTimeoutInSeconds is simply used as the default value in the Lobby
+// Configuration creation form.
+LobbyConfigs.defaultTimeoutInSeconds = 5 * 60;
+
 LobbyConfigs.schema = new SimpleSchema({
   // Optional experimenter given name for the treatment
   name: {
@@ -43,6 +72,8 @@ LobbyConfigs.schema = new SimpleSchema({
     regEx: /^[a-zA-Z0-9_]+$/
   },
 
+  // The timeoutType fundamentally changes the behavior of the lobby. See
+  // LobbyConfigs.timeoutTypes above for details.
   timeoutType: {
     type: String,
     allowedValues: LobbyConfigs.timeoutTypes
@@ -54,24 +85,21 @@ LobbyConfigs.schema = new SimpleSchema({
   // the timeoutType value.
   timeoutInSeconds: {
     type: SimpleSchema.Integer,
-    // One year, that's a lot, just need to block from something too wild like 10M years. We don't actually care, Inf would be fine...
-    max: 365 * 24 * 60 * 60,
+    max: LobbyConfigs.maxTimeoutInSeconds,
     // It would be difficult to manage a timer that is less than 5s, and it
-    // would be  weird.
+    // would be  weird. 5s is already weird...
     min: 5
   },
 
   // The timeoutStrategy determines what to do in case people are waiting
   // in the lobby for longer than the timeoutInSeconds duration.
   // Only for "lobby" timeoutType.
-  // Available strategies:
-  // - ignore: start the game anyway
-  // - fail: take the player to the exit survey
-  // - bots: fill the missing players slots with bots from timeoutBots
+  // See LobbyConfigs.timeoutStrategies for details.
   timeoutStrategy: {
     type: String,
-    allowedValues: ["fail", "ignore", "bots"],
-    defaultValue: "fail"
+    allowedValues: LobbyConfigs.timeoutStrategies,
+    defaultValue: "fail",
+    optional: true
   },
 
   // Names of bot to use if timed out and still not enough player.

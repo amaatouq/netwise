@@ -3,8 +3,7 @@ import { Batches } from "../batches/batches";
 import { GameLobbies } from "../game-lobbies/game-lobbies";
 import { Games } from "../games/games";
 
-// If all games for batch are filled, change batch status
-Games.after.insert(function(userId, { batchId }) {
+export const markBatchFull = batchId => {
   const batch = Batches.findOne(batchId);
   if (!batch) {
     throw `batch for game missing. batchId: ${batchId}`;
@@ -12,9 +11,18 @@ Games.after.insert(function(userId, { batchId }) {
 
   const expectedGamesCount = batch.gameCount();
   const gamesCount = Games.find({ batchId }).count();
-  if (expectedGamesCount === gamesCount) {
+  const timeOutGameLobbiesCount = GameLobbies.find({
+    batchId,
+    timedOutAt: { $exists: true }
+  }).count();
+  if (expectedGamesCount === gamesCount + timeOutGameLobbiesCount) {
     Batches.update(batchId, { $set: { full: true } });
   }
+};
+
+// If all games for batch are filled, change batch status
+Games.after.insert(function(userId, { batchId }) {
+  markBatchFull(batchId);
 });
 
 // Check if all games finished, mark batch as finished

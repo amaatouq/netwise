@@ -97,17 +97,23 @@ Batches.schema = new SimpleSchema({
     min: 1,
     max: maxGamesCount
   },
-  "simpleConfig.treatmentIds": {
+  "simpleConfig.treatments": {
     type: Array,
     minCount: 1,
     maxCount() {
       return Treatments.find().count();
     }
   },
-  "simpleConfig.treatmentIds.$": {
+  "simpleConfig.treatments.$": {
+    type: Object
+  },
+  "simpleConfig.treatments.$._id": {
     type: String,
     regEx: SimpleSchema.RegEx.Id
-    // associatedMustExist: Treatments
+  },
+  "simpleConfig.treatments.$.lobbyConfigId": {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id
   },
 
   // Complete configuration at init
@@ -130,15 +136,18 @@ Batches.schema = new SimpleSchema({
   "completeConfig.treatments.$": {
     type: Object
   },
+  "completeConfig.treatments.$._id": {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id
+  },
   "completeConfig.treatments.$.count": {
     type: SimpleSchema.Integer,
     minCount: 1,
     maxCount: maxGamesCount
   },
-  "completeConfig.treatments.$.treatmentId": {
+  "completeConfig.treatments.$.lobbyConfigId": {
     type: String,
     regEx: SimpleSchema.RegEx.Id
-    // associatedMustExist: Treatments
   }
 });
 

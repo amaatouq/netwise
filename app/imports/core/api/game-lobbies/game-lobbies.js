@@ -3,6 +3,7 @@ import SimpleSchema from "simpl-schema";
 import { Batches } from "../batches/batches";
 import { BelongsTo, HasManyByRef, TimestampSchema } from "../default-schemas";
 import { DebugModeSchema } from "../default-schemas.js";
+import { LobbyConfigs } from "../lobby-configs/lobby-configs.js";
 import { Players } from "../players/players";
 import { Treatments } from "../treatments/treatments";
 
@@ -63,6 +64,18 @@ GameLobbies.schema = new SimpleSchema({
     optional: true
   },
 
+  timeoutStartedAt: {
+    label: "Time the first player arrived in the lobby",
+    type: Date,
+    optional: true
+  },
+
+  timedOutAt: {
+    label: "Time when the lobby timed out and was cancelled",
+    type: Date,
+    optional: true
+  },
+
   // Queued players are players that have been associated with the lobby
   // but are not confirmed for the game yet. playerIds is used for confirmed
   // players
@@ -88,6 +101,7 @@ Meteor.startup(() => {
   GameLobbies.schema.extend(BelongsTo(Treatments));
   GameLobbies.schema.extend(HasManyByRef(Players));
   GameLobbies.schema.extend(BelongsTo(Batches));
+  GameLobbies.schema.extend(BelongsTo(LobbyConfigs));
   // We are denormalizing the parent batch status in order to make clean queries
   GameLobbies.schema.extend(Batches.statusSchema);
 });

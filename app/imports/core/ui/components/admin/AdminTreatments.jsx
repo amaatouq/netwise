@@ -31,7 +31,7 @@ export default class AdminTreatments extends React.Component {
             <tbody>
               {_.map(treatments, treatment => (
                 <tr key={treatment._id}>
-                  <td>{treatment.name}</td>
+                  <td>{treatment.name || "-"}</td>
                   <td>
                     <table className="pt-table pt-condensed inner-table">
                       <tbody>

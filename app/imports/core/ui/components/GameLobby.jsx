@@ -1,13 +1,46 @@
 import React from "react";
 
+import { Alert } from "@blueprintjs/core";
 import { CoreWrapper } from "./Helpers";
 
 export default class GameLobby extends React.Component {
+  // componentWillReceiveProps(nextProps) {
+  //   if (!(nextProps.timedOut && this.props.timedOut)) {
+  //     return;
+  //   }
+
+  //   const { lobbyConfig, player } = this.props;
+  //   // If lobby timeout type or if no more timeouts extensions left, bail.
+  //   if (
+  //     lobbyConfig.timeoutType !== "individual" ||
+  //     lobbyConfig.extendCount < player.timeoutWaitCount
+  //   ) {
+  //     return;
+  //   }
+
+  //   this.setState({ askForExtension: true });
+  // }
+
+  handleWaitLonger = () => {
+    extendPlayerTimeoutWait({ playerId: this.props.player._id });
+  };
+
+  handleExitNow = () => {
+    endPlayerTimeoutWait({ playerId: this.props.player._id });
+  };
+
   render() {
-    const { gameLobby, treatment } = this.props;
+    const { gameLobby, treatment, timedOut, lobbyConfig, player } = this.props;
+    // const { askForExtension } = this.state;
 
     const total = treatment.condition("playerCount").value;
     const exisiting = gameLobby.readyCount;
+
+    const showExtensionAlert =
+      timedOut &&
+      lobbyConfig.timeoutType === "individual" &&
+      lobbyConfig.extendCount >= player.timeoutWaitCount;
+
     return (
       <CoreWrapper>
         <div className="game-lobby">
@@ -25,6 +58,19 @@ export default class GameLobby extends React.Component {
             </div>
           </div>
         </div>
+        <Alert
+          intent={Intent.PRIMARY}
+          isOpen={showExtensionAlert}
+          confirmButtonText="Wait Longer"
+          cancelButtonText="Exit Now"
+          onConfirm={this.handleWaitLonger}
+          onCancel={this.handleExitNow}
+        >
+          <p>
+            Sorry you have been waiting for a while. Do you wish to wait longer
+            or exit now?
+          </p>
+        </Alert>
       </CoreWrapper>
     );
   }
