@@ -1,5 +1,6 @@
 import moment from "moment";
 
+import { GameLobbies } from "../game-lobbies/game-lobbies.js";
 import { Games } from "./games";
 import { PlayerRounds } from "../player-rounds/player-rounds";
 import { PlayerStages } from "../player-stages/player-stages";
@@ -45,6 +46,7 @@ export const createGameFromLobby = gameLobby => {
   // create it so we generate the id early
   const gameId = Random.id();
   params._id = gameId;
+  params.gameLobbyId = gameLobby._id;
   // We also add a few related objects
   params.treatmentId = treatmentId;
   params.batchId = batchId;
@@ -131,14 +133,14 @@ export const createGameFromLobby = gameLobby => {
   // Let Game Lobby know Game ID
   GameLobbies.update(gameLobby._id, { $set: { gameId } });
 
-  const playerIds = _.difference(
+  const failedPlayerIds = _.difference(
     gameLobby.queuedPlayerIds,
     gameLobby.playerIds
   );
 
-  // Notify players that did make the cut
+  // Notify players that didn't make the cut
   Players.update(
-    { _id: { $in: playerIds } },
+    { _id: { $in: failedPlayerIds } },
     {
       $set: {
         exitAt: new Date(),

@@ -277,7 +277,6 @@ export const config = {
       player.set("cumulativeScore", Math.round(currentScore + roundScore));
     });
     
-
     //checking whether the game contains shock and whether it is time for it!
     //currentRoundNumber % nRounds/shockRate * nRounds => whether it is time!
     const shockTime =

@@ -56,6 +56,7 @@ Players.schema = new SimpleSchema({
       "gameFull",
       "gameCancelled",
       "gameLobbyTimedOut",
+      "playerEndedLobbyWait",
       "playerLobbyTimedOut"
     ]
   }

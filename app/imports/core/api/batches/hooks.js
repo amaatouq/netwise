@@ -47,9 +47,11 @@ Batches.after.insert(function(userId, batch) {
 
     return GameLobbies.insert(l);
   });
+
+  Batches.update(batch._id, { $set: { gameLobbyIds } });
 });
 
-// Update status on GameLobbies
+// Update status on Games and GameLobbies
 Batches.after.update(
   function(userId, { _id: batchId, status }, fieldNames, modifier, options) {
     if (!fieldNames.includes("status")) {
