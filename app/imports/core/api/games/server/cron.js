@@ -2,12 +2,18 @@ import { SyncedCron } from "meteor/percolate:synced-cron";
 import moment from "moment";
 
 import { Games } from "../games.js";
+import { Players } from "../../players/players.js";
+import { Rounds } from "../../rounds/rounds.js";
 import { Stages } from "../../stages/stages.js";
+import {
+  augmentPlayerStageRound,
+  augmentStageRound
+} from "../../player-stages/augment.js";
+import { config } from "../../../../game/server";
 import { endOfStage } from "../../stages/finish.js";
-import Fiber from "fibers";
 
 SyncedCron.add({
-  name: "Check end of stage timer",
+  name: "Check end of stage timer and make bots play",
   schedule: function(parser) {
     // Run about once a second
     return parser.text("every 1 second");
@@ -26,6 +32,44 @@ SyncedCron.add({
       const ended = now.isSameOrAfter(endTimeAt);
       if (ended) {
         endOfStage(stage._id);
+      } else {
+        // make bots play
+        const query = { gameId: stage.gameId, bot: { $exists: true } };
+        if (Players.find(query).count() === 0) {
+          return;
+        }
+        const botPlayers = Players.find(query);
+        const players = Players.find({ gameId: stage.gameId });
+        const round = Rounds.findOne(stage.roundId);
+        botPlayers.forEach(botPlayer => {
+          const bot = config.bots[botPlayer.bot];
+          if (!bot) {
+            console.error(
+              `Definition for bot "${
+                botPlayer.bot
+              }" was not found in the server config!`
+            );
+            return;
+          }
+          if (!bot.onStageTick) {
+            return;
+          }
+
+          augmentStageRound(stage, round);
+          players.forEach(player => {
+            player.stage = _.extend({}, stage);
+            player.round = _.extend({}, round);
+            augmentPlayerStageRound(player, player.stage, player.round);
+          });
+
+          botPlayer.stage = _.extend({}, stage);
+          botPlayer.round = _.extend({}, round);
+          augmentPlayerStageRound(botPlayer, botPlayer.stage, botPlayer.round);
+
+          const tick = endTimeAt.diff(now, "seconds");
+
+          bot.onStageTick(botPlayer, game, round, stage, players, tick);
+        });
       }
     });
   }

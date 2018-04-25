@@ -1,6 +1,7 @@
 import SimpleSchema from "simpl-schema";
 
 import { difficulties, taskData } from "./constants.js";
+import { bob } from "./bots.js";
 
 export const config = {
   // treatmentAssignments is TBD, the following is a draft of how it might work.
@@ -49,9 +50,16 @@ export const config = {
       min: 1,
       max: 100
     },
+    botsCount: {
+      description: "The Number of bots that should participate in a given game",
+      type: SimpleSchema.Integer,
+      optional: true,
+      min: 0,
+      max: 100
+    },
     // JS doesn't have Integer and Float as distinctive types, just Number.
-    //So when we really don't want people to give a float (like playerCount)
-    // simple schema gives you that custom type
+    // So when we really don't want people to give a float (like playerCount)
+    // simple schema gives you that custom type.
     altersCount: {
       description: "The Number of connections for each player",
       type: SimpleSchema.Integer,
@@ -105,6 +113,10 @@ export const config = {
       optional: false
     }
   },
+
+  // A list of bots available for your game
+  // TODO documentation
+  bots: { bob },
 
   // init() is called when a new game instance is starting. It allows you
   // to define all proporties of this game run.
