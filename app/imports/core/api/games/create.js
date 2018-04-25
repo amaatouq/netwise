@@ -7,6 +7,10 @@ import { PlayerStages } from "../player-stages/player-stages";
 import { Players } from "../players/players";
 import { Rounds } from "../rounds/rounds";
 import { Stages } from "../stages/stages";
+import {
+  augmentPlayerStageRound,
+  augmentStageRound
+} from "../player-stages/augment.js";
 import { config } from "../../../game/server";
 
 export const createGameFromLobby = gameLobby => {
@@ -70,6 +74,7 @@ export const createGameFromLobby = gameLobby => {
   // Create the round objects
   let stageIndex = 0;
   let totalDuration = 0;
+  let firstRoundId;
   params.roundIds = params.rounds.map((round, index) => {
     // Extract top level data fields into the the data subfield
     round.data = _.omit(round, "stages");
@@ -93,6 +98,7 @@ export const createGameFromLobby = gameLobby => {
       const stageId = Stages.insert(sParams);
       stageIndex++;
       if (!params.currentStageId) {
+        firstRoundId = roundId;
         params.currentStageId = stageId;
       }
       const playerStageIds = params.players.map(({ _id: playerId }) => {
@@ -149,4 +155,21 @@ export const createGameFromLobby = gameLobby => {
     },
     { multi: true }
   );
+
+  const { onRoundStart } = config;
+  if (onRoundStart && firstRoundId) {
+    const game = Games.find(gameId);
+    const nextRound = Rounds.findOne(firstRoundId);
+    const players = Players.find({
+      _id: { $in: _.pluck(params.players, "_id") }
+    }).fetch();
+
+    augmentStageRound(null, nextRound);
+    players.forEach(player => {
+      player.round = _.extend({}, nextRound);
+      augmentPlayerStageRound(player, null, player.round);
+    });
+
+    onRoundStart(game, nextRound, players);
+  }
 };
