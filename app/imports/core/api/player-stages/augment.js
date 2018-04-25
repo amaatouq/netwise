@@ -38,23 +38,27 @@ const nullFunc = () => {
 
 export const augmentPlayerStageRound = (player, stage, round) => {
   const { _id: playerId } = player;
-  const playerStage = PlayerStages.findOne({ stageId: stage._id, playerId });
-  const playerRound = PlayerRounds.findOne({ roundId: round._id, playerId });
 
   player.get = key => player.data[key];
   player.set = set(player.data, playerSet(playerId));
 
-  stage.get = key => playerStage.data[key];
-  stage.set = set(playerStage.data, stageSet(playerStage._id));
-  stage.submit = stageSubmit(playerStage._id, err => {
-    if (!err) {
-      stage.submitted = true;
-    }
-  });
-  stage.submitted = Boolean(playerStage.submittedAt);
+  if (stage) {
+    const playerStage = PlayerStages.findOne({ stageId: stage._id, playerId });
+    stage.get = key => playerStage.data[key];
+    stage.set = set(playerStage.data, stageSet(playerStage._id));
+    stage.submit = stageSubmit(playerStage._id, err => {
+      if (!err) {
+        stage.submitted = true;
+      }
+    });
+    stage.submitted = Boolean(playerStage.submittedAt);
+  }
 
-  round.get = key => playerRound.data[key];
-  round.set = set(playerRound.data, roundSet(playerRound._id));
+  if (round) {
+    const playerRound = PlayerRounds.findOne({ roundId: round._id, playerId });
+    round.get = key => playerRound.data[key];
+    round.set = set(playerRound.data, roundSet(playerRound._id));
+  }
 };
 
 export const stubPlayerStageRound = (player, stage, round) => {
@@ -75,22 +79,26 @@ export const stubPlayerStageRound = (player, stage, round) => {
 };
 
 export const augmentStageRound = (stage, round) => {
-  stage.get = key => {
-    return state.data[key];
-  };
-  stage.set = (key, value) => {
-    throw "You cannot update stage data at the moment";
-  };
-  stage.submit = () => {
-    throw "You cannot submit the entire stage at the moment";
-  };
+  if (stage) {
+    stage.get = key => {
+      return state.data[key];
+    };
+    stage.set = (key, value) => {
+      throw "You cannot update stage data at the moment";
+    };
+    stage.submit = () => {
+      throw "You cannot submit the entire stage at the moment";
+    };
+  }
 
-  round.get = key => {
-    return round.data[key];
-  };
-  round.set = (key, value) => {
-    throw "You cannot update round data at the moment";
-  };
+  if (round) {
+    round.get = key => {
+      return round.data[key];
+    };
+    round.set = (key, value) => {
+      throw "You cannot update round data at the moment";
+    };
+  }
 };
 
 export const stubStageRound = (stage, round) => {

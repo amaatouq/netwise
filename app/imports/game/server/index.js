@@ -252,6 +252,11 @@ export const config = {
     }
   },
 
+  // TODO add documentation for onRoundStart
+  onRoundStart(game, round, players) {
+    console.log("round", round.index);
+  },
+
   // onRoundEnd is called each time a round ends. It is a good time to
   // update the players scores and make needed otherwise calculations.
   // onStageEnd is called for all players at once.

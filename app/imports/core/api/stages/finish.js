@@ -44,9 +44,21 @@ export const endOfStage = stageId => {
     players.forEach(player => {
       player.stage = null;
     });
-    const onRoundEnd = config.onRoundEnd;
+
+    const { onRoundEnd, onRoundStart } = config;
     if (onRoundEnd) {
       onRoundEnd(game, round, players);
+    }
+
+    if (nextStage && onRoundStart) {
+      const nextRound = Rounds.findOne(nextStage.roundId);
+      augmentStageRound(null, nextRound);
+      players.forEach(player => {
+        player.round = _.extend({}, nextRound);
+        augmentPlayerStageRound(player, null, player.round);
+      });
+
+      onRoundStart(game, nextRound, players);
     }
   }
 
