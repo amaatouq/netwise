@@ -6,3 +6,4 @@ import "./bootstrap.js";
 import "./cron.js";
 import "./register-api.js";
 import "./avatars.js";
+import "./export.js";
