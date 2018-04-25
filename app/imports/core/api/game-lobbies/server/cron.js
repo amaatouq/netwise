@@ -17,17 +17,9 @@ const checkLobbyTimeout = (lobby, lobbyConfig) => {
   const endTimeAt = startTimeAt.add(lobbyConfig.timeoutInSeconds, "seconds");
   const ended = now.isSameOrAfter(endTimeAt);
 
-  console.log("can fail. checking ended", ended);
-
   if (!ended) {
     return;
   }
-
-  console.log(
-    "ended",
-    lobbyConfig.timeoutStrategy,
-    Players.find({ _id: { $in: lobby.queuedPlayerIds } }).fetch()
-  );
 
   switch (lobbyConfig.timeoutStrategy) {
     case "fail":

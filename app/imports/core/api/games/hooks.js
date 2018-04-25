@@ -16,15 +16,6 @@ export const checkBatchFull = batchId => {
     timedOutAt: { $exists: true }
   }).count();
 
-  // console.log(
-  //   "Full?",
-  //   expectedGamesCount,
-  //   "=",
-  //   gamesCount,
-  //   "+",
-  //   timeOutGameLobbiesCount
-  // );
-
   if (expectedGamesCount === gamesCount + timeOutGameLobbiesCount) {
     Batches.update(batchId, { $set: { full: true } });
   }
@@ -49,8 +40,6 @@ export const checkForBatchFinished = batchId => {
   };
   const lobbiesCount = GameLobbies.find(gameLobbiesQuery).count();
   const noGameLobbiesLeft = lobbiesCount === 0;
-
-  // console.log("gamesCount / lobbiesCount: ", gamesCount, "/", lobbiesCount);
 
   if (noGamesLeft && noGameLobbiesLeft) {
     Batches.update(batchId, {
