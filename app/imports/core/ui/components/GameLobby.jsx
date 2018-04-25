@@ -26,13 +26,6 @@ export default class GameLobby extends React.Component {
     const total = treatment.condition("playerCount").value;
     const exisiting = gameLobby.readyCount;
 
-    // console.log(
-    //   timedOut,
-    //   lobbyConfig.timeoutType,
-    //   lobbyConfig.extendCount,
-    //   player.timeoutWaitCount
-    // );
-
     const showExtensionAlert =
       timedOut &&
       lobbyConfig.timeoutType === "individual" &&

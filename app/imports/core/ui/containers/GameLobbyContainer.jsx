@@ -18,14 +18,6 @@ export default withTracker(({ gameLobby, player, ...rest }) => {
   const endTimeAt = startTimeAt.add(lobbyConfig.timeoutInSeconds, "seconds");
   const timedOut = now.isSameOrAfter(endTimeAt);
 
-  // console.log(
-  //   lobbyConfig.timeoutType,
-  //   startObj.timeoutStartedAt,
-  //   lobbyConfig.timeoutInSeconds,
-  //   endTimeAt.toString(),
-  //   timedOut
-  // );
-
   return {
     lobbyConfig,
     gameLobby,

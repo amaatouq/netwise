@@ -47,7 +47,7 @@ export default class SocialInteraction extends React.Component {
     const { feedbackTime, game } = this.props;
     const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
-    console.log("roundScore", roundScore);
+
     return (
       <div className="alter pt-card pt-elevation-2" key={otherPlayer._id}>
         <div className="info">

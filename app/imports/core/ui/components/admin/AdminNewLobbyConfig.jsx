@@ -17,12 +17,10 @@ export default class AdminNewLobbyConfig extends React.Component {
   };
 
   handleChange = ({ currentTarget: { value, name } }) => {
-    console.log(value, name);
     this.setState({ [name]: value.trim() });
   };
 
   handleIntChange = (name, value) => {
-    console.log(name, value);
     this.setState({ [name]: value });
   };
 

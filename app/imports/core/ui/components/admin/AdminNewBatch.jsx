@@ -105,8 +105,6 @@ export default class AdminNewBatch extends React.Component {
     const t = this.state[key].find(tt => tt._id === id);
     t.lobbyConfigId = lobbyConfigId;
 
-    console.log(id, lobbyConfigId);
-
     this.setState({ [key]: this.state[key] });
   };
 
