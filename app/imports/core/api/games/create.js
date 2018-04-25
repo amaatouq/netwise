@@ -1,5 +1,6 @@
 import moment from "moment";
 
+import { GameLobbies } from "../game-lobbies/game-lobbies.js";
 import { Games } from "./games";
 import { PlayerRounds } from "../player-rounds/player-rounds";
 import { PlayerStages } from "../player-stages/player-stages";
@@ -9,6 +10,11 @@ import { Stages } from "../stages/stages";
 import { config } from "../../../game/server";
 
 export const createGameFromLobby = gameLobby => {
+  // Game already created, bail.
+  if (Games.find({ gameLobbyId: gameLobby._id }).count() > 0) {
+    return;
+  }
+
   const players = gameLobby.players();
 
   const batch = gameLobby.batch();
@@ -40,6 +46,7 @@ export const createGameFromLobby = gameLobby => {
   // create it so we generate the id early
   const gameId = Random.id();
   params._id = gameId;
+  params.gameLobbyId = gameLobby._id;
   // We also add a few related objects
   params.treatmentId = treatmentId;
   params.batchId = batchId;
@@ -121,5 +128,25 @@ export const createGameFromLobby = gameLobby => {
   // Insert game. As soon as it comes online, the game will start for the
   // players so all related object (rounds, stages, players) must be created
   // and ready
-  return Games.insert(params);
+  Games.insert(params);
+
+  // Let Game Lobby know Game ID
+  GameLobbies.update(gameLobby._id, { $set: { gameId } });
+
+  const failedPlayerIds = _.difference(
+    gameLobby.queuedPlayerIds,
+    gameLobby.playerIds
+  );
+
+  // Notify players that didn't make the cut
+  Players.update(
+    { _id: { $in: failedPlayerIds } },
+    {
+      $set: {
+        exitAt: new Date(),
+        exitStatus: "gameFull"
+      }
+    },
+    { multi: true }
+  );
 };

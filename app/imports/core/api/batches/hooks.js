@@ -10,19 +10,24 @@ Batches.after.insert(function(userId, batch) {
   switch (batch.assignment) {
     case "simple":
       _.times(batch.simpleConfig.count, index => {
-        const treatmentId = Random.choice(batch.simpleConfig.treatmentIds);
+        const treatment = Random.choice(batch.simpleConfig.treatments);
+        const { _id: treatmentId, lobbyConfigId } = treatment;
         gameLobbies.push({
           treatmentId,
+          lobbyConfigId,
           index
         });
       });
       break;
     case "complete":
-      batch.completeConfig.treatments.forEach(({ count, treatmentId }) => {
-        _.times(count, () => {
-          gameLobbies.push({ treatmentId });
-        });
-      });
+      batch.completeConfig.treatments.forEach(
+        ({ count, _id, lobbyConfigId }) => {
+          _.times(count, () => {
+            gameLobbies.push({ treatmentId: _id, lobbyConfigId });
+          });
+        }
+      );
+
       gameLobbies = _.shuffle(gameLobbies);
       gameLobbies.forEach((l, index) => {
         l.index = index;
@@ -42,9 +47,11 @@ Batches.after.insert(function(userId, batch) {
 
     return GameLobbies.insert(l);
   });
+
+  Batches.update(batch._id, { $set: { gameLobbyIds } });
 });
 
-// Update status on GameLobbies
+// Update status on Games and GameLobbies
 Batches.after.update(
   function(userId, { _id: batchId, status }, fieldNames, modifier, options) {
     if (!fieldNames.includes("status")) {

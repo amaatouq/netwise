@@ -4,6 +4,7 @@ import SimpleSchema from "simpl-schema";
 import { Batches } from "../batches/batches.js";
 import { GameLobbies } from "../game-lobbies/game-lobbies";
 import { IdSchema } from "../default-schemas.js";
+import { LobbyConfigs } from "../lobby-configs/lobby-configs.js";
 import { Players } from "./players";
 
 export const createPlayer = new ValidatedMethod({
@@ -58,7 +59,8 @@ export const createPlayer = new ValidatedMethod({
     const lobbies = GameLobbies.find({
       batchId: batch._id,
       status: "running",
-      startedAt: { $exists: false }
+      startedAt: { $exists: false },
+      timedOutAt: { $exists: false }
     }).fetch();
 
     if (lobbies.length === 0) {
@@ -179,9 +181,16 @@ export const playerReady = new ValidatedMethod({
       const lobbyUpdated = GameLobbies.findOne(gameLobbyId);
       if (lobbyUpdated.playerIds.includes(_id)) {
         // If it did work, mark player as ready
-        Players.update(_id, {
-          $set: { readyAt: new Date() }
-        });
+        $set = { readyAt: new Date() };
+
+        // If it's an individual lobby timeout, mark the first timer as started.
+        const lobbyConfig = LobbyConfigs.findOne(lobbyUpdated.lobbyConfigId);
+        if (lobbyConfig.timeoutType === "individual") {
+          $set.timeoutStartedAt = new Date();
+          $set.timeoutWaitCount = 1;
+        }
+
+        Players.update(_id, { $set });
         return;
       }
     }
@@ -241,5 +250,61 @@ export const markPlayerExitStepDone = new ValidatedMethod({
     // TODO check can update this record player
 
     Players.update(playerId, { $addToSet: { exitStepsDone: stepName } });
+  }
+});
+
+export const extendPlayerTimeoutWait = new ValidatedMethod({
+  name: "Players.methods.extendTimeoutWait",
+
+  validate: new SimpleSchema({
+    playerId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    }
+  }).validator(),
+
+  run({ playerId }) {
+    const player = Players.findOne(playerId);
+    if (!player) {
+      throw new Error("player not found");
+    }
+
+    Players.update(playerId, {
+      $inc: { timeoutWaitCount: 1 },
+      $set: { timeoutStartedAt: new Date() }
+    });
+  }
+});
+
+export const endPlayerTimeoutWait = new ValidatedMethod({
+  name: "Players.methods.endTimeoutWait",
+
+  validate: new SimpleSchema({
+    playerId: {
+      type: String,
+      regEx: SimpleSchema.RegEx.Id
+    }
+  }).validator(),
+
+  run({ playerId }) {
+    const player = Players.findOne(playerId);
+    if (!player) {
+      throw new Error("player not found");
+    }
+
+    Players.update(playerId, {
+      $set: {
+        exitStatus: "playerEndedLobbyWait",
+        exitAt: new Date()
+      }
+    });
+    GameLobbies.update(player.gameLobbyId, {
+      $inc: { readyCount: -1, queuedCount: -1 },
+      $pull: {
+        playerIds: playerId
+        // We keep the player in queued so they will still have it loaded in the UI
+        // queuedPlayerIds: playerId
+      }
+    });
   }
 });

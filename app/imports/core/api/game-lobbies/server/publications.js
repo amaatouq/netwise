@@ -4,6 +4,7 @@ import { Conditions } from "../../conditions/conditions.js";
 import { GameLobbies } from "../game-lobbies";
 import { Players } from "../../players/players";
 import { Treatments } from "../../treatments/treatments";
+import { LobbyConfigs } from "../../lobby-configs/lobby-configs.js";
 
 publishComposite("gameLobby", function({ playerId }) {
   return {
@@ -28,6 +29,11 @@ publishComposite("gameLobby", function({ playerId }) {
       {
         find() {
           return Players.find(playerId);
+        }
+      },
+      {
+        find({ lobbyConfigId }) {
+          return LobbyConfigs.find(lobbyConfigId);
         }
       }
     ]

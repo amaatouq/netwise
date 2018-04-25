@@ -267,13 +267,12 @@ export const config = {
       const roundScore = player.round.get("score");
       player.set("cumulativeScore", Math.round(currentScore + roundScore));
     });
-    
 
     //checking whether the game contains shock and whether it is time for it!
     //currentRoundNumber % nRounds/shockRate * nRounds => whether it is time!
     const shockTime =
       game.treatment.shockRate > 0 &&
-      (round.index +1) %
+      (round.index + 1) %
         Math.round(
           game.treatment.nRounds /
             (game.treatment.shockRate * game.treatment.nRounds)
@@ -286,7 +285,7 @@ export const config = {
 };
 
 // These are just some helper functions for the Guess the Correlation Game
-//compute score
+// compute score.
 function computeScore(players, round) {
   const correctAnswer = round.get("task").correctAnswer;
 
@@ -301,8 +300,9 @@ function computeScore(players, round) {
   });
 }
 
-//we sort the players based on their score in this round in order to color code how we display their scores
-//the highest 1/3 players are green, the lowest 1/3 are red, and the rest are orange
+// We sort the players based on their score in this round in order to color code
+// how we display their scores.
+// The highest 1/3 players are green, the lowest 1/3 are red, and the rest are orange.
 function colorScores(players) {
   const sortedPlayers = players.sort(compareScores);
   const top3rd = Math.floor(players.length / 3);
@@ -319,7 +319,7 @@ function colorScores(players) {
   });
 }
 
-//helper function to sort players objects based on their score in the current round
+// Helper function to sort players objects based on their score in the current round.
 function compareScores(firstPlayer, secondPlayer) {
   const scoreA = firstPlayer.round.get("score");
   const scoreB = secondPlayer.round.get("score");
@@ -333,8 +333,8 @@ function compareScores(firstPlayer, secondPlayer) {
   return comparison;
 }
 
-//Shocking the players by changing the difficulty of the problem that they see
-//-1 permutation: easy => hard; medium => easy; hard => medium
+// Shocking the players by changing the difficulty of the problem that they see
+// -1 permutation: easy => hard; medium => easy; hard => medium.
 function shock(players) {
   console.log("time for shock");
   players.forEach(player => {
@@ -349,7 +349,7 @@ function shock(players) {
   });
 }
 
-//sampling from a normal distribution for the noisy feedback
+// Sampling from a normal distribution for the noisy feedback.
 // Standard Normal variate using Box-Muller transform.
 function normal_random() {
   let u = 0;

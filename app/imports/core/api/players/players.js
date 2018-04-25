@@ -22,6 +22,18 @@ Players.schema = new SimpleSchema({
     optional: true
   },
 
+  timeoutStartedAt: {
+    label: "Time the first player arrived in the lobby",
+    type: Date,
+    optional: true
+  },
+  timeoutWaitCount: {
+    label: "Number of time the player has waited for timeoutStartedAt",
+    type: SimpleSchema.Integer,
+    optional: true,
+    min: 1
+  },
+
   exitStepsDone: {
     type: Array,
     defaultValue: []
@@ -40,7 +52,13 @@ Players.schema = new SimpleSchema({
     label: "Failed Reason",
     type: String,
     optional: true,
-    allowedValues: ["gameFull", "gameCancelled"]
+    allowedValues: [
+      "gameFull",
+      "gameCancelled",
+      "gameLobbyTimedOut",
+      "playerEndedLobbyWait",
+      "playerLobbyTimedOut"
+    ]
   }
 });
 
