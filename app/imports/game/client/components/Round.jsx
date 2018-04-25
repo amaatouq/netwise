@@ -14,7 +14,7 @@ export default class Round extends React.Component {
     //currentRoundNumber % nRounds/shockRate * nRounds + 1  => whether it is time!
     const feedbackTime =
       game.treatment.feedbackRate > 0 &&
-      round.index + 1 %
+      (round.index + 1) %
         Math.round(
           game.treatment.nRounds /
             (game.treatment.feedbackRate * game.treatment.nRounds)
