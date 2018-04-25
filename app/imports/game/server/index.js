@@ -268,8 +268,6 @@ export const config = {
       player.set("cumulativeScore", Math.round(currentScore + roundScore));
     });
 
-    console.log(round.index);
-
     // //TODO: bug here, game.treatment is not defined, unlike on the client side
     // //checking whether the game contains shock and whether it is time for it!
     // //currentRoundNumber % nRounds/shockRate * nRounds => whether it is time!

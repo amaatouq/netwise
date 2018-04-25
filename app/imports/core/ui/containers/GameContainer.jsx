@@ -15,9 +15,6 @@ import {
 import { stubPlayerStageRound } from "../../api/player-stages/augment.js";
 import Game from "../components/Game";
 
-// This will be part of the Game object eventually
-export const gameName = "task";
-
 // Handles all the timing stuff
 const withTimer = withTracker(({ game, stage, player, ...rest }) => {
   // We no longer need timers if the game ended, skip the timing stuff.

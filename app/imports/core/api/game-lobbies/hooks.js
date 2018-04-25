@@ -4,10 +4,22 @@ import { LobbyConfigs } from "../lobby-configs/lobby-configs.js";
 import { Players } from "../players/players.js";
 import { createGameFromLobby } from "../games/create";
 
-import { markBatchFull } from "../games/hooks.js";
-// If all games for batch are filled, change batch status
-GameLobbies.after.insert(function(userId, { batchId }) {
-  markBatchFull(batchId);
+import { checkBatchFull, checkForBatchFinished } from "../games/hooks.js";
+
+// Check if batch is full or the game finished if this lobby timed out
+GameLobbies.after.update(function(
+  userId,
+  { batchId },
+  fieldNames,
+  modifier,
+  options
+) {
+  if (!fieldNames.includes("timedOutAt")) {
+    return;
+  }
+
+  checkBatchFull(batchId);
+  checkForBatchFinished(batchId);
 });
 
 // Start the game if lobby full
@@ -23,7 +35,7 @@ GameLobbies.after.update(
     // (single player), try to start the timeout timer.
     if (
       gameLobby.readyCount > 0 &&
-      gameLobby.readyCount >= gameLobby.availableCount &&
+      gameLobby.availableCount != 1 &&
       !gameLobby.timeoutStartedAt
     ) {
       const lobbyConfig = LobbyConfigs.findOne(gameLobby.lobbyConfigId);

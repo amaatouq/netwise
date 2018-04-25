@@ -3,6 +3,7 @@ import SimpleSchema from "simpl-schema";
 import { Batches } from "../batches/batches";
 import { BelongsTo, HasManyByRef, TimestampSchema } from "../default-schemas";
 import { DebugModeSchema } from "../default-schemas.js";
+import { Games } from "../games/games.js";
 import { LobbyConfigs } from "../lobby-configs/lobby-configs.js";
 import { Players } from "../players/players";
 import { Treatments } from "../treatments/treatments";
@@ -98,6 +99,7 @@ if (Meteor.isDevelopment || Meteor.settings.public.debug_gameDebugMode) {
 
 GameLobbies.schema.extend(TimestampSchema);
 Meteor.startup(() => {
+  GameLobbies.schema.extend(BelongsTo(Games, false, false));
   GameLobbies.schema.extend(BelongsTo(Treatments));
   GameLobbies.schema.extend(HasManyByRef(Players));
   GameLobbies.schema.extend(BelongsTo(Batches));

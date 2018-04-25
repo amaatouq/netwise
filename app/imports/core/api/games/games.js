@@ -6,6 +6,7 @@ import { DebugModeSchema } from "../default-schemas.js";
 import { Players } from "../players/players";
 import { Rounds } from "../rounds/rounds";
 import { Treatments } from "../treatments/treatments";
+import { GameLobbies } from "../game-lobbies/game-lobbies";
 
 export const Games = new Mongo.Collection("games");
 
@@ -30,6 +31,7 @@ if (Meteor.isDevelopment || Meteor.settings.public.debug_gameDebugMode) {
 
 Games.schema.extend(TimestampSchema);
 Meteor.startup(() => {
+  Games.schema.extend(BelongsTo(GameLobbies, false, false));
   Games.schema.extend(BelongsTo(Treatments));
   Games.schema.extend(HasManyByRef(Rounds));
   Games.schema.extend(HasManyByRef(Players));

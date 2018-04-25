@@ -8,6 +8,7 @@ import "../../api/batches/server/publications.js";
 import "../../api/conditions/methods.js";
 import "../../api/conditions/server/publications.js";
 import "../../api/game-lobbies/hooks.js";
+import "../../api/game-lobbies/server/cron.js";
 import "../../api/game-lobbies/server/publications.js";
 import "../../api/games/hooks.js";
 import "../../api/games/server/publications.js";

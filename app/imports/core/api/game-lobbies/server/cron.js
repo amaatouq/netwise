@@ -3,17 +3,31 @@ import moment from "moment";
 
 import { GameLobbies } from "../game-lobbies.js";
 import { LobbyConfigs } from "../../lobby-configs/lobby-configs";
+import { Players } from "../../players/players.js";
+import { createGameFromLobby } from "../../games/create.js";
 
 const checkLobbyTimeout = (lobby, lobbyConfig) => {
-  import { createGameFromLobby } from "../../games/create.js";
+  // Timeout hasn't started yet
+  if (!lobby.timeoutStartedAt) {
+    return;
+  }
+
   const now = moment();
   const startTimeAt = moment(lobby.timeoutStartedAt);
   const endTimeAt = startTimeAt.add(lobbyConfig.timeoutInSeconds, "seconds");
   const ended = now.isSameOrAfter(endTimeAt);
 
+  console.log("can fail. checking ended", ended);
+
   if (!ended) {
     return;
   }
+
+  console.log(
+    "ended",
+    lobbyConfig.timeoutStrategy,
+    Players.find({ _id: { $in: lobby.queuedPlayerIds } }).fetch()
+  );
 
   switch (lobbyConfig.timeoutStrategy) {
     case "fail":
@@ -83,7 +97,8 @@ SyncedCron.add({
   job: function() {
     const query = {
       status: "running",
-      gameId: { $exists: false }
+      gameId: { $exists: false },
+      timedOutAt: { $exists: false }
     };
 
     GameLobbies.find(query).forEach(lobby => {

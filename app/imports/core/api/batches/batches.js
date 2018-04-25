@@ -82,6 +82,12 @@ Batches.schema = new SimpleSchema({
     optional: true
   },
 
+  finishedAt: {
+    label: "Time when batch finished running",
+    type: Date,
+    optional: true
+  },
+
   // Simple configuration at init
   simpleConfig: {
     type: Object,

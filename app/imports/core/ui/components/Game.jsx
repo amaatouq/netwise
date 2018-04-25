@@ -28,6 +28,18 @@ export default class Game extends React.Component {
     const { loading, gameLobby, treatment, ...rest } = this.props;
     const { started, timedOut, game, player, round, stage } = rest;
 
+    // console.log({
+    //   loading: loading,
+    //   gameLobby: gameLobby,
+    //   treatment: treatment,
+    //   started: started,
+    //   timedOut: timedOut,
+    //   game: game,
+    //   player: player,
+    //   round: round,
+    //   stage: stage
+    // });
+
     if (loading) {
       return <Loading />;
     }

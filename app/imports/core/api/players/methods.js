@@ -294,11 +294,11 @@ export const endPlayerTimeoutWait = new ValidatedMethod({
 
     Players.update(playerId, {
       $set: {
-        exitStatus: "playerEndedTimedOut",
+        exitStatus: "playerEndedLobbyWait",
         exitAt: new Date()
       }
     });
-    GameLobbies.update(lobby._id, {
+    GameLobbies.update(player.gameLobbyId, {
       $inc: { readyCount: -1, queuedCount: -1 },
       $pull: {
         playerIds: playerId

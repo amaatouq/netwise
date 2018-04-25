@@ -3,7 +3,7 @@ import { Batches } from "../batches/batches";
 import { GameLobbies } from "../game-lobbies/game-lobbies";
 import { Games } from "../games/games";
 
-export const markBatchFull = batchId => {
+export const checkBatchFull = batchId => {
   const batch = Batches.findOne(batchId);
   if (!batch) {
     throw `batch for game missing. batchId: ${batchId}`;
@@ -15,6 +15,16 @@ export const markBatchFull = batchId => {
     batchId,
     timedOutAt: { $exists: true }
   }).count();
+
+  // console.log(
+  //   "Full?",
+  //   expectedGamesCount,
+  //   "=",
+  //   gamesCount,
+  //   "+",
+  //   timeOutGameLobbiesCount
+  // );
+
   if (expectedGamesCount === gamesCount + timeOutGameLobbiesCount) {
     Batches.update(batchId, { $set: { full: true } });
   }
@@ -22,8 +32,32 @@ export const markBatchFull = batchId => {
 
 // If all games for batch are filled, change batch status
 Games.after.insert(function(userId, { batchId }) {
-  markBatchFull(batchId);
+  checkBatchFull(batchId);
 });
+
+export const checkForBatchFinished = batchId => {
+  // Find games that are not finished
+  const gameQuery = { batchId, finishedAt: { $exists: false } };
+  const gamesCount = Games.find(gameQuery).count();
+  const noGamesLeft = gamesCount === 0;
+
+  // Find game lobbies that haven't been transformed into games and that haven't timedout
+  const gameLobbiesQuery = {
+    batchId,
+    gameId: { $exists: false },
+    timedOutAt: { $exists: false }
+  };
+  const lobbiesCount = GameLobbies.find(gameLobbiesQuery).count();
+  const noGameLobbiesLeft = lobbiesCount === 0;
+
+  // console.log("gamesCount / lobbiesCount: ", gamesCount, "/", lobbiesCount);
+
+  if (noGamesLeft && noGameLobbiesLeft) {
+    Batches.update(batchId, {
+      $set: { status: "finished", finishedAt: new Date() }
+    });
+  }
+};
 
 // Check if all games finished, mark batch as finished
 Games.after.update(
@@ -32,17 +66,7 @@ Games.after.update(
       return;
     }
 
-    // Find games that are not finished
-    const gameQuery = { batchId, finishedAt: { $exists: false } };
-    const noGamesLeft = Games.find(gameQuery).count() === 0;
-
-    // Find game lobbies that haven't been transformed into games
-    const gameLobbiesQuery = { batchId, gameId: { $exists: false } };
-    const noGameLobbiesLeft = GameLobbies.find(gameLobbiesQuery).count() === 0;
-
-    if (noGamesLeft && noGameLobbiesLeft) {
-      Batches.update(batchId, { $set: { status: "finished" } });
-    }
+    checkForBatchFinished(batchId);
   },
   { fetchPrevious: false }
 );

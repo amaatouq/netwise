@@ -1,40 +1,37 @@
+import { Alert, Intent } from "@blueprintjs/core";
 import React from "react";
 
-import { Alert } from "@blueprintjs/core";
-import { CoreWrapper } from "./Helpers";
+import { CoreWrapper } from "./Helpers.jsx";
+import {
+  endPlayerTimeoutWait,
+  extendPlayerTimeoutWait
+} from "../../api/players/methods.js";
 
 export default class GameLobby extends React.Component {
-  // componentWillReceiveProps(nextProps) {
-  //   if (!(nextProps.timedOut && this.props.timedOut)) {
-  //     return;
-  //   }
-
-  //   const { lobbyConfig, player } = this.props;
-  //   // If lobby timeout type or if no more timeouts extensions left, bail.
-  //   if (
-  //     lobbyConfig.timeoutType !== "individual" ||
-  //     lobbyConfig.extendCount < player.timeoutWaitCount
-  //   ) {
-  //     return;
-  //   }
-
-  //   this.setState({ askForExtension: true });
-  // }
+  shouldComponentUpdate(nextProps, nextState) {
+    return !_.isEqual(this.props, nextProps);
+  }
 
   handleWaitLonger = () => {
-    extendPlayerTimeoutWait({ playerId: this.props.player._id });
+    extendPlayerTimeoutWait.call({ playerId: this.props.player._id });
   };
 
   handleExitNow = () => {
-    endPlayerTimeoutWait({ playerId: this.props.player._id });
+    endPlayerTimeoutWait.call({ playerId: this.props.player._id });
   };
 
   render() {
     const { gameLobby, treatment, timedOut, lobbyConfig, player } = this.props;
-    // const { askForExtension } = this.state;
 
     const total = treatment.condition("playerCount").value;
     const exisiting = gameLobby.readyCount;
+
+    // console.log(
+    //   timedOut,
+    //   lobbyConfig.timeoutType,
+    //   lobbyConfig.extendCount,
+    //   player.timeoutWaitCount
+    // );
 
     const showExtensionAlert =
       timedOut &&
