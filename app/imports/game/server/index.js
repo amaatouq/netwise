@@ -27,7 +27,7 @@ export const config = {
   //   gender(players, treatments) {
   //   }
   // },
-
+  
   // `conditions` define variables to run the game. These variables are combined
   // into treatments. Each game is ran with one treatment, which is a set of
   // conditions. Only one condition of a certain type is allowed per treatment
@@ -39,7 +39,7 @@ export const config = {
   // defined and determined how many players will be participating in a certain
   // game run. All other conditions are game specific and they are ignored by
   // netwise core.
-
+  
   //TODO: maybe for now (while we have them in the code) we should move them to another file called
   //'conditions' so we don't clutter index.js in server
   conditions: {
@@ -49,9 +49,17 @@ export const config = {
       min: 1,
       max: 100
     },
+    //TODO: should it specify which bot to add (i.e., bob or alice?)
+    botsCount: {
+      description: "The Number of bots that should participate in a given game",
+      type: SimpleSchema.Integer,
+      optional: true,
+      min: 0,
+      max: 100
+    },
     // JS doesn't have Integer and Float as distinctive types, just Number.
-    //So when we really don't want people to give a float (like playerCount)
-    // simple schema gives you that custom type
+    // So when we really don't want people to give a float (like playerCount)
+    // simple schema gives you that custom type.
     altersCount: {
       description: "The Number of connections for each player",
       type: SimpleSchema.Integer,
@@ -105,7 +113,11 @@ export const config = {
       optional: false
     }
   },
-
+  
+  // A list of bots available for your game
+  // TODO documentation
+  //bots: { bob },
+  
   // init() is called when a new game instance is starting. It allows you
   // to define all proporties of this game run.
   //
@@ -170,14 +182,14 @@ export const config = {
         treatment.altersCount
       );
       player.set("avatar", `/avatars/jdenticon/${player._id}`);
-      player.set("difficulty", difficulties[i % 3]); //equal number of difficulties
+      player.set("difficulty", difficulties[i % difficulties.length]); //equal number of difficulties
       player.set("alterIds", alterIds);
       player.set("cumulativeScore", 0);
     });
-
+    
     //only randomize the task if specified in the conditions
     const tasks = treatment.randomizeTask ? _.shuffle(taskData) : taskData;
-
+    
     const rounds = [];
     _.times(treatment.nRounds, i => {
       const stages = [
@@ -187,7 +199,7 @@ export const config = {
           durationInSeconds: 120
         }
       ];
-
+      
       if (treatment.altersCount > 0) {
         stages.push({
           name: "interactive",
@@ -195,7 +207,7 @@ export const config = {
           durationInSeconds: 120
         });
       }
-
+      
       // adding "outcome" might look complicated but basically what we are checking is this:
       // when interactive with others, show the round outcome if there is feedback or rewiring
       // when no interactions with others only show the outcome stage when feedback is given
@@ -210,24 +222,24 @@ export const config = {
           durationInSeconds: 120
         });
       }
-
+      
       rounds.push({
         stages,
         task: tasks[i]
       });
     });
-
+    
     return {
       rounds,
       players
     };
   },
-
+  
   //TODO: should we have onGameStart or onGameEnd?
   // for example, if one wants to play a special sound when the game starts to grab attention
   //or maybe conventing from 'game' score to real $ at the end of the game (to be shown at the exit survey)
   //I can't think of other use cases .. but maybe some people can.
-
+  
   // onStageEnd is called each time a stage ends. It is a good time to
   // update the players scores and make needed otherwise calculations.
   // onStageEnd is called for all players at once.
@@ -260,12 +272,22 @@ export const config = {
       return;
     }
   },
-
+  
   // TODO add documentation for onRoundStart
   onRoundStart(game, round, players) {
-    console.log("round", round.index);
+    
+    
+    //TODO: temporary fix for storing network evolution
+    // The network should be at the player.round level
+    // (i.e., so we can know the structure of the network at each round and track how it changed).
+    // A simple fix of doing an extra set at the start of the round
+    // This might change once we have the ''network'' object in later versions.
+    players.forEach(player => {
+      player.round.set("alterIds",player.get("alterIds"));
+    })
+    
   },
-
+  
   // onRoundEnd is called each time a round ends. It is a good time to
   // update the players scores and make needed otherwise calculations.
   // onStageEnd is called for all players at once.
@@ -302,7 +324,7 @@ export const config = {
 // compute score.
 function computeScore(players, round) {
   const correctAnswer = round.get("task").correctAnswer;
-
+  
   players.forEach(player => {
     const guess = player.round.get("guess");
     // store the initialGuess, if it was the initial guess
@@ -320,8 +342,13 @@ function computeScore(players, round) {
     // If no guess given, score is 0
     const score = !guess
       ? 0
+<<<<<<< HEAD
       : Math.max(0, (Math.PI - normalizeAngle(Math.abs(correctAnswer - guess)))) / Math.PI * 100;
 
+=======
+      : Math.round((1 - Math.abs(correctAnswer - guess)) * 100);
+    
+>>>>>>> Fixing #24 and few things on the UI (no default value slider etc)
     player.round.set("score", score);
   });
 }
@@ -333,7 +360,7 @@ function colorScores(players) {
   const sortedPlayers = players.sort(compareScores);
   const top3rd = Math.floor(players.length / 3);
   const bottom3rd = Math.floor(players.length - players.length / 3);
-
+  
   sortedPlayers.forEach((player, i) => {
     if (i < top3rd) {
       player.round.set("scoreColor", "green");
@@ -349,7 +376,7 @@ function colorScores(players) {
 function compareScores(firstPlayer, secondPlayer) {
   const scoreA = firstPlayer.round.get("score");
   const scoreB = secondPlayer.round.get("score");
-
+  
   let comparison = 0;
   if (scoreA > scoreB) {
     comparison = -1;
@@ -374,6 +401,7 @@ function shock(players) {
     }
   });
 }
+<<<<<<< HEAD
 
 // Sampling from a normal distribution for the noisy feedback.
 // Standard Normal variate using Box-Muller transform.
@@ -384,3 +412,5 @@ function normal_random() {
   while (v === 0) v = Math.random();
   return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
 }
+=======
+>>>>>>> Fixing #24 and few things on the UI (no default value slider etc)
