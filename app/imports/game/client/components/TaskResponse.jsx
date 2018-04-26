@@ -44,16 +44,16 @@ export default class TaskResponse extends React.Component {
 
   renderSlider(player, isOutcome) {
     //TODO: once we change the slider, if it is outcome, we want to color the slider handler
-    const value = player.round.get("guess");
+    const guess = player.round.get("guess");
     return (
-      <div className={`pt-form-content ${value === undefined ? "empty" : ""}`}>
+      <div className={`pt-form-content ${guess === undefined ? "empty" : ""}`}>
         <Slider
           min={0}
           max={1}
           stepSize={0.01}
           labelStepSize={0.25}
           onChange={this.handleChange}
-          value={value}
+          value={guess}
           showTrackFill={false}
           disabled={isOutcome}
         />

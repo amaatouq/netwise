@@ -4,7 +4,7 @@ import { Slider } from "@blueprintjs/core";
 export default class SocialExposure extends React.Component {
   renderSocialInteraction(otherPlayer) {
     // "or 0" here if the user hasn't submitted a guess, defaulting to 0
-    const guess = otherPlayer.round.get("guess") || 0;
+    const guess = otherPlayer.round.get("guess");
     return (
       <div className="alter pt-card pt-elevation-2" key={otherPlayer._id}>
         <img
@@ -12,7 +12,7 @@ export default class SocialExposure extends React.Component {
           className="profile-avatar"
           title={otherPlayer._id}
         />
-        <div className="range">
+        <div className={`range ${guess === undefined ? "empty" : ""}`}>
           <Slider
             min={0}
             max={1}
