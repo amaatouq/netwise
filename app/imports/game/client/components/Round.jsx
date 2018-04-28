@@ -10,16 +10,7 @@ export default class Round extends React.Component {
     const { round, stage, player, game } = this.props;
     const social = game.treatment.altersCount > 0;
 
-    //checking whether the game contains feedback and whether it is time for it!
-    //currentRoundNumber % nRounds/shockRate * nRounds + 1  => whether it is time!
-    const feedbackTime =
-      game.treatment.feedbackRate > 0 &&
-      (round.index + 1) %
-        Math.round(
-          game.treatment.nRounds /
-            (game.treatment.feedbackRate * game.treatment.nRounds)
-        ) ===
-        0;
+
     return (
       <div className="round">
         <div className="content">
@@ -27,29 +18,25 @@ export default class Round extends React.Component {
             player={player}
             stage={stage}
             game={game}
-            feedbackTime={feedbackTime}
           />
           <Task
             round={round}
             stage={stage}
             player={player}
             game={game}
-            feedbackTime={feedbackTime}
           />
           {social && stage.name === "interactive" ? (
             <SocialExposure
               stage={stage}
               player={player}
               game={game}
-              feedbackTime={feedbackTime}
             />
           ) : null}
-          {social && stage.name === "outcome" ? (
+          {stage.name === "outcome" ? (
             <SocialInteraction
               stage={stage}
               player={player}
               game={game}
-              feedbackTime={feedbackTime}
             />
           ) : null}
         </div>

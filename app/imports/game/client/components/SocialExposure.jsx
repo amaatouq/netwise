@@ -12,6 +12,7 @@ export default class SocialExposure extends React.Component {
           className="profile-avatar"
           title={otherPlayer._id}
         />
+        {/*If the guess of the alter (i.e., neighbor) is 'undefined' (i.e., gave no answer, then we don't show a default answer*/}
         <div className={`range ${guess === undefined ? "empty" : ""}`}>
           <Slider
             min={0}
@@ -28,15 +29,13 @@ export default class SocialExposure extends React.Component {
   }
 
   render() {
+    //we get the alters and sort them by score so that the higher performing ones are on top
     const { game, player } = this.props;
-
     const alterIds = player.get("alterIds");
-
     const allPlayers = _.sortBy(game.players, p =>
       p.get("cumulativeScore")
     ).reverse();
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
-
     return (
       <div className="social-exposure">
         <p>

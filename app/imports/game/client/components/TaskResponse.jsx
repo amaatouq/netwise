@@ -23,7 +23,7 @@ export default class TaskResponse extends React.Component {
     this.props.player.stage.submit();
   };
 
-  renderSubmitted() {
+  renderSubmitted = () => {
     return (
       <div className="task-response">
         <div className="pt-callout pt-icon-automatic-updates">
@@ -32,15 +32,15 @@ export default class TaskResponse extends React.Component {
         </div>
       </div>
     );
-  }
+  };
 
-  renderCurrentGuess(player) {
+  renderCurrentGuess = player => {
     return (
       <label className="pt-label">
         Your current guess of the correlation is: {player.round.get("guess")}
       </label>
     );
-  }
+  };
 
   renderSlider(player, isOutcome) {
     //TODO: once we change the slider, if it is outcome, we want to color the slider handler
@@ -61,7 +61,7 @@ export default class TaskResponse extends React.Component {
     );
   }
 
-  renderFeedback(player, round) {
+  renderFeedback = (player, round) => {
     return (
       <table className="pt-table  pt-html-table pt-html-table-bordered">
         <thead>
@@ -86,10 +86,10 @@ export default class TaskResponse extends React.Component {
         </tbody>
       </table>
     );
-  }
+  };
 
   render() {
-    const { stage, round, player, feedbackTime } = this.props;
+    const { stage, round, player } = this.props;
 
     //if the player already submitted, don't show the slider or submit button
     if (player.stage.submitted) {
@@ -106,9 +106,7 @@ export default class TaskResponse extends React.Component {
             {this.renderSlider(player, isOutcome)}
           </div>
 
-          {isOutcome && feedbackTime
-            ? this.renderFeedback(player, round)
-            : null}
+          {isOutcome ? this.renderFeedback(player, round) : null}
 
           <div className="pt-form-group">
             <button type="submit" className="pt-button pt-icon-tick pt-large">
