@@ -9,10 +9,13 @@ export const avatarPaths = [
 export const difficulties = ["easy", "medium", "hard"];
 
 const randomAngle = () => (2 * Math.random() - 1) * Math.PI;
+
 const generateTaskData = (length) => (
   Array.from({length}).map(i => ({
     _id: i,
     correctAnswer: randomAngle(),
+    answerProportion: 0.9,
+    dotSpeed: 120,
   }))
 );
 

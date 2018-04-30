@@ -49,13 +49,17 @@ export default class TaskStimulus extends React.Component {
     const alterGuesses = this.alters.map(alter => alter.round.get("guess") || 0);
     const { round } = this.props;
     const { guess } = this.state;
-    const answer = round.get("task").correctAnswer;
+    const task = round.get("task");
     return (
       <Board
         isOutcome={isOutcome}
+        taskData={{
+          answer: task.correctAnswer,
+          answerProportion: task.answerProportion,
+          dotSpeed: task.dotSpeed,
+        }}
         guess={guess}
         alterGuesses={alterGuesses}
-        answer={answer}
         isAnimating={true}
         actions={{
           updateArrow: this.updateArrow,

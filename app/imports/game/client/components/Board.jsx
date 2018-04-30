@@ -27,7 +27,7 @@ const Arrow = (props) => {
     pointerEvents: 'none',
     opacity: disabled ? 0.3 : 1,
   };
-"#1E201D"
+
   return (
     <div style={style}>
       <svg viewBox={`0 0 ${90} ${30 /* this should respect aspect ratio */}`}>
@@ -133,12 +133,11 @@ export default class Board extends React.Component {
   // Scene Logic
 
   generateAngle() {
-    const { answer } = this.props;
-    const difficulty = 0.1; // the proportion of random dots
-    if (Math.random() < difficulty) {
-      return randomAngle();
-    } else {
+    const { taskData : { answer, answerProportion } } = this.props;
+    if (Math.random() < answerProportion) {
       return answer;
+    } else {
+      return randomAngle();
     }
   }
 
@@ -147,7 +146,7 @@ export default class Board extends React.Component {
     const { time } = this.state;
     const velAngle = this.generateAngle();
     const posAngle = Math.PI + velAngle + (randomAngle() - Math.PI) / 2;
-    const speed = DOT_SPEED / FPS;
+    const speed = this.props.taskData.dotSpeed / FPS;
     const distance = BOARD_SIZE / 2 - DOT_RADIUS;
     const dot = {
       start: polarVector(BOARD_SIZE / 2, posAngle),
@@ -274,7 +273,7 @@ export default class Board extends React.Component {
   }
 
   renderAnswer() {
-    const { guess, isOutcome, answer } = this.props;
+    const { guess, isOutcome, taskData: { answer } } = this.props;
     if (!isOutcome) return;
     const color = "green";
     return (
@@ -318,7 +317,10 @@ Board.propTypes = {
   isOutcome: PropTypes.bool,
   guess: PropTypes.number,
   alterGuesses: PropTypes.arrayOf(PropTypes.number),
-  answer: PropTypes.number,
+  taskData: PropTypes.shape({
+    answer: PropTypes.number,
+    dotSpeed: PropTypes.number,
+  }),
   isAnimating: PropTypes.bool,
   actions: PropTypes.shape({
     updateArrow: PropTypes.func.isRequired,
