@@ -3,45 +3,6 @@ import SimpleSchema from "simpl-schema";
 import { difficulties, taskData } from "./constants.js";
 
 export const config = {
-  // treatmentAssignments is TBD, the following is a draft of how it might work.
-  // treatmentAssignments is called in the case of a Custom randomization batch
-  // Once the playerCount * game instances has been met, the treatmentAssignment
-  // function is called with all the players and all the possible treatments.
-  // The treatmentAssignments function should returns an array of game runs,
-  // which is the combination of a treatment and a set of players as follows:
-  //   [
-  //     {
-  //       treatment: { playerCount: "high", altersCount: "lowConnectivity", rewiring: "dynamic" },
-  //       players: [Player, Player, Player, Player ...]
-  //     },
-  //     {
-  //       treatment: { playerCount: "high", altersCount: "mediumConnectivity", rewiring: "dynamic" },
-  //       players: [Player, Player, Player, Player ...]
-  //     },
-  //     ...
-  //   ]
-  // Every player should be assigned to a single game run and all players must
-  // be assigned a game run and the exact same treatments should be returned in
-  // the game runs.
-  // treatmentAssignments: {
-  //   gender(players, treatments) {
-  //   }
-  // },
-  
-  // `conditions` define variables to run the game. These variables are combined
-  // into treatments. Each game is ran with one treatment, which is a set of
-  // conditions. Only one condition of a certain type is allowed per treatment
-  // and each condition type is required.
-  // A condition type if the first level key of the object bellow (playerCount,
-  // altersCount...), the value object contains the different possible values
-  // with a name (object key) and the value (value).
-  // The playerCount condition is required by netwise core, it must always be
-  // defined and determined how many players will be participating in a certain
-  // game run. All other conditions are game specific and they are ignored by
-  // netwise core.
-  
-  //TODO: maybe for now (while we have them in the code) we should move them to another file called
-  //'conditions' so we don't clutter index.js in server
   conditions: {
     playerCount: {
       description: "The Number of players participating in the given game",
@@ -49,17 +10,6 @@ export const config = {
       min: 1,
       max: 100
     },
-    //TODO: should it specify which bot to add (i.e., bob or alice?)
-    botsCount: {
-      description: "The Number of bots that should participate in a given game",
-      type: SimpleSchema.Integer,
-      optional: true,
-      min: 0,
-      max: 100
-    },
-    // JS doesn't have Integer and Float as distinctive types, just Number.
-    // So when we really don't want people to give a float (like playerCount)
-    // simple schema gives you that custom type.
     altersCount: {
       description: "The Number of connections for each player",
       type: SimpleSchema.Integer,
@@ -67,44 +17,6 @@ export const config = {
       max: 12,
       optional: false
     },
-    rewiring: {
-      description: "Can the player change their alters on each round",
-      type: Boolean,
-      optional: false
-    },
-    feedbackRate: {
-      description: "how frequent the feedback is (1 = every round; 0 = never)",
-      type: Number,
-      min: 0,
-      max: 1,
-      optional: false
-    },
-    feedbackNoise: {
-      description: "The level of noise added to performance of the alters",
-      type: Number,
-      min: 0,
-      max: 1,
-      optional: false
-    },
-    shockRate: {
-      description: "The rate at which we change difficulties for the players",
-      type: Number,
-      min: 0,
-      max: 1,
-      optional: false
-    },
-    randomizeTask: {
-      description: "Whether to randomize the sequence of the task or not",
-      type: Boolean,
-      optional: false
-    },
-    // environment: {
-    //   description: "This is an example of multiple choice selector",
-    //   type: String,
-    //   regEx: /[a-zA-Z]+/,
-    //   allowedValues: ["stationary", "nonStationary"],
-    //   optional: false
-    // },
     nRounds: {
       description: "This is the number of rounds for the game",
       type: SimpleSchema.Integer,
@@ -113,27 +25,7 @@ export const config = {
       optional: false
     }
   },
-  
-  // A list of bots available for your game
-  // TODO documentation
-  //bots: { bob },
-  
-  // init() is called when a new game instance is starting. It allows you
-  // to define all proporties of this game run.
-  //
-  // Game batches are started from the admin UI in one of 3 modes:
-  //   => Complete randomization: x chosen treatments * number of game instances
-  //   => Simple randomization: randomly chosen treatments * number of instances
-  //   => Custom randomization: x chosen treatments where custom function decides treatment * number of instances
-  //
-  // A treatment is a unique set of conditions. Each of the following is a
-  // treatment:
-  // - { playerCount: "high", altersCount: "lowConnectivity", rewiring: "dynamic" }
-  // - { playerCount: "high", altersCount: "mediumConnectivity", rewiring: "dynamic" }
-  // - { playerCount: "high", altersCount: "highConnectivity", rewiring: "dynamic" }
-  // - { playerCount: "medium", altersCount: "lowConnectivity", rewiring: "dynamic" }
-  // - ...
-  //
+
   // Once the right amount of players are ready, Netwise calls this init
   // function with 2 arguments:
   // - a `treatment` (Object), which is an object containing conditions for this
@@ -208,14 +100,7 @@ export const config = {
         });
       }
       
-      // adding "outcome" might look complicated but basically what we are checking is this:
-      // when interactive with others, show the round outcome if there is feedback or rewiring
-      // when no interactions with others only show the outcome stage when feedback is given
-      if (
-        (treatment.altersCount > 0 &&
-          (treatment.feedbackRate > 0 || treatment.rewiring)) ||
-        (treatment.altersCount === 0 && treatment.feedbackRate > 0)
-      ) {
+      if (treatment.altersCount > 0 ||  treatment.feedbackRate > 0) {
         stages.push({
           name: "outcome",
           displayName: "Round Outcome",
@@ -234,23 +119,7 @@ export const config = {
       players
     };
   },
-  
-  //TODO: should we have onGameStart or onGameEnd?
-  // for example, if one wants to play a special sound when the game starts to grab attention
-  //or maybe conventing from 'game' score to real $ at the end of the game (to be shown at the exit survey)
-  //I can't think of other use cases .. but maybe some people can.
-  
-  // onStageEnd is called each time a stage ends. It is a good time to
-  // update the players scores and make needed otherwise calculations.
-  // onStageEnd is called for all players at once.
-  // It arguments are:
-  // - `game`, which is the same object returned by init, plus current state
-  //   of the game data. The game contains all `players` and `rounds`.
-  // - `round`, the current Round object (same as created in init).
-  // - `stage`, the current Stage object (same as created in init). The Stage
-  //   object pass in onStageEnd also has accessor methods get and set to read
-  //   and write stage scoped player data.
-  // - `players` is the array of all players at this stage
+
   onStageEnd(game, round, stage, players) {
     if (stage.name === "response") {
       computeScore(players, round);
@@ -278,9 +147,7 @@ export const config = {
     }
   },
   
-  // TODO add documentation for onRoundStart
   onRoundStart(game, round, players) {
-    
     
     //TODO: temporary fix for storing network evolution
     // The network should be at the player.round level
