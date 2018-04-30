@@ -312,16 +312,18 @@ export default class Board extends React.Component {
     };
 
     return (
-      <div
-        onMouseDown={this.onMouseDown}
-        onMouseMove={this.onMouseMove}
-        onMouseUp={this.onMouseUp}
-        style={style}>
+      <div>
         {this.state.startedGuessing ? null : this.renderInstructions()}
-        {this.renderDots()}
-        {this.renderGuess()}
-        {alterGuesses.map(this.renderAlterGuess)}
-        {this.renderAnswer()}
+        <div className='dot-task'
+          onMouseDown={this.onMouseDown}
+          onMouseMove={this.onMouseMove}
+          onMouseUp={this.onMouseUp}
+          style={style}>
+          {this.renderDots()}
+          {this.renderGuess()}
+          {alterGuesses.map(this.renderAlterGuess)}
+          {this.renderAnswer()}
+        </div>
       </div>
     );
   }
