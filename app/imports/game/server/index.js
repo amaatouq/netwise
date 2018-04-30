@@ -126,6 +126,7 @@ export const config = {
     } else if (stage.name === "interactive") {
       //after the 'interactive' stage, we compute the score and color it
       computeScore(players, round);
+    }
     if (stage.name === "outcome") {
       return;
     }

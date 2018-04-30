@@ -70,6 +70,7 @@ export default class TaskStimulus extends React.Component {
 
   render() {
     const { round, stage, player } = this.props;
+  }
 
   get isOutcome() {
     const { stage } = this.props;
