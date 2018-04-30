@@ -232,9 +232,12 @@ export default class Board extends React.Component {
   // Render Logic
 
   renderInstructions() {
+    const beginText = 'Click anywhere inside the circle to make your guess!';
+    const continueText = 'Continue click and dragging to change your guess or submit when you\'re ready!';
     return (
-      <div className='instructions'>
-        <p> Click anywhere inside the circle to make your guess! </p>
+      // Height is there to make sure circle div doesn't bounce up after instructions change
+      <div className='instructions' style={{height: '30px'}}>
+        <p> {this.state.startedGuessing? continueText : beginText} </p>
       </div>
     );
   }
@@ -313,7 +316,7 @@ export default class Board extends React.Component {
 
     return (
       <div>
-        {this.state.startedGuessing ? null : this.renderInstructions()}
+        {this.renderInstructions()}
         <div className='dot-task'
           onMouseDown={this.onMouseDown}
           onMouseMove={this.onMouseMove}
@@ -335,6 +338,7 @@ Board.propTypes = {
   alterGuesses: PropTypes.arrayOf(PropTypes.number),
   taskData: PropTypes.shape({
     answer: PropTypes.number,
+    answerProportion: PropTypes.number,
     dotSpeed: PropTypes.number,
   }),
   isAnimating: PropTypes.bool,
