@@ -103,12 +103,14 @@ export default class TaskStimulus extends React.Component {
   renderBoard() {
     const isOutcome = this.isOutcome;
     const alterGuesses = this.alters.map(alter => alter.round.get("guess") || 0);
-    const { round } = this.props;
+    const { round, player } = this.props;
     const { guess } = this.state;
     const task = round.get("task");
+    const disabled = !player.stage.submitted;
     return (
       <Board
         isOutcome={isOutcome}
+        disabled={disabled}
         guess={guess}
         alterGuesses={alterGuesses}
         taskData={{
@@ -116,7 +118,6 @@ export default class TaskStimulus extends React.Component {
           answerProportion: task.answerProportion,
           dotSpeed: task.dotSpeed,
         }}
-        isAnimating={true}
         actions={{
           updateArrow: this.updateArrow,
         }}
@@ -126,13 +127,10 @@ export default class TaskStimulus extends React.Component {
 
   render() {
     const { game, round, stage, player } = this.props;
-    const shouldRenderBoard = !(
-      player.stage.submitted
-    );
     return (
       <div className="task-stimulus">
         <b>Stage</b>: {stage.name}
-        {shouldRenderBoard ? this.renderBoard() : null}
+        {this.renderBoard()}
       </div>
     );
   }

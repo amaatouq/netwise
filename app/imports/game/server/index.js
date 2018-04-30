@@ -204,17 +204,16 @@ function computeScore(players, round, {isInitialGuess = false} = {}) {
       player.round.set("initialGuess", guess);
     }
 
-    // TODO: define the score function better
+    // TODO: Define the score function better later
     // Current score fn:
-    // 1) take difference between guess and answer
-    // 2) if more than PI, get 0
-    // 3) if less than PI, get (PI - diff) * 100 / PI
-    // Perfect score: 100
+    // 1) take absolute difference between guess and answer
+    // 2) scale between 0 and 100 for how good the guess is
 
     // If no guess given, score is 0
+
     const score = !guess
       ? 0
-      : Math.max(0, (Math.PI - normalizeAngle(Math.abs(correctAnswer - guess)))) / Math.PI * 100;
+      : Math.abs(correctAnswer - guess) / (2 * Math.PI) * 100;
 
     player.round.set("score", score);
   });

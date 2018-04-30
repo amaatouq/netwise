@@ -334,6 +334,7 @@ export default class Board extends React.Component {
 
 Board.propTypes = {
   isOutcome: PropTypes.bool,
+  disabled: PropTypes.bool,
   guess: PropTypes.number,
   alterGuesses: PropTypes.arrayOf(PropTypes.number),
   taskData: PropTypes.shape({
@@ -341,7 +342,6 @@ Board.propTypes = {
     answerProportion: PropTypes.number,
     dotSpeed: PropTypes.number,
   }),
-  isAnimating: PropTypes.bool,
   actions: PropTypes.shape({
     updateArrow: PropTypes.func.isRequired,
   }).isRequired,
