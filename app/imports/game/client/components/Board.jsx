@@ -102,7 +102,10 @@ export default class Board extends React.Component {
   // Event Handlers
 
   handleMouse = (x, y) => {
-    if (this.props.isOutcome) {
+    console.log('tried to handle mouse');
+    console.log(this.props);
+    console.log(this.props.disabled);
+    if (this.props.isOutcome || this.props.disabled) {
       // outcome: readonly mode
       return;
     }
@@ -261,9 +264,9 @@ export default class Board extends React.Component {
   }
 
   renderGuess() {
-    const { guess, isOutcome } = this.props;
+    const { guess, stageName, isOutcome } = this.props;
 
-    if (!isOutcome && !this.state.startedGuessing) {  // before the first guess, don't show the arrow
+    if (stageName === 'response' && !this.state.startedGuessing) {  // before the first guess, don't show the arrow
       return;
     }
     const color = "#1E201D";
@@ -338,6 +341,7 @@ Board.propTypes = {
   disabled: PropTypes.bool,
   guess: PropTypes.number,
   alterGuesses: PropTypes.arrayOf(PropTypes.number),
+  stageName: PropTypes.string,
   taskData: PropTypes.shape({
     answer: PropTypes.number,
     answerProportion: PropTypes.number,
