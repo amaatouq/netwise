@@ -86,6 +86,7 @@ export default class Board extends React.Component {
     this.state = {
       dots: [],
       time: 0,
+      startedGuessing: false,
     };
   }
 
@@ -105,6 +106,7 @@ export default class Board extends React.Component {
       // outcome: readonly mode
       return;
     }
+    this.state.startedGuessing = true;
     // compute displacement from center of box
     const dx = x - BOARD_SIZE / 2;
     const dy = y - BOARD_SIZE / 2;
@@ -229,6 +231,14 @@ export default class Board extends React.Component {
   // =======================
   // Render Logic
 
+  renderInstructions() {
+    return (
+      <div className='instructions'>
+        <p> Click anywhere inside the circle to make your guess! </p>
+      </div>
+    );
+  }
+
   renderDots() {
     const { dots, time } = this.state;
     return (
@@ -248,6 +258,9 @@ export default class Board extends React.Component {
   }
 
   renderGuess() {
+    if (!this.state.startedGuessing) {  // before the first guess, don't show the arrow
+      return;
+    }
     const { guess, isOutcome } = this.props;
     const color = "#1E201D";
     return (
@@ -304,6 +317,7 @@ export default class Board extends React.Component {
         onMouseMove={this.onMouseMove}
         onMouseUp={this.onMouseUp}
         style={style}>
+        {this.state.startedGuessing ? null : this.renderInstructions()}
         {this.renderDots()}
         {this.renderGuess()}
         {alterGuesses.map(this.renderAlterGuess)}
