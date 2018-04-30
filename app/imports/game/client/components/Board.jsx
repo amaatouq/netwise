@@ -261,10 +261,11 @@ export default class Board extends React.Component {
   }
 
   renderGuess() {
-    if (!this.state.startedGuessing) {  // before the first guess, don't show the arrow
+    const { guess, isOutcome } = this.props;
+
+    if (!isOutcome && !this.state.startedGuessing) {  // before the first guess, don't show the arrow
       return;
     }
-    const { guess, isOutcome } = this.props;
     const color = "#1E201D";
     return (
       <Arrow

@@ -100,13 +100,11 @@ export const config = {
         });
       }
       
-      if (treatment.altersCount > 0 ||  treatment.feedbackRate > 0) {
-        stages.push({
-          name: "outcome",
-          displayName: "Round Outcome",
-          durationInSeconds: 120
-        });
-      }
+      stages.push({
+        name: "outcome",
+        displayName: "Round Outcome",
+        durationInSeconds: 120
+      });
       
       rounds.push({
         stages,
