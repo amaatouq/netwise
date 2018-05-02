@@ -289,7 +289,7 @@ export default class Board extends React.Component {
     if (stageName === 'response' && !this.state.startedGuessing) {  // before the first guess, don't show the arrow
       return;
     }
-    const color = "#1E201D";
+    const color = "#424242";
     return (
       <Arrow
         key={`guess`}

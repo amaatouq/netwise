@@ -89,7 +89,7 @@ export default class SocialInteraction extends React.Component {
     ).reverse();
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
     const cumulativeScore = player.get("cumulativeScore") || 0;
-    const roundScore = player.round.get("score") || 0;
+    const roundScore = Math.round(player.round.get("score")) || 0;
 
     return (
       <div className="social-interaction">
