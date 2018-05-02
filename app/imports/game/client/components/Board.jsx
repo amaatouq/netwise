@@ -330,6 +330,8 @@ export default class Board extends React.Component {
 
   render() {
     const { alterGuesses } = this.props;
+    // console.log(alterGuesses);
+    // console.log(this.props.guess);
 
     const style = {
       position: 'relative',

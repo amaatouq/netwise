@@ -1,13 +1,5 @@
 import React from "react";
-import { Slider } from "@blueprintjs/core";
 
-//TODO: this is not a good component as is for the following reasons
-//    It should have a 'null' default value while this can't be done with the default HTML <input> .. having a default value would lead to anchoring bias for the participant
-//    once a player chose a value, it should be sticky (i.e., saved and retrieved in the next stages)
-//    we might want to store to seperate values (last value as an answer and also intermediate values)
-// NP: Setting to 0 for now otherwise it will break things to have a submittable
-// null. Eventually we can create our own slider that can handle nil and report
-// and error if someone submits null.
 export default class TaskResponse extends React.Component {
   handleSubmit = event => {
     event.preventDefault();

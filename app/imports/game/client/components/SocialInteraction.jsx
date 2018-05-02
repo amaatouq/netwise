@@ -1,7 +1,5 @@
 import React from "react";
 
-//TODO: when I remove the pt-icon-dollar sign when giving no feedback, the images are not centered
-
 import { AlertToaster } from "../../../core/ui/components/AlertToaster.jsx";
 
 export default class SocialInteraction extends React.Component {
@@ -29,7 +27,7 @@ export default class SocialInteraction extends React.Component {
   };
 
   renderUnfollow(alterId) {
-    const { player } = this.props;
+    const {player} = this.props;
 
     return (
       //if they did not submit, they can unfollow, otherwise, the button is inactive
@@ -44,7 +42,7 @@ export default class SocialInteraction extends React.Component {
   }
 
   renderAlter(otherPlayer) {
-    const { feedbackTime, game } = this.props;
+    const {game, showScoreIncrement} = this.props;
     const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
     const roundScore = otherPlayer.round.get("score") || 0;
 
@@ -52,12 +50,9 @@ export default class SocialInteraction extends React.Component {
       <div className="alter pt-card pt-elevation-2" key={otherPlayer._id}>
         <div className="info">
           <img src={otherPlayer.get("avatar")} className="profile-avatar" />
-          {/*only show the scores of the alters if feedback is allowed*/}
-          {feedbackTime ? (
-            <span className="pt-icon-standard pt-icon-dollar" />
-          ) : null}
-          {feedbackTime ? <span>{cumulativeScore}</span> : null}
-          {feedbackTime ? (
+          <span className="pt-icon-standard pt-icon-dollar" />
+          <span>{cumulativeScore}</span>
+          {showScoreIncrement ? (
             <span style={{ color: otherPlayer.round.get("scoreColor") }}>
               <strong> (+{roundScore})</strong>
             </span>
@@ -68,82 +63,13 @@ export default class SocialInteraction extends React.Component {
     );
   }
 
-  renderAltersList(alterIds) {
-    return alterIds.map(alterId => this.renderAlter(alterId));
-  }
-
-  renderLeftColumn(player, alterIds, feedbackTime) {
-    const cumulativeScore = player.get("cumulativeScore") || 0;
-    const roundScore = player.round.get("score") || 0;
-
-    return (
-      <div className="right" key="left">
-        {feedbackTime ? (
-          <p>
-            <strong>Score:</strong> Total (+increment)
-          </p>
-        ) : null}
-
-        {feedbackTime ? (
-          <p style={{ textIndent: "1em" }}>
-            <span className="pt-icon-standard pt-icon-dollar" />
-            <span>{cumulativeScore}</span>
-            <span style={{ color: player.round.get("scoreColor") }}>
-              <strong> (+{roundScore})</strong>
-            </span>
-          </p>
-        ) : null}
-
-        <p>
-          <strong>You are following:</strong>
-        </p>
-        {this.renderAltersList(alterIds)}
-      </div>
-    );
-  }
-
-  renderNonAlter(otherPlayer) {
-    const { feedbackTime, player } = this.props;
-    const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
-    const roundScore = otherPlayer.round.get("score") || 0;
-
-    return (
-      <div className="non-alter" key={otherPlayer._id}>
-        <button
-          className="pt-button pt-intent-primary pt-icon-add pt-minimal"
-          onClick={this.handleFollow.bind(this, otherPlayer._id)}
-          disabled={player.stage.submitted}
-        />
-        <img src={otherPlayer.get("avatar")} className="profile-avatar" />
-        {feedbackTime ? (
-          <span className="pt-icon-standard pt-icon-dollar" />
-        ) : null}
-        {feedbackTime ? <span>{cumulativeScore} </span> : null}
-        {feedbackTime ? (
-          <span style={{ color: otherPlayer.round.get("scoreColor") }}>
-            <strong> (+{roundScore})</strong>
-          </span>
-        ) : null}
-      </div>
-    );
-  }
-  renderNonAltersList(nonAlterIds) {
-    return nonAlterIds.map(alterId => this.renderNonAlter(alterId));
-  }
-
-  renderRightColumn(nonAlterIds) {
-    return (
-      <div className="right" key="right">
-        <p>
-          <strong>You can follow:</strong>
-        </p>
-        {this.renderNonAltersList(nonAlterIds)}
-      </div>
-    );
+  renderAltersList(alters) {
+    return alters.map(alter => this.renderAlter(alter));
   }
 
   render() {
-    const { game, player, feedbackTime } = this.props;
+    console.log("rendering SocialInteraction");
+    const {game, player, showScoreIncrement} = this.props;
 
     const rewiring = game.treatment.rewiring;
 
@@ -155,23 +81,39 @@ export default class SocialInteraction extends React.Component {
       player._id
     );
 
-    //actual Player objects and not only Ids for alters and nonAlters
+    //actual Player objects and not only Ids
 
     //all players sorted by performance in descending order
     const allPlayers = _.sortBy(game.players, p =>
       p.get("cumulativeScore")
     ).reverse();
     const alters = allPlayers.filter(p => alterIds.includes(p._id));
-    const nonAlters = allPlayers.filter(p => nonAlterIds.includes(p._id));
+    const cumulativeScore = player.get("cumulativeScore") || 0;
+    const roundScore = player.round.get("score") || 0;
 
     return (
       <div className="social-interaction">
-        {rewiring
-          ? [
-              this.renderLeftColumn(player, alters, feedbackTime),
-              this.renderRightColumn(nonAlters)
-            ]
-          : this.renderLeftColumn(player, alters, feedbackTime)}
+        <div className="right" key="left">
+          <p>
+            <strong>Score:</strong>
+            {showScoreIncrement
+              ? <span>Total (+increment)</span>
+              : null}
+          </p>
+          <p style={{ textIndent: "1em" }}>
+            <span className="pt-icon-standard pt-icon-dollar" />
+            <span>{cumulativeScore}</span>
+            {showScoreIncrement
+              ? (<span style={{ color: player.round.get("scoreColor") }}>
+                  <strong> (+{roundScore})</strong>
+                </span>)
+              : null}
+          </p>
+          <p>
+            <strong>You are following:</strong>
+          </p>
+          {this.renderAltersList(alters)}
+        </div>
       </div>
     );
   }

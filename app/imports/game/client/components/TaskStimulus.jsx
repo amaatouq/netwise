@@ -80,6 +80,8 @@ export default class TaskStimulus extends React.Component {
   // get your "alters", the people in the game with you
   get alters() {
     const { game, player } = this.props;
+    console.log("players");
+    console.log(game.players);
     if (this.isIndividual) {
       // if not interactive, then no other people
       return [];
