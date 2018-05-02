@@ -1,16 +1,15 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-const DOT_RADIUS = 5;
-const BOARD_SIZE = 500;
-const DOT_SPEED = 100;
+const DOT_RADIUS = 4;
+const BOARD_SIZE = 400;
 const DPS = 8; // dots per second
 const FPS = 60; // frames per second
 const BORDER_WIDTH = 2;
 
-const ARROW_WIDTH = 300;
+const ARROW_WIDTH = 150;
 const ARROW_ASPECT_RATIO = 2.5;
-const ARROW_HEIGHT = ARROW_WIDTH / ARROW_ASPECT_RATIO; // 120
+const ARROW_HEIGHT = ARROW_WIDTH / ARROW_ASPECT_RATIO;
 
 const INSTRUCTION_TEXT = {
   begin: 'Click anywhere inside the circle to make your guess!',
@@ -339,7 +338,7 @@ export default class Board extends React.Component {
       height: BOARD_SIZE + 2 * BORDER_WIDTH,
       borderRadius: BOARD_SIZE/2,
       boxSizing: 'border-box',
-      border: `${BORDER_WIDTH}px double green`,
+      border: `${BORDER_WIDTH}px double rgba(16, 22, 26, 0.15)`,
     };
 
     return (
