@@ -12,6 +12,15 @@ const ARROW_WIDTH = 300;
 const ARROW_ASPECT_RATIO = 2.5;
 const ARROW_HEIGHT = ARROW_WIDTH / ARROW_ASPECT_RATIO; // 120
 
+const INSTRUCTION_TEXT = {
+  begin: 'Click anywhere inside the circle to make your guess!',
+  continue: 'Continue click and dragging to change your guess or submit when you\'re ready!',
+  submitted: 'Please wait until all the players are ready.',
+  outcome: 'See how you did!'
+};
+
+const INST = 'hello';
+
 const Arrow = (props) => {
   const { disabled, color, angle, size = 1 } = props;
 
@@ -102,9 +111,6 @@ export default class Board extends React.Component {
   // Event Handlers
 
   handleMouse = (x, y) => {
-    console.log('tried to handle mouse');
-    console.log(this.props);
-    console.log(this.props.disabled);
     if (this.props.isOutcome || this.props.disabled) {
       // outcome: readonly mode
       return;
@@ -231,16 +237,31 @@ export default class Board extends React.Component {
     };
   })()
 
+  // Get instruction text based on stage and status
+  getInstructionText() {
+    const { stageName, isOutcome, disabled } = this.props;
+    if (isOutcome) {
+      return INSTRUCTION_TEXT.outcome;
+    } else { // response or interactive stage
+      if (disabled) { // already submitted
+        return INSTRUCTION_TEXT.submitted;
+      } else if (!this.state.startedGuessing) {
+        return INSTRUCTION_TEXT.begin;
+      } else {
+        return INSTRUCTION_TEXT.continue;
+      }
+    }
+  }
+
   // =======================
   // Render Logic
 
   renderInstructions() {
-    const beginText = 'Click anywhere inside the circle to make your guess!';
-    const continueText = 'Continue click and dragging to change your guess or submit when you\'re ready!';
+    const instructionText = this.getInstructionText();
     return (
       // Height is there to make sure circle div doesn't bounce up after instructions change
       <div className='instructions' style={{height: '30px'}}>
-        <p> {this.state.startedGuessing? continueText : beginText} </p>
+        <p> {instructionText} </p>
       </div>
     );
   }
@@ -295,6 +316,7 @@ export default class Board extends React.Component {
   renderAnswer() {
     const { guess, isOutcome, taskData: { answer } } = this.props;
     if (!isOutcome) return;
+
     const color = "green";
     return (
       <Arrow
