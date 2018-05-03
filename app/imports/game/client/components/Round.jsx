@@ -6,7 +6,6 @@ import Task from "../components/Task";
 
 export default class Round extends React.Component {
   render() {
-    console.log("render round");
     const { round, stage, player, game } = this.props;
     const social = game.treatment.altersCount > 0;
     const interactive = social && stage.name === "interactive";

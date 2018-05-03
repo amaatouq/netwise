@@ -15,10 +15,12 @@ const INSTRUCTION_TEXT = {
   begin: 'Click anywhere inside the circle to make your guess!',
   continue: 'Continue click and dragging to change your guess or submit when you\'re ready!',
   submitted: 'Please wait until all the players are ready.',
-  outcome: 'See how you did!'
+  outcome: 'See how you did! Gray: your guess. Green: correct answer.',
 };
 
-const INST = 'hello';
+// Handles up to 18 alters by rotating along the hue wheel
+// Starts with blue
+const HUES = [200, 300, 40, 140, 240, 340, 80, 180, 280, 20, 120, 220, 320, 60, 160, 260, 0, 100];
 
 const Arrow = (props) => {
   const { disabled, color, angle, size = 1 } = props;
@@ -83,10 +85,15 @@ const polarVector = (scale, angle) => {
 
 const randomAngle = () => Math.random() * Math.PI * 2;
 
-const generateColor = () => {
+const generateDotColor = () => {
   const hue = Math.floor(Math.random() * 360);
   return `hsl(${hue},80%,80%)`;
 };
+
+export const getAlterColor = id => {
+  const hue = HUES[id];
+  return `hsl(${hue},50%,50%)`;
+}
 
 export default class Board extends React.Component {
   constructor() {
@@ -161,7 +168,7 @@ export default class Board extends React.Component {
     const dot = {
       start: polarVector(BOARD_SIZE / 2, posAngle),
       velocity: polarVector(speed, velAngle),
-      color: generateColor(),
+      color: generateDotColor(),
       id: Math.random(), // todo uuidv4
     };
 
@@ -230,7 +237,7 @@ export default class Board extends React.Component {
   getColor = ((store = {}) => {
     return (id) => {
       if (!(id in store)) {
-        store[id] = generateColor();
+        store[id] = generateDotColor();
       }
       return store[id];
     };
@@ -301,11 +308,11 @@ export default class Board extends React.Component {
   }
 
   renderAlterGuess = (guess, i) => {
-    const color = this.getColor(i);
+    const color = getAlterColor(i);
     return (
       <Arrow
         key={`alter${i}`}
-        size={0.5}
+        size={0.8}
         angle={guess}
         color={color}
       />
@@ -316,11 +323,11 @@ export default class Board extends React.Component {
     const { guess, isOutcome, taskData: { answer } } = this.props;
     if (!isOutcome) return;
 
-    const color = "green";
+    const color = `hsl(120, 80%, 40%)`; // green
+
     return (
       <Arrow
-        key={`answer`}
-        size={1.2}
+        key={'answer'}
         angle={answer}
         color={color}
       />
@@ -329,8 +336,6 @@ export default class Board extends React.Component {
 
   render() {
     const { alterGuesses } = this.props;
-    // console.log(alterGuesses);
-    // console.log(this.props.guess);
 
     const style = {
       position: 'relative',
@@ -338,7 +343,7 @@ export default class Board extends React.Component {
       height: BOARD_SIZE + 2 * BORDER_WIDTH,
       borderRadius: BOARD_SIZE/2,
       boxSizing: 'border-box',
-      border: `${BORDER_WIDTH}px double rgba(16, 22, 26, 0.15)`,
+      border: `${BORDER_WIDTH}px solid rgba(16, 22, 26, 0.15)`,
     };
 
     return (

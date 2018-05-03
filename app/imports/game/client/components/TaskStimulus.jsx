@@ -21,74 +21,15 @@ export default class TaskStimulus extends React.Component {
     return stage.name === 'outcome';
   }
 
-  // get your "alters", the people in the game with you
+  // get your "alters", the people you follow
   get alters() {
     const { game, player } = this.props;
     if (this.isIndividual) {
-      // if not interactive, then no other people
+      // if not interactive, then dont show other people
       return [];
     }
     const alterIds = player.get("alterIds");
-    const allPlayers = _.sortBy(game.players, p => p.get("cumulativeScore")).reverse();
-    const alters = allPlayers.filter(p => alterIds.includes(p._id));
-    return alters;
-  }
-
-  componentDidMount() {
-    const { guess } = this.state;
-    this.props.player.round.set("guess", guess);
-  }
-
-  updateArrow = (guess) => {
-    this.setState({guess});
-    this.props.player.round.set("guess", guess);
-  }
-
-  renderBoard() {
-    const isOutcome = this.isOutcome;
-    const alterGuesses = this.alters.map(alter => alter.round.get("guess") || 0);
-    const { round } = this.props;
-    const { guess } = this.state;
-    const task = round.get("task");
-    return (
-      <Board
-        isOutcome={isOutcome}
-        taskData={{
-          answer: task.correctAnswer,
-          answerProportion: task.answerProportion,
-          dotSpeed: task.dotSpeed,
-        }}
-        guess={guess}
-        alterGuesses={alterGuesses}
-        isAnimating={true}
-        actions={{
-          updateArrow: this.updateArrow,
-        }}
-      />
-    );
-  }
-
-  render() {
-    const { round, stage, player } = this.props;
-  }
-
-  get isOutcome() {
-    const { stage } = this.props;
-    return stage.name === 'outcome';
-  }
-
-  // get your "alters", the people in the game with you
-  get alters() {
-    const { game, player } = this.props;
-    console.log("players");
-    console.log(game.players);
-    if (this.isIndividual) {
-      // if not interactive, then no other people
-      return [];
-    }
-    const alterIds = player.get("alterIds");
-    const allPlayers = _.sortBy(game.players, p => p.get("cumulativeScore")).reverse();
-    const alters = allPlayers.filter(p => alterIds.includes(p._id));
+    const alters = game.players.filter(p => alterIds.includes(p._id));
     return alters;
   }
 

@@ -2,6 +2,10 @@ import React from "react";
 
 import { AlertToaster } from "../../../core/ui/components/AlertToaster.jsx";
 
+import { getAlterColor } from "./Board";
+
+COLOR_SQUARE_SIZE = 30;
+
 export default class SocialInteraction extends React.Component {
   handleUnfollow = (alterId, event) => {
     event.preventDefault();
@@ -41,10 +45,23 @@ export default class SocialInteraction extends React.Component {
     );
   }
 
-  renderAlter(otherPlayer) {
+  renderAlterColorSquare(i) {
+    const style = {
+      width: COLOR_SQUARE_SIZE,
+      height: COLOR_SQUARE_SIZE,
+      borderRadius: 5,
+      boxSizing: 'border-box',
+      backgroundColor: getAlterColor(i),
+      marginLeft: 5,
+    };
+
+    return (<div className='alterColorSquare' style={style} />);
+  }
+
+  renderAlter(otherPlayer, i) {
     const {game, showScoreIncrement} = this.props;
     const cumulativeScore = otherPlayer.get("cumulativeScore") || 0;
-    const roundScore = otherPlayer.round.get("score") || 0;
+    const roundScore = Math.round(otherPlayer.round.get("score")) || 0;
 
     return (
       <div className="alter pt-card pt-elevation-2" key={otherPlayer._id}>
@@ -53,10 +70,11 @@ export default class SocialInteraction extends React.Component {
           <span className="pt-icon-standard pt-icon-dollar" />
           <span>{cumulativeScore}</span>
           {showScoreIncrement ? (
-            <span style={{ color: otherPlayer.round.get("scoreColor") }}>
+            <div style={{ color: otherPlayer.round.get("scoreColor") }}>
               <strong> (+{roundScore})</strong>
-            </span>
+            </div>
           ) : null}
+          {this.renderAlterColorSquare(i)}
         </div>
         {game.treatment.rewiring ? this.renderUnfollow(otherPlayer._id) : null}
       </div>
@@ -64,51 +82,22 @@ export default class SocialInteraction extends React.Component {
   }
 
   renderAltersList(alters) {
-    return alters.map(alter => this.renderAlter(alter));
+    return _.range(alters.length).map(i => this.renderAlter(alters[i], i));
   }
 
   render() {
-    console.log("rendering SocialInteraction");
     const {game, player, showScoreIncrement} = this.props;
 
-    const rewiring = game.treatment.rewiring;
-
-    //get the ids of the followers and the people that they could follow
-    const allPlayersIds = _.pluck(game.players, "_id");
+    // Get the players being followed
     const alterIds = player.get("alterIds");
-    const nonAlterIds = _.without(
-      _.difference(allPlayersIds, alterIds),
-      player._id
-    );
+    const alters = game.players.filter(p => alterIds.includes(p._id));
 
-    //actual Player objects and not only Ids
-
-    //all players sorted by performance in descending order
-    const allPlayers = _.sortBy(game.players, p =>
-      p.get("cumulativeScore")
-    ).reverse();
-    const alters = allPlayers.filter(p => alterIds.includes(p._id));
     const cumulativeScore = player.get("cumulativeScore") || 0;
     const roundScore = Math.round(player.round.get("score")) || 0;
 
     return (
       <div className="social-interaction">
         <div className="right" key="left">
-          <p>
-            <strong>Score:</strong>
-            {showScoreIncrement
-              ? <span>Total (+increment)</span>
-              : null}
-          </p>
-          <p style={{ textIndent: "1em" }}>
-            <span className="pt-icon-standard pt-icon-dollar" />
-            <span>{cumulativeScore}</span>
-            {showScoreIncrement
-              ? (<span style={{ color: player.round.get("scoreColor") }}>
-                  <strong> (+{roundScore})</strong>
-                </span>)
-              : null}
-          </p>
           <p>
             <strong>You are following:</strong>
           </p>
