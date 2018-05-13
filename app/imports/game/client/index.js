@@ -9,7 +9,7 @@ import Sorry from "./exit/Sorry.jsx";
 import Thanks from "./exit/Thanks.jsx";
 
 // config contains the client side configuration for this game. It is used by
-// netwise core to initialize and run the game.
+// Empirica core to initialize and run the game.
 export const config = {
   RoundComponent: Round,
   ConsentComponent: Consent,

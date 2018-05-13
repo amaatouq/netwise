@@ -67,7 +67,7 @@ export default class Admin extends React.Component {
       <div className="admin">
         <nav className="pt-navbar header">
           <div className="pt-navbar-group pt-align-left">
-            <div className="pt-navbar-heading">Netwise Admin</div>
+            <div className="pt-navbar-heading">Empirica Admin</div>
             <NavLink
               exact
               to="/admin"

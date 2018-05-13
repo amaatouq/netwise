@@ -63,7 +63,7 @@ export default class Public extends React.Component {
                 className="pt-button pt-large pt-minimal pt-icon-exchange"
                 to="/"
               >
-                Netwise
+                Empirica
               </Link>
             </div>
           </div>

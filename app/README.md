@@ -1,4 +1,4 @@
-# Netwise
+# Empirica
 
 Open source project to tackle the problem of long development cycles required to
 produce software to conduct multi-participant and real-time human experiments
@@ -6,16 +6,16 @@ online.
 
 ## Experiment development
 
-Netwise was built with the experiement developer in mind. The `core` of Netwise
-has been seperated from the `game`. The folder structure reflects this
-organization method.
+Empirica was built with the experiement developer in mind. The `core` of
+Empirica has been seperated from the `experiment`. The folder structure reflects
+this organization method.
 
 To develop a new game, you will only be interested in a couple of folders:
 
 * imports/game
 * public/game
 
-All other folders contain `core` Netwise code, which you should not need to
+All other folders contain `core` Empirica code, which you should not need to
 change in the vast majority of cases.
 
 ## Running locally
@@ -103,8 +103,8 @@ Custom settings for Empirica:
 
 ## Deployment
 
-There are many ways the app can be deployed. Netwise has no special dependencies
-beyond normal Meteor requirements: Node.js + Mongo.
+There are many ways the app can be deployed. Empirica has no special
+dependencies beyond normal Meteor requirements: Node.js + Mongo.
 
 We will go through the deployment on one of the easiest solution using
 `Meteor Galaxy`. But there are many other options so we recommend you take a
@@ -127,7 +127,7 @@ Once your DB is configured, you should get a MongoDB configuration URL that
 looks something like this:
 
 ```
-mongodb://myuser:A6629E8B-F4D2-4EC1-ACE3-DF5AA9F2F9A6@43243gh43.mlab.com:6604/my-netwise-db
+mongodb://myuser:A6629E8B-F4D2-4EC1-ACE3-DF5AA9F2F9A6@43243gh43.mlab.com:6604/my-empirica-db
 ```
 
 You should then create a settings.json file at the same level as this file and
@@ -138,7 +138,7 @@ add you Mongo URL config as follows:
   "galaxy.meteor.com": {
     "env": {
       "MONGO_URL":
-        "mongodb://myuser:A6629E8B-F4D2-4EC1-ACE3-DF5AA9F2F9A6@43243gh43.mlab.com:6604/my-netwise-db"
+        "mongodb://myuser:A6629E8B-F4D2-4EC1-ACE3-DF5AA9F2F9A6@43243gh43.mlab.com:6604/my-empirica-db"
     }
   }
 }
@@ -148,13 +148,13 @@ DO NOT COMMIT this file, it contains secrets that should not go into your git
 repo.
 
 `*.meteorapp.com` domains are free to use with Galaxy, so you can simply choose
-an available subdomain such as `my-netwise-app` (don't use this one), which will
-give us the `my-netwise-app.meteorapp.com` domain name. Meteor will let you know
+an available subdomain such as `my-empirica-app` (don't use this one), which will
+give us the `my-empirica-app.meteorapp.com` domain name. Meteor will let you know
 when you try to deploy if the domain is available. Finally just run the
 following command with you settings file and your domain name:
 
 ```sh
-DEPLOY_HOSTNAME=galaxy.meteor.com meteor deploy my-netwise-app.meteorapp.com --settings settings.json
+DEPLOY_HOSTNAME=galaxy.meteor.com meteor deploy my-empirica-app.meteorapp.com --settings settings.json
 ```
 
 Then you can go to https://galaxy.meteor.com/ to see the status of your
