@@ -5,6 +5,7 @@ import { Games } from "../games.js";
 import { Players } from "../../players/players.js";
 import { Rounds } from "../../rounds/rounds.js";
 import { Stages } from "../../stages/stages.js";
+import { Treatments } from "../../treatments/treatments.js";
 import {
   augmentPlayerStageRound,
   augmentStageRound
@@ -33,14 +34,21 @@ SyncedCron.add({
       if (ended) {
         endOfStage(stage._id);
       } else {
+        const { gameId } = stage;
         // make bots play
-        const query = { gameId: stage.gameId, bot: { $exists: true } };
+        const query = { gameId, bot: { $exists: true } };
         if (Players.find(query).count() === 0) {
           return;
         }
         const botPlayers = Players.find(query);
-        const players = Players.find({ gameId: stage.gameId });
+        const players = Players.find({ gameId }).fetch();
+        const treatment = Treatments.findOne(game.treatmentId);
         const round = Rounds.findOne(stage.roundId);
+        game.treatment = treatment.conditionsObject();
+        game.players = players;
+        game.rounds = Rounds.find({ gameId }).fetch();
+        game.stages = Stages.find({ gameId }).fetch();
+
         botPlayers.forEach(botPlayer => {
           const bot = config.bots[botPlayer.bot];
           if (!bot) {
@@ -51,6 +59,7 @@ SyncedCron.add({
             );
             return;
           }
+
           if (!bot.onStageTick) {
             return;
           }
@@ -67,6 +76,10 @@ SyncedCron.add({
           augmentPlayerStageRound(botPlayer, botPlayer.stage, botPlayer.round);
 
           const tick = endTimeAt.diff(now, "seconds");
+
+          game.rounds.forEach(round => {
+            round.stages = game.stages.filter(s => s.roundId === round._id);
+          });
 
           bot.onStageTick(botPlayer, game, round, stage, players, tick);
         });
