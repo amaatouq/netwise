@@ -50,7 +50,7 @@ Meteor.startup(() => {
     return;
   }
 
-  import("../../../game/server").then(server => {
+  import("../../../experiment/server").then(server => {
     const { config } = server;
     if (!config.conditions) {
       throw new Error(

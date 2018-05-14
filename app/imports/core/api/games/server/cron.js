@@ -10,7 +10,7 @@ import {
   augmentPlayerStageRound,
   augmentStageRound
 } from "../../player-stages/augment.js";
-import { config } from "../../../../game/server";
+import { config } from "../../../../experiment/server";
 import { endOfStage } from "../../stages/finish.js";
 
 SyncedCron.add({

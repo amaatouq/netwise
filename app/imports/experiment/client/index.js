@@ -1,15 +1,13 @@
-import Consent from "./instructions/Consent.jsx";
-import ExitSurvey from "./exit/ExitSurvey.jsx";
-import InstructionStepOne from "./instructions/InstructionStepOne.jsx";
-import InstructionStepTwo from "./instructions/InstructionStepTwo.jsx";
-import Quiz from "./instructions/Quiz.jsx";
-import Round from "./components/Round";
-import Score from "./exit/Score.jsx";
-import Sorry from "./exit/Sorry.jsx";
-import Thanks from "./exit/Thanks.jsx";
-
 // config contains the client side configuration for this game. It is used by
 // Empirica core to initialize and run the game.
+import Consent from "./intro/Consent.jsx";
+import ExitSurvey from "./outro/ExitSurvey.jsx";
+import InstructionStepOne from "./intro/InstructionStepOne.jsx";
+import InstructionStepTwo from "./intro/InstructionStepTwo.jsx";
+import Quiz from "./intro/Quiz.jsx";
+import Round from "./game/Round.jsx";
+import Thanks from "./outro/Thanks.jsx";
+
 export const config = {
   RoundComponent: Round,
   ConsentComponent: Consent,
@@ -34,15 +32,7 @@ export const config = {
   // user if they come back to the website.
   // If you don't return anything, or do not define this function, a default
   // exit screen will be shown.
-  // Returned steps components must be unique (must all be different components)
-  // and must all have a name (automatically infered by the class usually) or a
-  // displayName (if could not be infered, must be set manually, see:
-  // https://reactjs.org/docs/higher-order-components.html#convention-wrap-the-display-name-for-easy-debugging
-  // for details).
   ExitSteps(game, player) {
-    if (player.exitStatus) {
-      return [Sorry, Thanks];
-    }
-    return [Score, ExitSurvey, Thanks];
+    return [ExitSurvey, Thanks];
   }
 };

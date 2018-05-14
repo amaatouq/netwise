@@ -1,5 +1,5 @@
 import { Conditions } from "../../api/conditions/conditions.js";
-import { config } from "../../../game/server";
+import { config } from "../../../experiment/server";
 
 const admins = [
   {

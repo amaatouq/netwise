@@ -3,7 +3,7 @@ import { GameLobbies } from "../game-lobbies/game-lobbies";
 import { Games } from "../games/games";
 import { Players } from "../players/players.js";
 import { Treatments } from "../treatments/treatments";
-import { config } from "../../../game/server";
+import { config } from "../../../experiment/server";
 
 // Create GameLobbies
 Batches.after.insert(function(userId, batch) {
@@ -46,8 +46,9 @@ Batches.after.insert(function(userId, batch) {
 
     const treatment = Treatments.findOne(l.treatmentId);
     l.availableCount = treatment.condition("playerCount").value;
-    const botsCount = treatment.condition("botsCount").value;
-    if (botsCount) {
+    const botsCountCond = treatment.condition("botsCount");
+    if (botsCountCond) {
+      const botsCount = botsCountCond.value;
       if (botsCount > l.availableCount) {
         throw "Trying to create a game with more bots than players";
       }

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { config } from "../../../game/client";
+import { config } from "../../../experiment/client";
 import Loading from "./Loading.jsx";
 
 export default class Instructions extends React.Component {

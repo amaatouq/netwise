@@ -1,5 +1,5 @@
 import { Conditions } from "../conditions.js";
-import { config } from "../../../../game/server";
+import { config } from "../../../../experiment/server";
 import { SimpleSchema } from "simpl-schema/dist/SimpleSchema";
 
 Meteor.publish("admin-conditions", function() {

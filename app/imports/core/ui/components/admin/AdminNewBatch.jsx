@@ -242,69 +242,79 @@ export default class AdminNewBatch extends React.Component {
           <div className="pt-form-group">
             <label className="pt-label">Treatments</label>
             <div className="pt-form-content">
-              <table className="pt-table pt-table-bordered pt-html-table pt-html-table-bordered">
-                <tbody>
-                  {_.map(currentTreatments, t => {
-                    const id = `gamesCount${t._id}`;
-                    const treatment = treatments.find(tt => tt._id === t._id);
-                    return (
-                      <tr key={id}>
-                        <td>{treatment.displayName()} </td>
+              {currentTreatments.length > 0 ? (
+                <table className="pt-table pt-table-bordered pt-html-table pt-html-table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Treatment</th>
+                      <th>Lobby Configuration</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {_.map(currentTreatments, t => {
+                      const id = `gamesCount${t._id}`;
+                      const treatment = treatments.find(tt => tt._id === t._id);
+                      return (
+                        <tr key={id}>
+                          <td>{treatment.displayName()} </td>
 
-                        <td>
-                          <div className="pt-select">
-                            <select
-                              name="lobbyConfigId"
-                              id="lobbyConfigId"
-                              onChange={this.handleLobbyConfigChange.bind(
-                                this,
-                                t._id
-                              )}
-                              value={t.lobbyConfigId}
-                              style={{ width: 250 }}
+                          <td>
+                            <div className="pt-select">
+                              <select
+                                name="lobbyConfigId"
+                                id="lobbyConfigId"
+                                onChange={this.handleLobbyConfigChange.bind(
+                                  this,
+                                  t._id
+                                )}
+                                value={t.lobbyConfigId}
+                                style={{ width: 250 }}
+                              >
+                                {_.map(lobbyConfigs, l => (
+                                  <option key={l._id} value={l._id}>
+                                    {l.displayName()}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </td>
+
+                          <td>
+                            {isComplete ? (
+                              <NumericInput
+                                name={id}
+                                id={id}
+                                min="1"
+                                max={maxGamesCount}
+                                stepSize="1"
+                                onValueChange={this.handleTreatmentCountChange.bind(
+                                  this,
+                                  t._id
+                                )}
+                                value={t.count}
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              className="pt-button pt-intent-danger"
+                              onClick={this.handleRemoveTreatment}
+                              data-id={t._id}
                             >
-                              {_.map(lobbyConfigs, l => (
-                                <option key={l._id} value={l._id}>
-                                  {l.displayName()}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </td>
-
-                        <td>
-                          {isComplete ? (
-                            <NumericInput
-                              name={id}
-                              id={id}
-                              min="1"
-                              max={maxGamesCount}
-                              stepSize="1"
-                              onValueChange={this.handleTreatmentCountChange.bind(
-                                this,
-                                t._id
-                              )}
-                              value={t.count}
-                            />
-                          ) : (
-                            ""
-                          )}
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            className="pt-button pt-intent-danger"
-                            onClick={this.handleRemoveTreatment}
-                            data-id={t._id}
-                          >
-                            Remove
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              ) : (
+                ""
+              )}
 
               {currentTreatments.length === 0 ? (
                 <p className="pt-text-muted">No treatments yet, add one:</p>

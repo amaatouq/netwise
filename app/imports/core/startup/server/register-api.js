@@ -1,6 +1,6 @@
 // Register your apis here
 
-// import "../../../game/server/index.js";
+// import "../../../experiment/server/index.js";
 import "../../api/admin/methods.js";
 import "../../api/batches/methods.js";
 import "../../api/batches/hooks.js";

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { addPlayerInput } from "../../api/player-inputs/methods.js";
-import { config } from "../../../game/client";
+import { config } from "../../../experiment/client";
 import {
   markPlayerExitStepDone,
   playerReady

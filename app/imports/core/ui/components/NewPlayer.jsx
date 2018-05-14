@@ -2,7 +2,7 @@ import React from "react";
 
 import { AlertToaster } from "./AlertToaster.jsx";
 import { DevNote } from "./Helpers";
-import { config } from "../../../game/client";
+import { config } from "../../../experiment/client";
 import { createPlayer } from "../../api/players/methods";
 import { setPlayerId } from "../containers/IdentifiedRoute";
 import Centered from "./Centered.jsx";

@@ -4,7 +4,7 @@ import { TimestampSchema } from "../default-schemas.js";
 
 let config;
 if (Meteor.isServer) {
-  config = require("../../../game/server/index.js").config;
+  config = require("../../../experiment/server/index.js").config;
 } else {
   config = { conditions: [] };
 }

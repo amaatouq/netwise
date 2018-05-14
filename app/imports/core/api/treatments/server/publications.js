@@ -1,5 +1,5 @@
 import { Treatments } from "../treatments";
-import { config } from "../../../../game/server";
+import { config } from "../../../../experiment/server";
 
 Meteor.publish("admin-treatments", function() {
   if (!this.userId) {
