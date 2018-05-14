@@ -35,7 +35,7 @@ export const bob = {
         (sum, alter) => sum + alter.round.get("guess"),
         0
       );
-      const currentGuess = sum / alterIds.length;
+      const currentGuess = (sum + bot.round.get("guess")) / (alterIds.length+1);
       console.log("bob's updated guess", currentGuess);
       bot.stage.set("guess", currentGuess);
       bot.round.set("guess", currentGuess);
@@ -44,8 +44,12 @@ export const bob = {
       // console.log("from inside bot in round outcome",game);
 
       // if (game.treatment.rewiring) {
+      //bot.set("alterIds", _.pluck(players, "_id").slice(0, game.treatment.altersCount));
+  
       // bot.set("alterIds", allPlayers.slice(0, game.treatment.altersCount));
-      bot.set("alterIds", allPlayers.slice(0, 2));
+      //following the top one!
+      const playerIds = _.pluck(allPlayers, "_id");
+      bot.set("alterIds", _.without(playerIds,bot.get("_id")).slice(1, 2));
       bot.stage.submit();
     }
 
