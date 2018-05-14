@@ -24,6 +24,7 @@ export const bob = {
 
     if (stage.name === "response") {
       const guess = Math.random();
+      bot.round.set("initialGuess", guess);
       bot.stage.set("guess", guess);
       bot.round.set("guess", guess);
       bot.stage.submit();
@@ -31,11 +32,17 @@ export const bob = {
       // This should run when a player has changed a value, not every second
       // NOTE(np) Not sure what this was what you wanted, but it was cummulative
       // so it went beyond bounds before, now it's just the mean of the alters.
-      const sum = alters.reduce(
-        (sum, alter) => sum + alter.round.get("guess"),
-        0
-      );
-      const currentGuess = (sum + bot.round.get("guess")) / (alterIds.length+1);
+      let sum = 0;
+      let alterNoGuess = 0;
+      alters.forEach(alter=>{
+        if (alter.round.get("guess")) {
+          sum += alter.round.get("guess");
+        } else {
+          alterNoGuess++
+        }
+        
+      });
+      const currentGuess = (sum + bot.round.get("initialGuess")) / (alterIds.length+1-alterNoGuess);
       console.log("bob's updated guess", currentGuess);
       bot.stage.set("guess", currentGuess);
       bot.round.set("guess", currentGuess);
@@ -46,14 +53,13 @@ export const bob = {
       // if (game.treatment.rewiring) {
       //bot.set("alterIds", _.pluck(players, "_id").slice(0, game.treatment.altersCount));
   
-      // bot.set("alterIds", allPlayers.slice(0, game.treatment.altersCount));
-      //following the top one!
+      //following the top!
       const playerIds = _.pluck(allPlayers, "_id");
-      bot.set("alterIds", _.without(playerIds,bot.get("_id")).slice(1, 2));
+      bot.set("alterIds", _.without(playerIds,bot.get("_id")).slice(0, game.treatment.altersCount+1));
       bot.stage.submit();
     }
 
-    if (secondsRemaining <= 50) {
+    if (secondsRemaining <= 100) {
       bot.stage.submit();
     }
   }
